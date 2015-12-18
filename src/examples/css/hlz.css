@@ -1,0 +1,381 @@
+body {
+	font: 62.5% "微软雅黑" !important;
+	margin: 0;
+	-webkit-text-size-adjust: 100%;
+}
+.container {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute !important;
+	border: 0;
+}
+@font-face {
+	font-family: font1;
+	src: url('font/HELVETICA LT 33 THIN EXTENDED.TTF')
+}
+
+.myhr {
+	border-top: 1px solid #cccccc;
+}
+.w100 {
+	width: 100%
+}
+.w0 {
+	width: 0%
+}
+.fh {
+	font-family: Helvetica
+}
+.mt_5 {
+	margin-top: .5em
+}
+.mt1 {
+	margin-top: 1em
+}
+.mt2_8 {
+	margin-top: 2.8em
+}
+.mt_4 {
+	margin-top: -4em
+}
+.pt1_667 {
+	padding-top: 1.667em
+}
+.fz1_2 {
+	font-size: 1.2em
+}
+.fz1_3 {
+	font-size: 1.3em
+}
+.fz1_4 {
+	font-size: 1.4em
+}
+/*隐藏*/
+.dn {
+	display: none
+}
+/*y轴滚动条*/
+.s_y {
+	overflow-y: auto
+}
+/*ios滚动*/
+.content_y {
+    height: 500px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch
+}
+/*全部隐藏*/
+.o_h {
+	over-flow: hidden
+}
+/*把图像扩展至宽度和高度完全适应内容区域*/
+.bg-img {
+	background-repeat: no-repeat !important;
+	background-size: contain !important;
+	background-position: center;
+}
+/*把图像扩展至完全覆盖内容区域，某些部分会超出无法显示*/
+.bg-img1 {
+	background-repeat: no-repeat !important;
+	background-size: cover !important;
+	background-position: center;
+}
+/*把图像X轴方向完全撑开，Y轴方向自适应*/
+.bg-img2 {
+	background-repeat: no-repeat !important;
+	background-size: 100% auto !important;
+	background-position: center;
+}
+/*把图像Y轴方向完全撑开，X轴方向自适应*/
+.bg-img3 {
+	background-repeat: no-repeat !important;
+	background-size: auto 100% !important;
+	background-position: center;
+}
+/*把图像X轴、Y轴方向都完全撑开*/
+.bg-img4 {
+	background-repeat: no-repeat !important;
+	background-size: 100% 100% !important;
+	background-position: center;
+}
+
+/*首页*/
+.wp {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	overflow: hidden;
+}
+.id_wait {
+	background: url('images/wait.png')
+}
+.id_head {
+	padding: 1.2em 1.5em 0
+}
+.id_headImg {
+	background-image: url('images/mask.png'), url('images/bg.jpg');
+	background-position: 0 0, 0 0
+}
+.id_headName {
+	font: 3em Helvetica;
+	color: #f9f9f9
+}
+.id_headDate {
+	font-size: 1.2em;
+	color: #f9f9f9;
+	margin-top: .4em
+}
+.id_headMore {
+	background: url('images/more.png');
+	width: 4.5em;
+	height: 4.5em;
+	margin-top: .7em
+}
+.triangle1 {
+	margin-top: 5em;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	overflow: hidden;
+	background: url('images/id_conImg.png') no-repeat !important
+}
+.id_ta {
+	padding: 4em 0 0 1.5em
+}
+.id_taName {
+	font: 2em Helvetica;
+	color: #3ea3a3;
+}
+.id_taScore {
+	font-size: 2.2em;
+	font-family: font1;
+	color: #ff8736;
+	margin-left: 1.3em
+}
+.id_con {
+	/*background-color: #000;*/
+	height: 13em;
+	padding: 2.6em 1.5em 2.8em;
+}
+.id_conIntro {
+	font-size: 1.5em;
+	color: #f9f9f9;
+	text-indent: 2em;
+	line-height: 1.8
+}
+.id_conName {
+	font-size: 1.3em;
+	color: #727272;
+	margin-top: 1.3em
+}
+.id_conLike {
+	background-image: url('images/unlike.png');
+	width: 2em;
+	height: 2em
+}
+.id_conlike2 {
+	margin-top: 1.69em;
+	font-size: 1em
+}
+.id_conNum {
+	color: #727272;
+	font: 1.5em Helvetica;
+	margin-left: .5em
+}
+/*首页dialog*/
+.dia_bg {
+	padding: 0 15px 0 15px;
+	background: url('images/sharebg.png') no-repeat;
+}
+.dia_content {
+	text-align: center;
+	font: 20px '微软雅黑';
+	color: #f9f9f9;
+	height: 60px;
+	line-height: 60px;
+}
+.dia_confirm {
+	font: 20px '微软雅黑';
+	color: #f9f9f9;
+	text-align: center;
+	height: 50px;
+	line-height: 50px;
+}
+/*错误页*/
+.er_con {
+	padding: 0 1.5em
+}
+.er_con > div:first-child {
+	font-size: 3em;
+	color: #585858;
+	margin-top: 1em
+}
+.er_con > div:nth-child(2) {
+	margin-top: 1.5em;
+	font-size: 1.5em;
+	color: #595959
+}
+.er_but {
+	margin-top: 2em;
+	background: url("images/er_refresh.png");
+	font-size: 1.5em;
+	color: #f9f9f9;
+	height: 3em;
+	line-height: 3em;
+	text-align: center;
+	border-radius: 5px
+}
+/*详情页*/
+.triangle2 {
+	background: url('images/dt_conImg.png') no-repeat !important
+}
+.dt_bgImg {
+	background: url('images/bg.jpg') no-repeat;
+}
+.dt_back {
+	background: url('images/detail_back.png');
+	width: 4.5em;
+	height: 4.5em;
+	margin: 1.9em 0 0 1.5em
+}
+.dt_share {
+	background: url('images/detail_share.png');
+	width: 4.5em;
+	height: 4.5em;
+	margin: 1.9em 1.5em 0 0
+}
+.dt_taPad {
+	padding: 4em 0 0 1.5em
+}
+.dt_taName {
+	font: 2em Helvetica;
+	color: #3ea3a3;
+}
+.dt_taNum {
+	font: 2.2em font1;
+	color: #ff8736;
+	margin-left: 1.2em
+}
+.dt_conPad {
+	padding: 2em 1.5em 0 1.5em
+}
+.dt_download {
+	background: url("images/detail_down.png");
+	width: 6.4em;
+	height: 2.2em;
+	border-radius: 5px;
+	margin-top: 1.5em;
+	text-align: center;
+	line-height: 2.2em;
+	color: #f9f9f9;
+	font-size: 1.3em
+}
+.dt_con {
+	font-size: 1.3em;
+	/*text-indent: 2em;*/
+	margin-top: 1.4em
+}
+.dt_imgList {
+	margin-top: 2em;
+	overflow-x: auto;
+}
+.dt_imgList img {
+	width: 15em
+}
+/*分享窗口*/
+.sharebg {
+
+}
+.sharett {
+	font: 25px '微软雅黑';
+	color: #f9f9f9;
+	text-align: center;
+	margin: 12px 0 13px 0;
+}
+.sharehr, .dia_hr {
+	border-top: 1px solid #f9f9f9;
+}
+.share_qq {
+	background: url("images/qq.png") no-repeat 50%;
+	background-size: 50px;
+}
+.share_wxhy {
+	background: url("images/wxhy.png") no-repeat 50%;
+	background-size: 55px;
+}
+.share_sina {
+	background: url("images/sina.png") no-repeat 50%;
+	background-size: 55px;
+}
+.share_wxpyq {
+	background: url("images/wxpyq.png") no-repeat 50%;
+	background-size: 65px;
+}
+.sharecn {
+	font: 20px '微软雅黑';
+	color: #f9f9f9;
+	text-align: center;
+	margin: 20px 0 23px 0;
+}
+.share_padd {
+	padding: 0 1.5em 0 1.5em;
+	background: url("images/sharebg.png") no-repeat;
+}
+/*设置页*/
+.st_bg {
+	background: url('images/setting_bg.png') no-repeat
+}
+.st_back {
+	background: url('images/setting_back.png');
+	width: 4.5em;
+	height: 4.5em;
+	margin: 1.9em 0 0 1.5em
+}
+.st_list {
+	margin-top: 22em
+}
+.st_versionImg {
+	width: 5em;
+	height: 2em;
+	background: url('images/setting_version.png') no-repeat 60%
+}
+.st_cacheImg {
+	width: 5em;
+	height: 2em;
+	background: url('images/setting_cache.png') no-repeat 60%
+}
+.st_evaluateImg {
+	width: 5em;
+	height: 2em;
+	background: url('images/setting_evaluation.png') no-repeat 60%
+}
+.st_infoImg {
+	margin-top: 2.5em;
+	width: 5em;
+	height: 2em;
+	background: url('images/setting_information.png') no-repeat 60%
+}
+.st_listFont {
+	font-size: 1.6em;
+	color: #444
+}
+.st_conFont {
+	font: 2em font1;
+	color: #828282;
+	margin-right: 1.5em
+}
+.st_hrMar {
+	margin: 1em 0 0 5em
+}
+.st_boxMar {
+	margin-top: 2.5em
+}
+.st_switchMar {
+	margin: 1.5em 1.5em 0 0
+}

@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Hello UI SwipePage</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="dist/css/co.css">
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+    <div class="ui-swipe">
+        <div class="ui-swipe-group">
+            <div class="ui-swipe-item">
+                <div class="ui-swipe-content">
+                    1
+                </div>
+            </div>
+            <div class="ui-swipe-item">
+                <div class="swipe-content">
+                    2
+                </div>
+            </div>
+            <div class="ui-swipe-item">
+                <div class="swipe-content">
+                    3
+                </div>
+            </div>
+            <div class="ui-swipe-item">
+                <div class="swipe-content">
+                    4
+                </div>
+            </div>
+            <div class="ui-swipe-item">
+                <div class="swipe-content">
+                    5
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="dist/js/dom.js"></script>
+    <script src="dist/js/co.js"></script>
+</body>
+<script>
+domReady(function(require) {
+    require("swipepage");
+    var swipe = $('.ui-swipe').swipepage().ref.on('moveend',function(){
+        console.log('message');
+    });
+});
+</script>
+
+</html>

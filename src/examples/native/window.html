@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Hello UI Window</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="../dist/css/co.css">
+        <style>
+        .button {
+            margin: 5px 15px;
+        }
+        </style>
+        
+    </head>
+    <body>
+        <header class="ui-nav-bar">
+            <div class="ui-nav-bar-inner">
+                <a class="ui-action-back ui-nav-bar-link">
+                    <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des">Back</span>
+              </i>
+                </a>
+                <h1 class="ui-nav-bar-title">Window</h1>
+                <a class="ui-nav-bar-link"><i class="ui-nav-bar-icon ui-nav-bar-right ui-icon-bars"></i></a>
+            </div>
+        </header>
+            <a class="button button-block button-rounded button-primary button-large">打开一个新窗口</a>
+            <a class="button button-block button-rounded button-primary button-large">添加抽屉</a>
+            
+        <script src="../dist/js/dom.js"></script>
+    <script src="../dist/js/co.js"></script>
+    </body>
+     <script>
+            var win = app.window.create();
+            domReady(function(require){
+                $('.button').button(function(btn,vet){
+                    var text = btn.innerHTML;
+                    if(text == '打开一个新窗口'){
+                        win.open('native/view.html');
+                    }else{
+                       var slideLayoutParams = {
+
+                                type: 'left',
+                                leftEdge:200,
+                                rightEdge:200,
+                                leftPane: {
+                                    name: 'leftDrawer',
+                                    url: 'native/view.html',
+                                    bgColor: '#fff', 
+                                    bounces:true,
+                                    vScrollBarEnabled:true,//只在iOS下有效
+                                    hScrollBarEnabled:false//只在iOS下有效
+                                }
+                            }
+
+                        rd.window.setSlideLayout(slideLayoutParams);
+                        var slideLayoutParams = {
+
+                                type: 'left',
+                                leftEdge:200,
+                                rightEdge:200,
+                                leftPane: {
+                                    name: 'leftDrawer',
+                                    url: 'native/app.html',
+                                    bgColor: '#fff', 
+                                    bounces:true,
+                                    vScrollBarEnabled:true,//只在iOS下有效
+                                    hScrollBarEnabled:false//只在iOS下有效
+                                }
+                            }
+
+                        rd.window.setSlideLayout(slideLayoutParams);
+        rd.window.openSlidePane({
+            type : 'left'
+        });
+                    }
+                });
+            });
+        </script>
+</html>

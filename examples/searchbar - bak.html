@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Hello UI SearchBar</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="dist/css/co.css">
+
+        <style>
+
+        </style>
+        
+    </head>
+    <body>
+  <div  class="ui-searchbar">
+     <form class="ui-searchbar-container">
+      <div class="ui-searchbar-input">
+        <input type="search"  placeholder="Search"/>
+      </div>
+    </form>
+    <div  class="ui-searchbar-content">
+      <div class="ui-list-block ui-searchbar-list">
+        <ul>
+          <li class="ui-list-item-content ui-searchbar-item">
+            <div class="ui-list-item-inner"> 
+              <div class="ui-list-item-title ui-searchbar-key">中国</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+            
+        <script src="dist/js/dom.js"></script>
+    <script src="dist/js/co.js"></script>
+    </body>
+     <script>
+            domReady(function(require){
+              require('searchbar');
+              $('.ui-searchbar').searchbar()
+            });
+        </script>
+</html>

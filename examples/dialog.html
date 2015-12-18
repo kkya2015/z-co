@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Hello UI Dialog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="dist/css/co.css">
+    <link rel="stylesheet" type="text/css" href="css/dialog_demo.css" />
+    <!--demo展示所用css -->
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <header class="ui-nav-bar">
+        <div class="ui-nav-bar-inner">
+            <a class="ui-action-back ui-nav-bar-link">
+                <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des">Back</span>
+              </i>
+            </a>
+            <h1 class="ui-nav-bar-title">Dialog</h1>
+            <a class="ui-nav-bar-link"><i class="ui-nav-bar-icon ui-nav-bar-right ui-icon-bars"></i></a>
+        </div>
+    </header>
+    <a id='alertBtn' class="button button-block button-rounded button-primary button-large">分享框</a>
+    <a id='confirmBtn' class="button button-block button-rounded button-action button-large">评分框</a>
+    <a class="button button-block button-rounded button-highlight button-large">提示框</a>
+    <a id='customBtn' class="button button-block button-rounded button-royal button-large">个性化提示框</a>
+    <a id='toastBtn' class="button button-block button-rounded button-inverse button-large">加载中Toast</a>
+    <a id='mesToastBtn' class="button button-block button-rounded button-caution button-large">带有消息的Toast</a>
+    <div class="ui-dialog" style="width: 300px; height: auto; display: block; position: fixed; left: 50%; margin-left: -150px; top: 314px; margin-top: -94px;">
+        <div class="ui-dialog-title">
+            <h3>登陆提示</h3></div>
+        <div class="ui-dialog-content" style="overflow-y: hidden;">
+            <div style="display:block">
+                <p>登录后, 获得更多个性化特色功能</p>
+            </div>
+        </div>
+        <div class="ui-dialog-btns"><a class="ui-btn" data-btn="1" data-key="取消" style="-webkit-tap-highlight-color: rgba(255, 255, 255, 0);">取消</a><a class="ui-btn" data-btn="2" data-key="确定" style="-webkit-tap-highlight-color: rgba(255, 255, 255, 0);">确定</a></div>
+    </div>
+    <script src="dist/js/native.js"></script>
+    <script src="dist/js/dom.js"></script>
+    <script src="dist/js/co.js"></script>
+</body>
+<script>
+var win = app.createWindow();
+domReady(function(require) {
+    $('.ui-nav-bar-right').button(function() {
+        win.open('cards.html');
+    })
+    var Dialog = require("dialog");
+    $('#alertBtn').button(function(btn, evt) {
+        Dialog.init({
+            title: '消息框',
+            width: 288,
+            contentMaxHeight: 100,
+            scrollMove: true,
+            buttons: {
+                '取消': function() {
+                    this.close();
+                }
+            },
+            content: '<ul class="share-list"><li class="renren">人人网</li><li class="sina">新浪微博</li><li class="sms">短信息</li><li class="email">用电子邮件发送信息</li></ul>'
+        })._wrap.addClass('share-dialog');
+
+
+    });
+
+    $('#confirmBtn').button(function(btn, evt) {
+        Dialog.init({
+            title: '文档评分',
+            autoOpen: false,
+            closeBtn: true,
+            scrollMove: false,
+            content: '<div  class="vote-dialog" style="display:block"><p class="vote"></p><p>星级从1到5，获得越多星星，表示等级越高</p></div>'
+        });
+    });
+    $('.button-highlight').button(function(btn, evt) {
+        Dialog.init({
+                title: '登陆提示',
+                autoOpen: false,
+                closeBtn: false,
+                buttons: {
+                    '取消': function() {
+                        this.close();
+                    },
+                    '确定': function() {
+                        this.close();
+                    }
+                },
+                content: '<div style="display:block"><p>登录后, 获得更多个性化特色功能</p></div>'
+            }) //.opts['_wrap'].addClass('login-dialog').addClass('login-dialog login-dialog-dark');;
+
+    });
+    $('#customBtn').button(function(btn, evt) {
+        Dialog.init({
+            autoOpen: false,
+            closeBtn: false,
+            scrollMove: false,
+            buttons: {
+                '取消': function() {
+                    this.close();
+                },
+                '确定': function() {
+                    this.close();
+                }
+            },
+            title: '登录提示',
+            content: '<p>登录后, 获得更多个性化特色功能</p><p>特色功能1：个性化首页</p>' +
+                '<p>特色功能2：各产品线自动关联，无需再次登录，一站式服务</p><p>特色功能3：记录您当前的活动状态</p>' +
+                '<p>特色功能4：个性化提醒</p>'
+        })._wrap.addClass('login-dialog login-dialog-dark')
+
+    });
+    $('#toastBtn').button(function(btn, evt) {
+        Dialog.showToast();
+    });
+    $('#mesToastBtn').button(function(btn, evt) {
+
+        Dialog.showToast({
+            message: '您输入的信息有误，请重新输入'
+        });
+    });
+});
+</script>
+
+</html>

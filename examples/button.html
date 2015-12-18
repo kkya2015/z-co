@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Hello UI Button</title>
+
+    <!-- Style -->
+  <link rel="stylesheet" href="dist/css/co.css">
+  
+</head>
+<body>
+    <header class="ui-nav-bar">
+      <div class="ui-nav-bar-inner">
+        <a class="ui-action-back ui-nav-bar-link"><i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des">Back</span></i></a>
+        <h1 class="ui-nav-bar-title">Button</h1>
+        <a class="ui-nav-bar-link"><i class="ui-nav-bar-icon ui-nav-bar-right ui-icon-bars"></i></a>
+      </div>
+    </header>
+    <div class = "ui-content">
+                <h5>底色按钮：</h5>
+                <button type="button" class="ui-btn" id="basebtn">
+                    默认
+                </button>
+                <div class="ui-btn ui-btn-primary" id="bluebtn">
+                    蓝色
+                </div>
+                <span class="ui-btn ui-btn-success" id="greenbtn">
+                    绿色
+                </span>
+                <button type="button" class="ui-btn ui-btn-warning" id="yelowbtn">
+                    黄色
+                </button>
+                <button type="button" class="ui-btn ui-btn-danger">
+                    红色
+                </button>
+                <button type="button" class="ui-btn ui-btn-royal">
+                    紫色
+                </button>
+        
+                <h5 style="margin-top: 10px;">无底色按钮（使用父元素的背景色）：</h5>    
+                <button type="button" class="ui-btn ui-btn-outlined">
+                    默认
+                </button>
+                <button type="button" class="ui-btn ui-btn-primary ui-btn-outlined">
+                    操作
+                </button>
+                <button type="button" class="ui-btn ui-btn-success ui-btn-outlined">
+                    成功
+                </button>
+                <button type="button" class="ui-btn ui-btn-warning ui-btn-outlined">
+                    警告
+                </button>
+                <button type="button" class="ui-btn ui-btn-danger ui-btn-outlined">
+                    危险
+                </button>
+                <button type="button" class="ui-btn ui-btn-royal ui-btn-outlined">
+                    高贵
+                </button>
+
+<div style = 'background-color: #229FFD;'>
+  <button class="button button-large button-plain button-border button-circle"><i class="fa fa-reply"></i></button>
+  <button class="button button-large button-plain button-border button-box"><i class="fa fa-star"></i></button>
+  <button class="button button-large button-plain button-border button-square"><i class="fa fa-trash-o"></i></button>
+  <button class="button button-large button-plain button-borderless"><i class="fa fa-tag"></i></button>
+</div>
+
+  <span class="button-wrap">
+    <button class="button button-circle">
+      <i class="fa fa-cloud"></i>
+    </button>
+  </span>
+  
+  <span class="button-wrap">
+    <button class="button button-circle button-raised button-primary">
+      <i class="fa fa-cloud"></i>
+    </button>
+  </span>
+  
+  <span class="button-wrap">
+    <a class="button button-pill ">Go</a>
+  </span>
+  <span class="button-wrap">
+    <a class="button button-pill button-raised button-primary">Go</a>
+  </span>
+  
+  
+  <a class="button button-block button-rounded button-large">Go</a>
+  <a class="button button-block button-rounded button-primary button-large">Go</a>
+  <a class="button button-block button-rounded button-action button-large">Go</a>
+  <a class="button button-block button-rounded button-highlight button-large">Go</a>
+  <a class="button button-block button-rounded button-caution button-large">Go</a>
+  <a class="button button-block button-rounded button-royal button-large">Go</a>
+  
+  
+  <div class="button-group">
+    <button type="button" class="button button-primary">Option 1</button>
+    <button type="button" class="button button-primary">Option 2</button>
+    <button type="button" class="button button-primary">Option 3</button>
+  </div>
+  
+  <div class="button-group">
+    <button type="button" class="button button-pill button-action">Option 1</button>
+    <button type="button" class="button button-pill button-action">Option 2</button>
+    <button type="button" class="button button-pill button-action">Option 3</button>
+  </div>
+  
+  <div class="button-group">
+    <button type="button" class="button button-royal button-rounded button-raised">Option 1</button>
+    <button type="button" class="button button-royal button-rounded button-raised">Option 2</button>
+    <button type="button" class="button button-royal button-rounded button-raised">Option 3</button>
+  </div>
+  
+  
+  <a class="button button-glow button-rounded button-raised button-primary">Go</a>
+  <a class="button button-glow button-border button-rounded button-primary">Go</a>
+  <button class="button button-glow button-circle button-action button-jumbo"><i class="fa fa-thumbs-up"></i></button>
+  <a class="button button-glow button-rounded button-highlight">Go</a>
+  <a class="button button-glow button-rounded button-caution">Go</a>
+  <a class="button button-glow button-rounded button-royal">Go</a>
+  
+  <button class="button button-primary button-box button-giant button-longshadow-right">
+    <i class="fa fa-twitter"></i>
+  </button>
+   
+  <button class="button button-caution button-box button-raised button-giant button-longshadow">
+    <i class="fa fa-google-plus"></i>
+  </button>
+   
+  <button class="button button-action button-box button-giant button-longshadow-left">
+    <i class="fa fa-share-alt"></i>
+  </button>
+   
+  <button class="button button-highlight button-box button-giant button-longshadow-right button-longshadow-expand">
+    <i class="fa fa-rss"></i>
+  </button>
+   
+  <button class="button button-primary button-circle button-giant button-longshadow">
+    <i class="fa fa-gear"></i>
+  </button>
+</div>
+      <script src="dist/js/dom.js"></script>
+      <script src="dist/js/co.js"></script>
+</body>
+     <script>
+      $(function(require){
+          $('.ui-btn').button(function(btn,evt) {
+            alert(btn.innerHTML)
+          })
+      })
+    </script>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Hello UI Request</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="stylesheet" href="../dist/css/co.css">
+
+        <style>
+
+        </style>
+        
+    </head>
+    <body>
+        <header class="ui-nav-bar">
+        <div class="ui-nav-bar-inner">
+            <h1 class="ui-nav-bar-title">Request</h1>
+        </div>
+    </header>
+            <a id='alertBtn' class="button button-block button-rounded button-primary button-large">新建一个表</a>
+            <a id='confirmBtn' class="button button-block button-rounded button-action button-large">评分框</a>
+            <a id='promptBtn' class="button button-block button-rounded button-highlight button-large">提示框</a>
+            <a id='customBtn' class="button button-block button-rounded button-royal button-large">个性化提示框</a>
+            <a id='toastBtn' class="button button-block button-rounded button-inverse button-large">加载中Toast</a>
+            <a id='mesToastBtn' class="button button-block button-rounded button-caution button-large">带有消息的Toast</a>
+        <script src="../dist/js/dom.js"></script>
+        <script src="request.js"></script>
+    </body>
+     <script>
+            $(function(require){
+                $('#alertBtn').tap(function(btn,el){
+                      RQ.newTable({
+                        appID:'781',
+                        appKey:'189a7f1d7d5d4ce293564d0fff77c97b',
+                        data:{'name':'APP'},
+                        success: function(data){
+                            alert(data);
+                        },
+                        error: function(xhr, type){
+                            alert('Ajax error!')
+                        }
+                      })   
+                    
+                });
+
+                // $('#confirmBtn').button(function(btn,el){
+                       
+                // });
+                // $('#promptBtn').button(function(btn,el){
+                      
+
+                // });
+                // $('#customBtn').button(function(btn,el){
+                       
+
+                // });
+                // $('#toastBtn').button(function(btn,el){
+                   
+                // });
+                // $('#mesToastBtn').button(function(btn,el){
+                   
+                // });
+            });
+        </script>
+</html>

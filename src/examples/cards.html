@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="dist/css/co.css">
+    <title>Hello UI Cards</title>
+  </head>
+  <body>
+        <header class="ui-nav-bar">
+        <div class="ui-nav-bar-inner">
+            <a class="ui-action-back ui-nav-bar-link">
+                <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des">Back</span>
+          </i>
+            </a>
+            <h1 class="ui-nav-bar-title">Cards</h1>
+            <a class="ui-nav-bar-link"><i class="ui-nav-bar-icon ui-nav-bar-right ui-icon-bars"></i></a>
+        </div>
+    </header>
+    <div class = ' ui-content'>
+      <div id="tc" class="card">
+          <div class="card-header">
+            <div class="card-header-avatar"><img src="img/img.jpg" width="34" height="34"/></div>
+            <div class="card-header-name"><b>教育技术服务平台分</b></div>
+            <div class="card-header-date"><img src="img/img.jpg" width="34" height="34"/></div>
+          </div>
+          <div class="card-content"> 
+            <div  class = "title-content">
+              <canvas class="canvas"></canvas>
+            </div>
+            <div class = 'container'>
+              <canvas class="canvas"></canvas>
+            </div>
+          </div>
+        </div>
+        <div id="mm" class="card">
+          <div class="card-header">
+            <div class="card-header-avatar"><img src="img/img.jpg" width="34" height="34"/></div>
+            <div class="card-header-name"><b>妈咪100分</b></div>
+            <div class="card-header-date"><img src="img/img.jpg" width="34" height="34"/></div>
+          </div>
+          <div class="card-content"> 
+            <div  class = "title-content">
+              <canvas class="canvas"></canvas>
+            </div>
+            <div class = 'container'>
+              <canvas class="canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+       <script src="dist/js/dom.js"></script>
+       <script src="dist/js/co.js"></script>
+  </body>
+    <script>
+        var randomScalingFactor = function(){ return Math.round(Math.random()*1000)};
+
+      
+        $(function(){
+          drawCard('#tc');
+          drawCard('#mm');
+        })
+
+        function drawCard(id){
+          var title = $(id);
+          var content = title.find('.title-content');
+          var tcanvas = content.find('.canvas')[0];
+          var twidth = content.width();
+          tcanvas.width = twidth;
+          tcanvas.height = 40;
+          var tctx = H5Draw(tcanvas).ctx;
+          var tleftW = parseInt(twidth/7*4)-10;
+          tctx.font="small-caps bold 14px arial";
+          tctx.textBaseline = 'middle';  
+          tctx.moveTo(tleftW/8, 35); 
+          tctx.fillText('今日', tleftW/8, 25);
+
+          var trightW = tleftW + 10;
+          var rightX = parseInt(trightW/3*2);
+          rightX = twidth - rightX + 10;
+          tctx.moveTo(rightX, 35); 
+          tctx.fillText('累计', rightX, 25);
+
+          var container = title.find('.container');
+          var ccanvas = container.find('.canvas')[0];
+          var cwidth = container.width();
+          ccanvas.width = cwidth;
+          ccanvas.height = 200;
+          var ctx = H5Draw(ccanvas);
+          var leftW = parseInt(cwidth/7*4)-10;
+          leftW = parseInt(leftW/8)*8;
+          ctx.drawHlines(0,0,leftW,150,8);
+          ctx.drawVlines(8,0,142,leftW+8,8);
+          var rightW = leftW + 20;
+          ctx.drawHlines(rightW,0,cwidth,150,8);
+          ctx.drawVlines(rightW,0,142,cwidth-8,8);
+
+
+          ctx.draw(cwidth,leftW,rightW,randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor());
+
+        }
+
+        function H5Draw(canvas){
+          // var canvas = document.getElementById(container)
+          var ctx = canvas.getContext("2d");
+          ctx.translate(0.5,0.5);
+          ctx.lineWidth = 1;
+          return {
+            ctx : ctx,
+            drawLine:function(x1,y1,x2,y2){
+                ctx.strokeStyle='#F4F3F2';
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2,y2);
+                ctx.closePath();
+            },
+            drawHlines:function(beginX,beginY,toX,totals,space){
+                for(var h=beginY;h<totals;h+=space){
+                    this.drawLine(beginX,h,toX,h); 
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            },
+            drawVlines:function(beginX,beginY,toY,totals,space){
+                for(var h=beginX;h<totals;h+=space){
+                    this.drawLine(h,beginY,h,toY);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            },
+            drawText:function(text,x,y){
+                ctx.fillStyle = '#000000';
+                ctx.textAlign = 'center';  
+                ctx.textBaseline = 'middle';  
+                ctx.moveTo(x, y);  
+                ctx.save();
+                ctx.translate(x, y+10);
+                if(canvas.width<400){
+                  ctx.rotate(300*Math.PI/180);
+                }
+                ctx.fillText(text, 0, 0);
+                ctx.restore()
+            },
+            drawRect : function(num,times,fRectX,fRectY,width,height,color){
+                var process = 0;
+                var serf = this;
+                var t = setInterval(function(){
+                    ctx.fillStyle=color;  //填充的颜色
+                    if(process<times){
+                        process++;
+                        fRectY = fRectY - 1
+                        ctx.fillRect(fRectX,fRectY,width,height);  //填充颜色 x y坐标 宽 高
+                    }else{
+                      clearInterval(t);
+                      serf.drawNum(num,fRectX+5,fRectY-10)
+                    }
+                },10);
+            },
+            drawNum : function(num,x,y){
+                ctx.textAlign = 'center';  
+                ctx.textBaseline = 'middle';  
+                ctx.moveTo(x, y);  
+                ctx.fillText(num, x, y);
+            },
+            draw : function(pwidth,leftW,rightW,num1,num2,num3,num4,num5){
+                var nums = [num1,num2,num3,num4,num5];
+                var maxN = Math.max.apply(Math,nums);
+
+                var times = 13*8;
+                var space = parseInt(maxN/times);
+                var fRectY = 145;
+
+                times = num1/space;
+                var fRectX = parseInt(leftW/7);
+                var rectW = 1.5 * 8;
+                this.drawText('活跃用户',fRectX,160);
+                this.drawRect(num1,times,fRectX,fRectY,rectW,1,'#009AD6');
+
+                times = num2/space;
+                var fRectX = parseInt(leftW/2 - rectW/2);
+                this.drawText('新增用户',fRectX,160);
+                this.drawRect(num2,times,fRectX,fRectY,rectW,1,'#009AD6');
+
+                times = num3/space;
+                var fRectX = parseInt(leftW/7*6 - rectW);
+                this.drawText('新增用户',fRectX,160);
+                this.drawRect(num3,times,fRectX,fRectY,rectW,1,'#009AD6');
+
+                times = num4/space;
+                var fRectX = parseInt(rightW/3*2);
+                fRectX = pwidth - fRectX  + 20;
+                this.drawText('用户',fRectX,160);
+                this.drawRect(num4,times,fRectX,fRectY,rectW,1,'#00D287');
+
+                times = num5/space;
+                var fRectX = parseInt(rightW/3);
+                fRectX = pwidth - fRectX  + 10;
+                this.drawText('启动次数',fRectX,160);
+                this.drawRect(num5,times,fRectX,fRectY,rectW,1,'#00D287');
+            }
+
+          }
+        }
+    </script>
+</html>

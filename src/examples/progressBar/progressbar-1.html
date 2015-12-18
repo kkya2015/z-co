@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello UI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+ <title>progressBar</title>
+</head>
+ 	<style type="text/css">
+		#demo-radius {
+			background-color:#06BAF0;
+			padding:0.5em;
+			color: wheat;
+			text-align: right;
+			font-size:xx-small;
+		}
+ 	</style>
+<body>
+<canvas id="canvas" width="160" height="180" style="background-color:#FFFFFF;"> </canvas>
+
+<div id="demo-radius" class="has-shadow" style="width:80%; border: 0px none; border-radius: 8em;">80%</div>
+<div id="demo-radius" class="has-shadow" style="width:50%; border: 0px none; border-radius: 8em;">50%</div>
+</body>
+
+ <script>
+
+
+function drawProgress(process){
+	 		var	canvas = document.getElementById('canvas');
+	 		var context = canvas.getContext("2d");
+	 		context.clearRect(20, 15, 120, 120);  
+	        context.beginPath();  
+	        context.moveTo(80, 75);    
+	        if(process<25){
+	        	proc = process + 75;
+		    	context.arc(80, 75, 60, Math.PI * 1.5, Math.PI * 2 * proc / 100, false);  
+		    }else if(process>25&&process<75){
+		    	context.arc(80, 75, 60, Math.PI * 1.5, Math.PI * 2, false);  
+		   	 	context.arc(80, 75, 60, 0, Math.PI * 2 * process / 100, false);  
+		    }else{
+		    	proc = process - 25;
+		    	context.arc(80, 75, 60, Math.PI * 1.5, Math.PI * 2, false);
+		    	context.arc(80, 75, 60, 0, Math.PI * 2 * proc / 100, false);  
+		    }
+	        
+	        context.closePath(); 
+		    context.fillStyle = '#FF716B'; 
+	        context.fill();   
+
+	        context.beginPath();  
+		    context.moveTo(80, 75);  
+		    context.arc(80, 75, 38, 0, Math.PI * 2, true);  
+		    context.closePath();  
+		    context.fillStyle = '#FFFFFF';  
+		    context.fill();  
+
+	        context.beginPath();  
+		    context.moveTo(80, 75);  
+		    context.arc(80, 75, 35, 0, Math.PI * 2, true);  
+		    context.closePath();  
+		    context.fillStyle = '#0094D3';  
+		    context.fill();  
+
+		    context.beginPath();  
+	        context.font = "25px Arial";  
+	        context.fillStyle = '#FBFFFF';  
+	        context.textAlign = 'center';  
+	        context.textBaseline = 'middle';  
+	        context.moveTo(80, 75);  
+	        context.fillText(process + "%", 80, 75);  
+	 	}
+function drawDiagonal(){
+	drawProgress(80);
+}
+	window.addEventListener('load',drawDiagonal,true);
+</script>
+</html>
+</body>
+</html>

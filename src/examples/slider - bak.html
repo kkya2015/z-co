@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+    <title>Hello UI Slider</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="dist/css/co.css">
+</head>
+<body >
+            <div id="slider" style = "height:400px" class="ui-slider">
+                <div class="ui-slider-group">
+                    <div class="ui-slider-item">
+                        <img class="ui-slider-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEXCwsK592mkAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==">
+                    </div>
+                    <div class="ui-slider-item">
+                        <img class="ui-slider-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEXCwsK592mkAAAACklEQVQI12NgAAAAAgAB4iG8MwAAAABJRU5ErkJggg==">
+                    </div>
+                </div>
+            </div> 
+        <script src="dist/js/dom.js"></script>
+        <script src="dist/js/co.js"></script>
+</body>
+<script>
+
+    domReady(function(require){
+        require("slider");
+        $('#slider').slider( { 
+            loop:true,
+            dots:true,
+            guide:true,
+            space:5
+        }).ref.on('slide',function(e,index){
+           console.log(index);
+        })
+    });
+</script>
+</html>
