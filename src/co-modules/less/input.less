@@ -2,10 +2,103 @@
 .ui-input-row {
   overflow: hidden;
   clear: left;
+  position: relative;
 }
 
-.ui-input-row {
-  position: relative;
+.ui-input-row * {
+  -webkit-box-sizing: border-box;
+          
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  outline: none;
+
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ui-input-row button,
+.ui-input-row input,
+.ui-input-row optgroup,
+.ui-input-row select,
+.ui-input-row textarea {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.ui-input-row input {
+  line-height: normal;
+}
+
+.ui-input-row input,
+.ui-input-row textarea,
+.ui-input-row select {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 17px;
+
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ui-input-row input[type="search"] {
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
+  -webkit-appearance: textfield;
+}
+
+.ui-input-row select,
+.ui-input-row textarea,
+.ui-input-row input[type="text"],
+.ui-input-row input[type="search"],
+.ui-input-row input[type="password"],
+.ui-input-row input[type="datetime"],
+.ui-input-row input[type="datetime-local"],
+.ui-input-row input[type="date"],
+.ui-input-row input[type="month"],
+.ui-input-row input[type="time"],
+.ui-input-row input[type="week"],
+.ui-input-row input[type="number"],
+.ui-input-row input[type="email"],
+.ui-input-row input[type="url"],
+.ui-input-row input[type="tel"],
+.ui-input-row input[type="color"] {
+  width: 100%;
+  height: 40px;
+  -webkit-appearance: none;
+  padding: 10px 15px;
+  line-height: 21px;
+  -webkit-user-select: text;
+  background-color: #fff;
+  border-radius: 3px;
+  outline: none;
+}
+
+.ui-input-row input[type="search"] {
+  height: 34px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-size: 16px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, .1);
+  border: 0;
+  border-radius: 6px;
+}
+
+.ui-input-row button,
+.ui-input-row select {
+  text-transform: none;
+}
+.ui-input-row select {
+  height: auto;
+  margin-top: 1px;
+  font-size: 14px;
+  background-color: #fff;
+  border: 0 !important;
+}
+
+.ui-input-row textarea {
+  height: auto;
+  resize: none;
 }
 
 .ui-search {
@@ -123,9 +216,24 @@
   font-size: 17px;
 }
 
-.ui-input-row label ~ input, .ui-input-row label ~ select, .ui-input-row label ~ textarea {
-  float: right;
+.ui-input-row label ~ select,
+.ui-input-row label ~ textarea,
+.ui-input-row label ~ input[type="text"],
+.ui-input-row label ~ input[type="search"],
+.ui-input-row label ~ input[type="password"],
+.ui-input-row label ~ input[type="datetime"],
+.ui-input-row label ~ input[type="datetime-local"],
+.ui-input-row label ~ input[type="date"],
+.ui-input-row label ~ input[type="month"],
+.ui-input-row label ~ label ~ input[type="time"],
+.ui-input-row label ~ input[type="week"],
+.ui-input-row label ~ input[type="number"],
+.ui-input-row label ~ input[type="email"],
+.ui-input-row label ~ input[type="url"],
+.ui-input-row label ~ input[type="tel"],
+.ui-input-row label ~ input[type="color"] {
   width: 65%;
+  float: right;
   padding-left: 0;
   margin-bottom: 0;
   border: 0;

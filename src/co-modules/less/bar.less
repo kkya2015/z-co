@@ -1,6 +1,7 @@
 /* === bar === */
 
 .ui-nav-bar {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
   left: 0;
   top: 0;
   height: 44px;
@@ -14,6 +15,12 @@
   z-index: 500;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+.ui-nav-bar a {
+    outline: 0;
+    text-decoration: none;
+    color: @blue;
+    background: transparent;
 }
 .ui-nav-bar:after {
   content: '';

@@ -2,6 +2,14 @@
 ************   zepto extend   ************
 ===============================================================================*/
 (function($) {
+
+    var unique = function(arr) {
+        var unique = [];
+        for (var i = 0; i < arr.length; i++) {
+            if (unique.indexOf(arr[i]) === -1) unique.push(arr[i]);
+        }
+        return unique;
+    };
     // Transforms
     $.fn.transform = function(transform) {
         for (var i = 0; i < this.length; i++) {
@@ -55,5 +63,22 @@
             }
         }
         return this;
+    }
+
+    $.fn.children = function(selector) {
+        var children = [];
+        for (var i = 0; i < this.length; i++) {
+            var childNodes = this[i].childNodes;
+
+            for (var j = 0; j < childNodes.length; j++) {
+                var node = childNodes[j];
+                if (!selector) {
+                    if (node.nodeType === 1 && node.nodeName.toUpperCase() !== 'SCRIPT') children.push(childNodes[j]);
+                } else {
+                    if (node.nodeType === 1 && node.nodeName.toUpperCase() !== 'SCRIPT' && $(node).is(selector)) children.push(node);
+                }
+            }
+        }
+        return $(unique(children));
     }
 }($));

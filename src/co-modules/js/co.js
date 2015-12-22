@@ -27,7 +27,8 @@
 		return ret
 	}
 	if (($.os.android || $.os.ios)) {
-		if (($.os.ios) && (parseFloat($.os.version) >= 7)) {
+		// if (($.os.ios) && rd.app.isFullScreen()) {
+		if ($.os.ios) {
 			$(document.body).addClass('ui-ios7');
 		}
 	}
@@ -53,9 +54,9 @@
 				}
 
 				$(document).find('.ui-action-back').button(function(evt) {
-					if(app){
+					if (app) {
 						app.currentView().back();
-					}else if(rd){
+					} else if (rd) {
 						rd.window.closeSelf();
 					}
 				})

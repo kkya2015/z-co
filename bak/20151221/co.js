@@ -1,4 +1,7 @@
 /**
+ * Released on: 2015-12-21
+ */
+/**
  * Sea.js 2.2.0 | seajs.org/LICENSE.md
  */
 ;(function(global, undefined) {
@@ -1028,8 +1031,7 @@ seajs.config({
 		return ret
 	}
 	if (($.os.android || $.os.ios)) {
-		// if (($.os.ios) && rd.app.isFullScreen()) {
-		if ($.os.ios) {
+		if (($.os.ios) && rd.app.isFullScreen()) {
 			$(document.body).addClass('ui-ios7');
 		}
 	}
@@ -1055,9 +1057,9 @@ seajs.config({
 				}
 
 				$(document).find('.ui-action-back').button(function(evt) {
-					if (app) {
+					if(app){
 						app.currentView().back();
-					} else if (rd) {
+					}else if(rd){
 						rd.window.closeSelf();
 					}
 				})

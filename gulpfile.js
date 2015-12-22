@@ -292,9 +292,13 @@ gulp.task('co-ui', function(cb) {
 gulp.task('co-css', function(cb) {
     gulp.src('src/co-modules/less/co.less')
         .pipe(less())
+        .pipe(gulp.dest(paths.bak + date.year + date.month + date.day))
         .pipe(minifycss({
             advanced: false,
             aggressiveMerging: false,
+        }))
+        .pipe(header(banner.header, {
+            date: date
         }))
         .pipe(gulp.dest(paths.co.styles))
         .on('finish', function() {
@@ -428,7 +432,7 @@ gulp.task('dist-dom', function(cb) {
 // dom处理
 gulp.task('dist-zepto', function(cb) {
     gulp.src(zepto.jsFiles) //要合并的文件
-        .pipe(concat(dom.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
+        .pipe(concat(zepto.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
         .pipe(gulp.dest(paths.dist.scripts))
         // .pipe(rename({
         //     suffix: '.min'
