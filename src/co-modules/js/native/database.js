@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native database   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
 
 	var dataBaseObj = function(databaseName) {
@@ -41,12 +41,7 @@
 			if (typeof sql === undefined) {
 				throw new Error("请传入有效的sql语句！");
 			}
-			var res = $L.executeObjFunJS([dataBase, 'selectAll'], sql);
-			if(res && $L.isArray(res)){
-				return res 
-			}else{
-				return []
-			}
+			return $L.executeObjFunJS([dataBase, 'selectAll'], sql);
 		}
 
 		/*

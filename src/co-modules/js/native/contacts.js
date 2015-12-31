@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native contacts   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
   var AddressBook = function(type) {
     if (type == 1) {
@@ -12,11 +12,11 @@
     this.create = function(success, error) {
       $L.executeNativeJS(['contacts', 'getAddressBook'], type, function(addressbook) {
         if ($L.isFunction(success)) {
-          success.call(null, addressbook.create());
+          success.call(global, addressbook.create());
         }
       }, function(err) {
         if ($L.isFunction(error)) {
-          error.call(null, err);
+          error.call(global, err);
         }
       });
     };
@@ -26,12 +26,12 @@
           addressbook.find(function(res) {
               if ($L.isFunction(success)) {
                 res = res || []
-                success.call(null, res);
+                success.call(global, res);
               }
             },
             function(err) {
               if ($L.isFunction(error)) {
-                error.call(null, err);
+                error.call(global, err);
               }
             },
             findOptions
@@ -39,7 +39,7 @@
         },
         function(err) {
           if ($L.isFunction(error)) {
-            error.call(null, err);
+            error.call(global, err);
           }
         }
       );

@@ -1,14 +1,14 @@
 /*===============================================================================
 ************   ui native socketManager   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
 
 	var socketManager = function(options, callback) {
 		var socket = $L.executeNativeJS(['require'], 'socketManager');
 		$L.executeObjFunJS([socket, 'createSocket'], options, function(state,info){
 			if ($L.isFunction(callback)) {
-					callback.call(null,state,info);
+					callback.call(global,state,info);
 				}
 			});
 

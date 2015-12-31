@@ -24,16 +24,12 @@ var gulp = require('gulp'), //基础库
         co: {
             root: 'co/',
             styles: 'co/css/',
-            scripts: 'co/',
-            libs: 'co/libs/',
-            ui: 'co/ui/'
+            scripts: 'co/'
         },
         source: {
             root: 'src/co-modules/',
             styles: 'src/co-modules/less/',
             scripts: 'src/co-modules/js/',
-            libs: 'src/co-modules/js/libs/',
-            ui: 'src/co-modules/js/ui/',
             emu: 'src/co-modules/emu/',
             examples: 'src/examples/'
         },
@@ -46,6 +42,8 @@ var gulp = require('gulp'), //基础库
         filename: 'native',
         jsFiles: [
             'src/co-modules/js/native.js',
+            'src/co-modules/js/native/app.js',
+            'src/co-modules/js/native/component.js',
             'src/co-modules/js/native/window.js',
             'src/co-modules/js/native/view.js',
             'src/co-modules/js/native/accelerometer.js',
@@ -70,15 +68,35 @@ var gulp = require('gulp'), //基础库
             'src/co-modules/js/native/screen.js',
             'src/co-modules/js/native/socketManager.js',
             'src/co-modules/js/native/storage.js',
-            'src/co-modules/js/native/zip.js'
+            'src/co-modules/js/native/zip.js',
+            'src/co-modules/js/debug.js'
         ]
     },
     co = {
         filename: 'co',
         jsFiles: [
-            'src/co-modules/js/base/sea.js',
-            'src/co-modules/js/base/config.js',
-            'src/co-modules/js/co.js'
+            'src/co-modules/js/libs/iscroll.js',
+            'src/co-modules/js/zepto.extend.js',
+            'src/co-modules/js/$extend.js',
+            'src/co-modules/js/co.js',
+            'src/co-modules/js/widgets/slider/slider.js',
+            'src/co-modules/js/widgets/slider/touch.js',
+            'src/co-modules/js/widgets/slider/guide.js',
+            'src/co-modules/js/widgets/slider/multiview.js',
+            'src/co-modules/js/widgets/slider/gestures.js',
+            'src/co-modules/js/widgets/accordion.js',
+            'src/co-modules/js/widgets/accordionList.js',
+            'src/co-modules/js/widgets/fullpage.js',
+            'src/co-modules/js/widgets/input.js',
+            'src/co-modules/js/widgets/lazyloadimage.js',
+            'src/co-modules/js/widgets/navigator.js',
+            'src/co-modules/js/widgets/photobrowser.js',
+            'src/co-modules/js/widgets/refresh.js',
+            'src/co-modules/js/widgets/searchbar.js',
+            'src/co-modules/js/widgets/swipelist.js',
+            'src/co-modules/js/widgets/swipepage.js',
+            'src/co-modules/js/widgets/switch.js',
+            'src/co-modules/js/widgets/tabs.js'
         ]
     },
     emu = {
@@ -88,7 +106,7 @@ var gulp = require('gulp'), //基础库
         css: 'src/co-modules/emu/transitions.css'
     },
     dom = {
-        filename: 'dom',
+        filename: 'dom-bak',
         jsFiles: [
             'src/co-modules/js/base/dom/dom.js',
             'src/co-modules/js/base/dom/plugins/event.js',
@@ -100,21 +118,15 @@ var gulp = require('gulp'), //基础库
             'src/co-modules/js/base/dom/plugins/detect.js',
             'src/co-modules/js/base/dom/plugins/touch.js',
             'src/co-modules/js/base/dom/plugins/matchMedia.js',
-            'src/co-modules/js/$extend.js',
+            'src/co-modules/js/base/dom/plugins/$extend.js',
             'src/co-modules/js/base/dom/plugins/ex-ortchange.js',
-            'src/co-modules/js/$fn_extend.js'
-            // 'src/co-modules/js/base/zepto/plugins/deferred.js',
-            // 'src/co-modules/js/base/zepto/plugins/callbacks.js',
-            // 'src/co-modules/js/base/zepto/plugins/selector.js',
-            // 'src/co-modules/js/base/zepto/plugins/stack.js',
-            // 'src/co-modules/js/base/zepto/plugins/form.js',
+            'src/co-modules/js/base/dom/plugins/$fn_extend.js'
         ]
     },
     zepto = {
-        filename: 'zepto',
+        filename: 'dom',
         jsFiles: [
             'src/co-modules/js/base/zepto/zepto.js',
-            'src/co-modules/js/base/zepto/zepto.extend.js',
             'src/co-modules/js/base/zepto/plugins/event.js',
             'src/co-modules/js/base/zepto/plugins/ajax.js',
             'src/co-modules/js/base/zepto/plugins/fx.js',
@@ -124,15 +136,7 @@ var gulp = require('gulp'), //基础库
             'src/co-modules/js/base/zepto/plugins/detect.js',
             'src/co-modules/js/base/zepto/plugins/touch.js',
             'src/co-modules/js/base/zepto/plugins/matchMedia.js',
-            'src/co-modules/js/$extend.js',
-            'src/co-modules/js/base/zepto/plugins/ex-ortchange.js',
-            'src/co-modules/js/$fn_extend.js'
-        ]
-    },
-    debug = {
-        filename: 'debug',
-        jsFiles: [
-            'src/co-modules/js/debug.js'
+            'src/co-modules/js/base/zepto/plugins/ex-ortchange.js'
         ]
     },
     banner = {
@@ -250,44 +254,6 @@ gulp.task('co-zepto', function(cb) {
         });
 });
 
-//libs处理
-gulp.task('co-libs', function(cb) {
-    gulp.src(paths.source.libs + '*')
-        .pipe(gulp.dest(paths.co.libs))
-        .on('finish', function() {
-            cb();
-        });
-});
-
-// debug处理
-gulp.task('co-debug', function(cb) {
-    gulp.src(debug.jsFiles) //要合并的文件
-        .pipe(concat(debug.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
-        .pipe(header(banner.header, {
-            date: date
-        }))
-        .pipe(gulp.dest(paths.bak + date.year + date.month + date.day))
-        .pipe(uglify())
-        .pipe(header(banner.header, {
-            date: date
-        }))
-        .pipe(gulp.dest(paths.co.scripts))
-        .on('end', function() {
-            cb();
-        });
-});
-
-
-
-//ui处理
-gulp.task('co-ui', function(cb) {
-    gulp.src(paths.source.ui + '**/*.*')
-        .pipe(gulp.dest(paths.co.ui))
-        .on('finish', function() {
-            cb();
-        });
-});
-
 // co样式处理
 gulp.task('co-css', function(cb) {
     gulp.src('src/co-modules/less/co.less')
@@ -306,15 +272,6 @@ gulp.task('co-css', function(cb) {
         });
 });
 
-// //co图片处理
-// gulp.task('co-img', function(cb) {
-//     gulp.src(paths.source.root + 'img/*.*')
-//         .pipe(gulp.dest(paths.co.root + 'img/'))
-//         .on('finish', function() {
-//             cb();
-//         });
-// });
-
 //co字体处理
 gulp.task('co-font', function(cb) {
     gulp.src(paths.source.root + 'fonts/*.*')
@@ -325,7 +282,7 @@ gulp.task('co-font', function(cb) {
 });
 
 //co处理
-gulp.task('build-co', gulp.series('cleanCo', 'co-native', 'co-scripts', 'co-dom', 'co-zepto', 'co-libs', 'co-debug', 'co-ui', 'co-css', 'co-font'));
+gulp.task('build-co', gulp.series('cleanCo', 'co-native', 'co-scripts', 'co-dom', 'co-zepto', 'co-css', 'co-font'));
 
 // 清空dist样式
 gulp.task('cleanDist', function(cb) {
@@ -357,14 +314,6 @@ gulp.task('dist-css', function(cb) {
         });
 });
 
-// //dist图片处理
-// gulp.task('dist-img', function(cb) {
-//     gulp.src(paths.source.root + 'img/*.*')
-//         .pipe(gulp.dest(paths.dist.root + 'img/'))
-//         .on('finish', function() {
-//             cb();
-//         });
-// });
 
 //dist字体处理错误: 没有找到进程 "node.exe"。
 gulp.task('dist-font', function(cb) {
@@ -379,26 +328,8 @@ gulp.task('dist-font', function(cb) {
 gulp.task('dist-styles', gulp.series('cleanDist', 'dist-css', 'dist-font'));
 
 
-//libs处理
-gulp.task('dist-libs', function(cb) {
-    gulp.src(paths.source.libs + '*')
-        .pipe(gulp.dest(paths.dist.libs))
-        .on('end', function() {
-            cb();
-        });
-});
-
-// ui处理
-gulp.task('dist-ui', function(cb) {
-    gulp.src(paths.source.ui + '**/*.*')
-        .pipe(gulp.dest(paths.dist.ui))
-        .on('end', function() {
-            cb();
-        });
-});
-
 // js处理
-gulp.task('dist-scripts', function(cb) {
+gulp.task('dist-co', function(cb) {
     gulp.src(co.jsFiles) //要合并的文件
         .pipe(concat(co.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
         .pipe(gulp.dest(paths.dist.scripts))
@@ -461,17 +392,6 @@ gulp.task('dist-native', function(cb) {
         });
 });
 
-// debug处理
-gulp.task('dist-debug', function(cb) {
-    gulp.src(debug.jsFiles) //要合并的文件
-        .pipe(concat(debug.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
-        .pipe(gulp.dest(paths.dist.scripts))
-        .pipe(livereload())
-        .on('end', function() {
-            cb();
-        });
-});
-
 
 // 清空图片、样式、js
 gulp.task('cleanExamples', function(cb) {
@@ -506,7 +426,7 @@ gulp.task('build-emu', function(cb) {
 
 gulp.task('build-examples', gulp.series('cleanExamples', 'examples'));
 
-gulp.task('dist-js', gulp.series('dist-libs', 'dist-ui', 'dist-scripts', 'dist-dom', 'dist-zepto', 'dist-native', 'dist-debug'));
+gulp.task('dist-js', gulp.series('dist-co', 'dist-dom', 'dist-zepto', 'dist-native'));
 
 gulp.task('build-dist', gulp.series('dist-styles', 'dist-js'));
 

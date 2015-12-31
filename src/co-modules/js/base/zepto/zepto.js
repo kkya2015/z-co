@@ -587,7 +587,6 @@ var Zepto = (function() {
       return filtered(uniq(this.pluck('parentNode')), selector)
     },
     children: function(selector) {
-      debugger;
       return filtered(this.map(function() {
         return children(this)
       }), selector)

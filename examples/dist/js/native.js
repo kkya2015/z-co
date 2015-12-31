@@ -14,41 +14,29 @@ var app = (function(global) {
   }
   var DIRNAME_RE = /[^?#]*\//
   var plus = !!global['rd'];
-  var dirname = function(path) {
-    return path.match(DIRNAME_RE)[0]
-  }
-  var getScriptAbsoluteSrc = function(node) {
-    return node.hasAttribute ? node.src : node.getAttribute("src", 4)
-  }
-  var doc = document
-  var cwd = dirname(doc.URL)
-  var scripts = doc.scripts
-  var loaderScript = scripts[scripts.length - 1]
-  var loaderDir = dirname(getScriptAbsoluteSrc(loaderScript) || cwd)
-  var head = doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement
-  var domReady = function(factory) {
+  // var dirname = function(path) {
+  //   return path.match(DIRNAME_RE)[0]
+  // }
+  // var getScriptAbsoluteSrc = function(node) {
+  //     return node.hasAttribute ? node.src : node.getAttribute("src", 4)
+  //   }
+  // var doc = document
+  // var cwd = dirname(doc.URL)
+  // var scripts = doc.scripts
+  // var loaderScript = scripts[scripts.length - 1]
+  // var loaderDir = dirname(getScriptAbsoluteSrc(loaderScript) || cwd)
+  // var head = doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement
+  var domReady = function(factory, require) {
+    if (!require) require = function() {}
     if ($L.isFunction(factory)) {
       if (!(($L.android || $L.ios) && plus)) {
-        var node = doc.createElement("script");
-        node.charset = 'utf-8';
-        node.async = true
-        node.src = loaderDir + 'debug.js'
-        node.onload = function() {
-          node.onload = node.onerror = node.onreadystatechange = null
-          factory.call(null, function() {
-            throw new Error("请引入dom.js和co.js后加载组件！");
-          });
-        }
-        node.onerror = function() {
-          return true;
-        }
-        head.appendChild(node)
+        $L.debug()
+        factory.call(global, require);
       } else {
         setTimeout(function() {
           if (domReady.isReady) {
-            factory.call(null, function() {
-              throw new Error("请引入dom.js和co.js后加载组件！");
-            });
+            $L.init();
+            factory.call(global, require);
           } else {
             setTimeout(arguments.callee, 1);
           }
@@ -84,7 +72,7 @@ var app = (function(global) {
     windowAnimationDirection = 41, // 动画方向--右侧
     windowAnimationDuration = 300, // 动画时间
     windowAnimationCurve = 53, // 动画曲线--从慢到快到慢
-    viewBounces = true, // 页面是否弹动--  仅IOS有效果
+    viewBounces = false, // 页面是否弹动--  仅IOS有效果
     viewBgcolor = '', // 页面背景色  -- 如果字段为空，颜色为白色
     viewVScrollBar = false, //  是否显示水平滚动条
     viewHScrollBar = true, //  是否显示垂直滚动条
@@ -94,11 +82,12 @@ var app = (function(global) {
     viewAnimationType = 11, // 页面关闭动画效果 --推入 
     viewAnimationDirection = 40, // 页面关闭动画方向 -- 左侧
     viewAnimationDuration = 300, // 页面关闭动画时间
-    viewAnimationCurve = 53; // 页面关闭动画曲线--从慢到快到慢
+    viewAnimationCurve = 53, // 页面关闭动画曲线--从慢到快到慢
+    viewSlideBack = true; //是否支持滑动返回，设置window全局，ture表示支持，false表示不支持,Android设备暂时不支持
+
 
 
   var setViewBounces = function(bounces) {
-    if (viewBounces == bounces) return;
     viewBounces = !!bounces;
     var currentView = $L.currentView();
     if (viewBounces) {
@@ -107,14 +96,7 @@ var app = (function(global) {
       currentView.disableBounces();
     }
   }
-  var setViewBgcolor = function(bgcolor) {
-    if (viewBgcolor == bgcolor) return;
-    viewBgcolor = !!bgcolor;
-    var currentView = $L.currentView();
-    currentView.setBgcolor(viewBgcolor);
-  }
   var setViewVScrollBar = function(vScrollBar) {
-    if (viewVScrollBar == vScrollBar) return;
     viewVScrollBar = !!vScrollBar;
     var currentView = $L.currentView();
     if (viewVScrollBar) {
@@ -124,7 +106,6 @@ var app = (function(global) {
     }
   }
   var setViewHScrollBar = function(hScrollBar) {
-    if (viewHScrollBar == hScrollBar) return;
     viewHScrollBar = !!hScrollBar;
     var currentView = $L.currentView();
     if (viewHScrollBar) {
@@ -134,7 +115,6 @@ var app = (function(global) {
     }
   }
   var setViewZoom = function(zoom) {
-    if (viewZoom == zoom) return;
     viewZoom = !!zoom;
     var currentView = $L.currentView();
     if (viewZoom) {
@@ -144,7 +124,6 @@ var app = (function(global) {
     }
   }
   var setViewKeyboard = function(keyboard) {
-    if (viewKeyboard == keyboard) return;
     viewKeyboard = !!keyboard;
     var currentView = $L.currentView();
     if (viewKeyboard) {
@@ -154,7 +133,6 @@ var app = (function(global) {
     }
   }
   var setViewDragDismiss = function(dragDismiss) {
-    if (viewDragDismiss == dragDismiss) return;
     viewDragDismiss = !!dragDismiss;
     var currentView = $L.currentView();
     if (viewDragDismiss) {
@@ -163,29 +141,41 @@ var app = (function(global) {
       currentView.disableDragDismiss();
     }
   }
+
+  var setViewBgcolor = function(bgcolor) {
+    viewBgcolor = bgcolor;
+    var currentView = $L.currentView();
+    currentView.setBgcolor(viewBgcolor);
+  }
   var setViewAnimationType = function(animationType) {
-    if (viewAnimationType == animationType) return;
-    viewAnimationType = !!animationType;
+    viewAnimationType = animationType;
     var currentView = $L.currentView();
     currentView.setAnimationType(viewAnimationType);
   }
   var setViewAnimationDirection = function(animationDirection) {
-    if (viewAnimationDirection == animationDirection) return;
-    viewAnimationDirection = !!animationDirection;
+    viewAnimationDirection = animationDirection;
     var currentView = $L.currentView();
     currentView.setAnimationDirection(viewAnimationDirection);
   }
   var setViewAnimationDuration = function(animationDuration) {
-    if (viewAnimationDuration == animationDuration) return;
-    viewAnimationDuration = !!animationDuration;
+    viewAnimationDuration = animationDuration;
     var currentView = $L.currentView();
     currentView.setAnimationDuration(viewAnimationDuration);
   }
   var setViewAnimationCurve = function(animationCurve) {
-    if (viewAnimationCurve == animationCurve) return;
-    viewAnimationCurve = !!animationCurve;
+    viewAnimationCurve = animationCurve;
     var currentView = $L.currentView();
     currentView.setAnimationCurve(viewAnimationCurve);
+  }
+
+  var setSlideBack = function(slideBack) {
+    viewSlideBack = !!slideBack;
+    var currentView = $L.currentView();
+    if (viewSlideBack) {
+      currentView.enableSlideBack();
+    } else {
+      currentView.disableSlideBack();
+    }
   }
 
 
@@ -310,24 +300,101 @@ var app = (function(global) {
     }
   }
 
-  $L.config = function(opts) {
-    opts.windowType && (windowType = opts.windowType)
-    opts.popoverType && (popoverType = opts.popoverType)
-    opts.windowAnimationType && (windowAnimationType = opts.windowAnimationType)
-    opts.windowAnimationDirection && (windowAnimationDirection = opts.windowAnimationDirection)
-    opts.windowAnimationDuration && (windowAnimationDuration = opts.windowAnimationDuration)
-    opts.windowAnimationCurve && (windowAnimationCurve = opts.windowAnimationCurve)
-    opts.viewBounces && (setViewBounces(opts.viewBounces))
-    opts.viewBgcolor && (setViewBgcolor(opts.viewBgcolor))
-    opts.viewVScrollBar && (setViewVScrollBar(opts.viewVScrollBar))
-    opts.viewHScrollBar && (setViewHScrollBar(opts.viewHScrollBar))
-    opts.viewZoom && (setViewZoom(opts.viewZoom))
-    opts.viewKeyboard && (setViewKeyboard(opts.viewKeyboard))
-    opts.viewDragDismiss && (setViewDragDismiss(opts.viewDragDismiss))
-    opts.viewAnimationType && (setViewAnimationType(opts.viewAnimationType))
-    opts.viewAnimationDirection && (setViewAnimationDirection(opts.viewAnimationDirection))
-    opts.viewAnimationDuration && (setViewAnimationDuration(opts.viewAnimationDuration))
-    opts.viewAnimationCurve && (setViewAnimationCurve(opts.viewAnimationCurve))
+  $L.init = function() {
+    var app_property = app.properties.open('app_property_setting', 'app_property');
+    var propertys = app_property.get('propertys');
+    if (propertys) {
+      var prop = JSON.parse(propertys);
+      this.config(prop);
+    } else {
+      var prop = {}
+      prop.windowType = windowType;
+      prop.popoverType = popoverType;
+      prop.windowAnimationType = windowAnimationType;
+      prop.windowAnimationDirection = windowAnimationDirection;
+      prop.windowAnimationDuration = windowAnimationDuration;
+      prop.windowAnimationCurve = windowAnimationCurve;
+      prop.viewBounces = viewBounces;
+      prop.viewBgcolor = viewBgcolor;
+      prop.viewVScrollBar = viewVScrollBar;
+      prop.viewHScrollBar = viewHScrollBar;
+      prop.viewZoom = viewZoom;
+      prop.viewKeyboard = viewKeyboard;
+      prop.viewDragDismiss = viewDragDismiss;
+      prop.viewAnimationType = viewAnimationType;
+      prop.viewAnimationDirection = viewAnimationDirection;
+      prop.viewAnimationDuration = viewAnimationDuration;
+      prop.viewAnimationCurve = viewAnimationCurve;
+      prop.viewSlideBack = viewSlideBack;
+      this.config(prop);
+    }
+
+  }
+
+
+  $L.config = function(prop) {
+    if (!prop) return;
+
+    prop.windowType && (windowType = prop.windowType)
+    prop.popoverType && (popoverType = prop.popoverType)
+
+    prop.windowAnimationType && (windowAnimationType = prop.windowAnimationType)
+    prop.windowAnimationDirection && (windowAnimationDirection = prop.windowAnimationDirection)
+    prop.windowAnimationDuration && (windowAnimationDuration = prop.windowAnimationDuration)
+    prop.windowAnimationCurve && (windowAnimationCurve = prop.windowAnimationCurve)
+
+    prop.viewAnimationType && (setViewAnimationType(prop.viewAnimationType))
+    prop.viewAnimationDirection && (setViewAnimationDirection(prop.viewAnimationDirection))
+    prop.viewAnimationDuration && (setViewAnimationDuration(prop.viewAnimationDuration))
+    prop.viewAnimationCurve && (setViewAnimationCurve(prop.viewAnimationCurve))
+    prop.viewBgcolor && (setViewBgcolor(prop.viewBgcolor))
+
+    if (prop.viewBounces) {
+      setViewBounces(prop.viewBounces)
+    } else {
+      setViewBounces(viewBounces)
+    }
+
+    if (prop.viewVScrollBar) {
+      setViewVScrollBar(prop.viewVScrollBar)
+    } else {
+      setViewVScrollBar(viewVScrollBar)
+    }
+
+    if (prop.viewHScrollBar) {
+      setViewHScrollBar(prop.viewHScrollBar)
+    } else {
+      setViewHScrollBar(viewHScrollBar)
+    }
+
+    if (prop.viewZoom) {
+      setViewZoom(prop.viewZoom)
+    } else {
+      setViewZoom(viewZoom)
+    }
+
+    if (prop.viewKeyboard) {
+      setViewKeyboard(prop.viewKeyboard)
+    } else {
+      setViewKeyboard(viewKeyboard)
+    }
+
+    if (prop.viewDragDismiss) {
+      setViewDragDismiss(prop.viewDragDismiss)
+    } else {
+      setViewDragDismiss(viewDragDismiss)
+    }
+
+    if (prop.viewSlideBack) {
+      setSlideBack(prop.viewSlideBack)
+    } else {
+      setSlideBack(viewSlideBack)
+    }
+
+    var app_property = app.properties.open('app_property_setting', 'app_property');
+    prop = JSON.stringify(prop);
+    app_property.put('propertys', prop);
+    app_property.save()
   }
   $L.getWindowType = function() {
     return windowType;
@@ -380,6 +447,9 @@ var app = (function(global) {
   $L.getViewAnimationCurve = function() {
     return viewAnimationCurve;
   }
+  $L.getViewAnimationCurve = function() {
+    return viewAnimationCurve;
+  }
 
 
   /*
@@ -409,7 +479,7 @@ var app = (function(global) {
       var slideLayoutParams = {
         type: 'right',
         leftEdge: edge,
-        rightEdge:edge,
+        rightEdge: edge,
         rightPane: {
           name: url,
           url: url
@@ -420,7 +490,7 @@ var app = (function(global) {
       var slideLayoutParams = {
         type: 'left',
         leftEdge: edge,
-        rightEdge:edge,
+        rightEdge: edge,
         leftPane: {
           name: url,
           url: url
@@ -466,18 +536,17 @@ var app = (function(global) {
    * @param String windowName  需要执行JS语句的窗口名称，默认为当前窗口
    * @param String popoverName 需要执行JS语句的pop名称
    */
-  $L.evalScript = function(script, windowName, popoverName) {
-    if (typeof script === 'undefined') {
-      throw new Error("请传入有效的JS语句！");
-    } else if (typeof windowName === 'undefined' && typeof popoverName === 'undefined') {
-      $L.executeNativeJS(['window', 'evaluateScript'], '', '', script)
+  $L.evalScriptInComponent = function(componentName, windowName, popoverName, script) {
+    if (typeof componentName === 'undefined') {
+      throw new Error("请传入有效的componentName！");
     } else if (typeof windowName === 'undefined') {
-      $L.executeNativeJS(['window', 'evaluateScript'], '', popoverName, script)
+      throw new Error("请传入有效的windowName！");
     } else if (typeof popoverName === 'undefined') {
-      $L.executeNativeJS(['window', 'evaluateScript'], windowName, '', script)
-    } else {
-      $L.executeNativeJS(['window', 'evaluateScript'], windowName, popoverName, script)
+      throw new Error("请传入有效的popoverName！");
+    } else if (typeof script === 'undefined') {
+      throw new Error("请传入有效的JS语句！");
     }
+    $L.executeNativeJS(['window', 'evaluateScript'], componentName, windowName, popoverName, script)
   }
 
   /*
@@ -489,9 +558,9 @@ var app = (function(global) {
     if (typeof script === 'undefined') {
       throw new Error("请传入有效的JS语句！");
     } else if (typeof windowName === 'undefined') {
-      $L.executeNativeJS(['window', 'evaluateScript'], '', '', script)
+      $L.executeNativeJS(['window', 'evaluateScript'], '', '', '', script)
     } else {
-      $L.executeNativeJS(['window', 'evaluateScript'], windowName, '', script)
+      $L.executeNativeJS(['window', 'evaluateScript'], '', windowName, '', script)
     }
   }
 
@@ -507,9 +576,9 @@ var app = (function(global) {
     } else if (typeof popoverName === 'undefined') {
       throw new Error("请传入有效的popoverName！");
     } else if (typeof windowName === 'undefined') {
-      $L.executeNativeJS(['window', 'evaluateScript'], '', popoverName, script)
+      $L.executeNativeJS(['window', 'evaluateScript'], '', '', popoverName, script)
     } else {
-      $L.executeNativeJS(['window', 'evaluateScript'], windowName, popoverName, script)
+      $L.executeNativeJS(['window', 'evaluateScript'], '', windowName, popoverName, script)
     }
   }
 
@@ -666,34 +735,184 @@ var app = (function(global) {
       $L.isFunction(callback) && callback.call(global, Tips.buttonIndex, Tips.buttonIndex.text);
     });
   }
-
-  /*
-   * 打开指定component
-   * @param String componentName 必选 component名字
-   * @param String defaultPage 必选 如果传空(''),使用component.xml中配置的url。window的名字默认为root
-   * @param String animation  可选 type默认值为rd.window.ANIMATIONTYPEPUSH, direction默认值为rd.window.ANIMATIONSUBTYPEFROMRIGHT，time默认值为300ms，curve默认值为rd.window.ANIMATIONCURVE_EASEINEASEOUT
-   */
-  $L.openComponent = function(componentName, defaultPage, animation) {
-    $L.executeNativeJS(['window', 'openComponent'], componentName, defaultPage, animation)
-  }
-
-  /*
-   * 关闭指定component
-   * @param String componentName 必选 如果传空(''),关闭当前component,否则，关闭指定名称的component
-   * @param String animation  可选 type默认值为rd.window.ANIMATIONTYPEPUSH, direction默认值为rd.window.ANIMATIONSUBTYPEFROMRIGHT，time默认值为300ms，curve默认值为rd.window.ANIMATIONCURVE_EASEINEASEOUT
-   */
-  $L.closeComponent = function(componentName, animation) {
-    $L.executeNativeJS(['window', 'closeComponent'], componentName, animation)
-  }
-
   return $L;
 }(this));
- window.app = app;
- window.A === undefined && (window.A = app);
+window.app = app;
+window.A === undefined && (window.A = app);
+/*===============================================================================
+************   ui native app   ************
+===============================================================================*/
+;
+(function($L, global) {
+	/*
+	 * 获取系统名称
+	 */
+	$L.getPlatformName = function() {
+		return $L.executeConstantJS(['app', 'platformName']);
+	}
+
+	/*
+	 * 获取系统版本
+	 */
+	$L.getPlatformVersion = function() {
+		return $L.executeConstantJS(['app', 'platformVersion']);
+	}
+
+	/*
+	 * 获取设备模型名称
+	 */
+	$L.getDeviceModel = function() {
+		return $L.executeConstantJS(['app', 'deviceModel']);
+	}
+
+	/*
+	 * 获取设备名称
+	 */
+	$L.getDeviceName = function() {
+		return $L.executeConstantJS(['app', 'deviceName']);
+	}
+
+	/*
+	 * 使用系统浏览器下载文件(android)
+	 */
+	$L.downloadFile = function(url) {
+		$L.executeNativeJS(['app', 'downloadFile'], url);
+	}
+
+	/*
+	 * 退出app(android)
+	 */
+	$L.exit = function() {
+		$L.executeNativeJS(['app', 'exit']);
+	}
+
+	/*
+	 * 设置当前页面状态栏文字颜色 0 表示黑色。1 表示白色(iOS)
+	 */
+	$L.statusBarFontColor = function(color) {
+		if(!color) color = 0;
+		$L.executeNativeJS(['app', 'setStatusBarStyle'], color);
+	}
+
+	/*
+	 * 安装一个app
+	 */
+	$L.installApp = function(path) {
+		$L.executeNativeJS(['app', 'installApp'], path);
+	}
+
+	/*
+	 * 获取引擎版本号
+	 */
+	$L.getEngineVersion = function() {
+		return $L.executeNativeJS(['app', 'getEngineVersion']);
+	}
+
+	/*
+	 * 获取app配置信息，此app配置信息来自application.xml。
+	 */
+	$L.getApplicationInfo = function() {
+		return $L.executeNativeJS(['app', 'getApplicationInfo']);
+	}
+
+	/*
+	 * 启动一个app
+	 */
+	$L.openApp = function(params, success, error) {
+		$L.executeNativeJS(['app', 'openApp'], params, function(ret, retVals) {
+			if (ret == 1) {
+				if ($L.isFunction(success)) {
+					success.call(global, retVals);
+				}
+			} else if (ret == 0) {
+				if ($L.isFunction(error)) {
+					error.call(global);
+				}
+			}
+		});
+	}
+
+	/*
+	 * 判断设备上是否已安装指定app
+	 */
+	$L.isAppInstalled = function(appSource, callback) {
+		$L.executeNativeJS(['app', 'isAppInstalled'], appSource, function(isInstalled) {
+			$L.isFunction(callback) && callback.call(global, isInstalled);
+		});
+	}
+
+	/*
+	 * 判断app是否全屏显示
+	 */
+	$L.isFullScreen = function() {
+		return $L.executeNativeJS(['app', 'isFullScreen']);
+	}
+
+	/*
+	 * 设置app状态栏背景颜色；Android要求版本4.4以上。默认黑色
+	 */
+	$L.setStatusBarBackgroundColor = function(color) {
+		$L.executeNativeJS(['app', 'setStatusBarBackgroundColor'], color);
+	}
+
+	/*
+	 * 清空cache目录
+	 */
+	$L.cleanCache = function() {
+		$L.executeNativeJS(['app', 'cleanCache']);
+	}
+
+}(app, this));
+/*===============================================================================
+************   ui native eventListener   ************
+===============================================================================*/
+;
+(function($L, global) {
+	/*
+	 * 打开指定component
+	 * @param String componentName 必选 component名字
+	 * @param String defaultPage 必选 如果传空(''),使用component.xml中配置的url。window的名字默认为root
+	 * @param String animation  可选 type默认值为rd.window.ANIMATIONTYPEPUSH, direction默认值为rd.window.ANIMATIONSUBTYPEFROMRIGHT，time默认值为300ms，curve默认值为rd.window.ANIMATIONCURVE_EASEINEASEOUT
+	 */
+	$L.openComponent = function(componentName, animation) {
+		$L.executeNativeJS(['component', 'openComponent'], componentName, animation)
+	}
+
+	/*
+	 * 关闭当前component
+	 * @param String componentName 必选 如果传空(''),关闭当前component,否则，关闭指定名称的component
+	 * @param String animation  可选 type默认值为rd.window.ANIMATIONTYPEPUSH, direction默认值为rd.window.ANIMATIONSUBTYPEFROMRIGHT，time默认值为300ms，curve默认值为rd.window.ANIMATIONCURVE_EASEINEASEOUT
+	 */
+	$L.closeComponent = function(animation) {
+		$L.executeNativeJS(['component', 'closeComponent'], animation)
+	}
+
+	/*
+	 * 获取主component的componentInfo
+	 */
+	$L.getMainComponentInfo = function() {
+		return $L.executeNativeJS(['component', 'getMainComponentInfo'])
+	}
+
+	/*
+	 * 通过名字获取模块信息
+	 */
+	$L.getComponentInfoByName = function(componentName) {
+		$L.executeNativeJS(['component', 'getComponentInfoByName'], componentName)
+	}
+
+	/*
+	 * 获取当前模块信息
+	 */
+	$L.getCurrentComponentInfo = function() {
+		$L.executeNativeJS(['component', 'getCurrentComponentInfo'])
+	}
+
+}(app, this));
 /*===============================================================================
 ************   ui native window   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
   var window = function() {
     var windowType = $L.getWindowType(); //打开窗口类型
     var windowAnimationType = $L.getWindowAnimationType(); // 动画效果
@@ -746,7 +965,7 @@ var app = (function(global) {
       } else if (typeof windowName === 'undefined') {
         throw new Error("无法在未打开的window窗口中执行JS语句！");
       } else {
-        $L.executeNativeJS(['window', 'evaluateScript'], windowName, '', script)
+        $L.executeNativeJS(['window', 'evaluateScript'], '',windowName, '', script)
       }
     }
 
@@ -762,7 +981,7 @@ var app = (function(global) {
       }else if (typeof popoverName === 'undefined') {
         throw new Error("请传入有效的popoverName！");
       } else {
-        $L.executeNativeJS(['window', 'evaluateScript'], windowName, popoverName, script)
+        $L.executeNativeJS(['window', 'evaluateScript'], '',windowName, popoverName, script)
       }
     }
   }
@@ -775,7 +994,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native view   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
   var view = function() {
     // var viewBounces = $L.getViewBounces(); // 页面是否弹动--  仅IOS有效果
     // var viewBgcolor = $L.getViewBgcolor(); // 页面背景色  -- 如果字段为空，颜色为白色
@@ -804,9 +1023,8 @@ var app = (function(global) {
       })
     }
     this.setBgcolor = function(bgcolor) {
-      var viewBgcolor = !!bgcolor;
       $L.executeNativeJS(['window', 'setAttr'], {
-        bgColor: viewBgcolor
+        bgColor: bgcolor
       })
     }
     this.enableVScrollBar = function() {
@@ -869,17 +1087,29 @@ var app = (function(global) {
         dragDismiss: viewDragDismiss
       })
     }
-    this.setAnimationType = function(animationType) {
-      viewAnimationType = !!animationType;
+    this.enableSlideBack = function() {
+      var viewSlideBack = true;
+      $L.executeNativeJS(['window', 'setAttr'], {
+        slideBack: viewSlideBack
+      })
     }
-    this.seAnimationDirection = function(animationDirection) {
-      viewAnimationDirection = !!animationDirection;
+    this.disableSlideBack = function() {
+      var viewSlideBack = false;
+      $L.executeNativeJS(['window', 'setAttr'], {
+        slideBack: viewSlideBack
+      })
+    }
+    this.setAnimationType = function(animationType) {
+      viewAnimationType = animationType;
+    }
+    this.setAnimationDirection = function(animationDirection) {
+      viewAnimationDirection = animationDirection;
     }
     this.setAnimationDuration = function(animationDuration) {
-      viewAnimationDuration = !!animationDuration;
+      viewAnimationDuration = animationDuration;
     }
     this.setAnimationCurve = function(animationCurve) {
-      viewAnimationCurve = !!animationCurve;
+      viewAnimationCurve = animationCurve;
     }
 
     /*
@@ -900,15 +1130,6 @@ var app = (function(global) {
         $L.executeNativeJS(['window', 'backToWindow'], windowname, animation)
       }
     };
-
-    /*
-     * 设置当前页面状态栏文字颜色 0 表示黑色。1 表示白色
-     */
-    this.statusBarFontColor = function(color) {
-      $L.ios() && $L.executeNativeJS(['window', 'statusBarStyle'], color);
-    };
-
-
 
     /*
      * 获取当前窗口的宽度
@@ -1139,7 +1360,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native accelerometer   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	$L.accelerometer = {
 		/*
 		 * 获取当前设备的加速度信息
@@ -1149,11 +1370,11 @@ var app = (function(global) {
 		getCurrentAcceleration: function(success, error) {
 			$L.executeNativeJS(['accelerometer', 'getCurrentAcceleration'], function(acceleration) {
 				if ($L.isFunction(success)) {
-					success.call(null, acceleration);
+					success.call(global, acceleration);
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			});
 		},
@@ -1166,11 +1387,11 @@ var app = (function(global) {
 		watchAcceleration: function(success, error, options) {
 			$L.executeNativeJS(['accelerometer', 'watchAcceleration'], function(acceleration) {
 				if ($L.isFunction(success)) {
-					success.call(null, acceleration);
+					success.call(global, acceleration);
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			}, options);
 		},
@@ -1187,7 +1408,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native actionSheet   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	$L.actionSheet = {
 		/*
 		 * 显示弹出框。
@@ -1203,7 +1424,7 @@ var app = (function(global) {
 		show: function(options, success) {
 			$L.executeNativeJS(['actionSheet', 'show'], options, function(index) {
 				if ($L.isFunction(success)) {
-					success.call(null,index);
+					success.call(global,index);
 				}
 			});
 		}
@@ -1213,58 +1434,130 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native audio   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
   var recorder;
   var player;
+  var recorderIsRecord = false;
+  var recorderIsOver = false;
+
 
   $L.audio = {
     /*
      * 获取当前设备的录音对象
      *
      */
-    getRecorder: function() {
+    getRecorder: function(opts) {
       !recorder && (recorder = $L.executeNativeJS(['audio', 'getRecorder']))
-      var supportedSamplerates = $L.executeObjConstantJS(recorder, 'supportedSamplerates');
-      var supportedFormats = $L.executeObjConstantJS(recorder, 'supportedFormats');
+      opts = opts || {}
+      var options = {
+        filename: opts.filename || '',
+        samplerate: opts.samplerate || 8000,
+        format: opts.format || 'aac',
+        duration: opts.duration
+      }
       return {
-        getSamplerates: function() {
-          if (supportedSamplerates && $L.isArray(supportedSamplerates)) {
-            return supportedSamplerates
-          } else {
-            return []
-          }
-
-        },
-        getFormats: function() {
-          if (supportedFormats && $L.isArray(supportedFormats)) {
-            return supportedFormats
-          } else {
-            return []
-          }
-        },
-        record: function(success, error, opts) {
-          if ($L.isPlainObject(error)) {
-            opts = error;
-          }
-          opts = opts || {}
-          var options = {
-            filename: opts.filename,
-            samplerate: opts.samplerate,
-            format: opts.format
+        /*
+         * 录音
+         *
+         */
+        record: function(success, error) {
+          if (recorderIsRecord) {
+            throw new Error('当前正在录音，请等待录音完成后再进行新的录音操作！');
           }
           $L.executeObjFunJS([recorder, 'record'], options, function(recordFile) {
             if ($L.isFunction(success)) {
-              success.call(null, recordFile);
+              success.call(global, recordFile);
             }
           }, function(err) {
             if ($L.isFunction(error)) {
-              error.call(null, err);
+              error.call(global, err);
             }
           })
+          recorderIsRecord = true;
+          recorderIsOver = false;
         },
+        /*
+         * 录音时,获取当前录音时长.
+         *
+         */
+        getCurrentTime: function() {
+          if(!recorderIsRecord){
+            throw new Error('先执行录音操作后，才可获取当前录音时间！');
+          }
+          var currentTime = $L.executeObjFunJS([recorder, 'getCurrentTime']);
+          if (currentTime) {
+            return currentTime
+          } else {
+            return 0
+          }
+        },
+        /*
+         * 获取录音时长上限,如果没有设置录音时长上限,则返回-1.
+         *
+         */
+        getDuration: function() {
+          var duration = options.duration
+          if (duration) {
+            return duration
+          } else {
+            return -1
+          }
+        },
+        /*
+         * 如果此回调被添加,则每秒回调一次.通过回调函数返回格式为"mm:ss"的字符串.内容为当前录音时长.
+         *
+         */
+        addCalculateTimeCallback: function(timeCallback) {
+          $L.executeObjFunJS([recorder, 'addCalculateTimeCallback'], function(time) {
+            if ($L.isFunction(timeCallback)) {
+              timeCallback.call(global, time);
+            }
+          });
+        },
+        /*
+         * 如果此回调被添加,则每秒回调一次.通过回调函数返回格式为"mm:ss"的字符串.内容为录音时长倒计时.
+         *
+         */
+        addCountDownCallback: function(timeCallback) {
+          $L.executeObjFunJS([recorder, 'addCountDownCallback'], function(time) {
+            if ($L.isFunction(timeCallback)) {
+              timeCallback.call(global, time);
+            }
+          });
+        },
+        /*
+         * 录音时,当音量分贝值有变化时,则通过回调函数返回当前分贝值.此方法添加的回调函数调用频率很高.
+         *
+         */
+        addAveragePowerCallback: function(callback) {
+          $L.executeObjFunJS([recorder, 'addAveragePowerCallback'], function(averagePower) {
+            if ($L.isFunction(callback)) {
+              callback.call(global, averagePower);
+            }
+          });
+        },
+        /*
+         * 录音完毕之后,播放刚刚录制的声音文件.若想播放其他录音文件,请使用AudioPlayer.
+         *
+         */
+        playJustRecord: function() {
+          if(!recorderIsOver){
+            throw new Error('先执行录音操作后，并录音完成后，才可执行播放录音操作！');
+          }
+          $L.executeObjFunJS([recorder, 'playJustRecord']);
+        },
+        /*
+         * 结束录音操作，通知设备完成录音操作。
+         *
+         */
         stop: function() {
+          if(!recorderIsRecord){
+            throw new Error('先执行录音操作后，才可执行录音结束操作！');
+          }
           $L.executeObjFunJS([recorder, 'stop'])
+          recorderIsRecord = false;
+          recorderIsOver = true;
         }
 
       }
@@ -1285,7 +1578,7 @@ var app = (function(global) {
             }
           }, function(err) {
             if ($L.isFunction(error)) {
-              error.call(null, err);
+              error.call(global, err);
             }
           })
         },
@@ -1314,9 +1607,9 @@ var app = (function(global) {
           if (typeof path === undefined) {
             throw new Error("请传入有效的音频输出线路！");
           }
-          if(route == 1){
+          if (route == 1) {
             route = $L.executeConstantJS(['auduo', 'ROUTE_EARPIECE'])
-          }else{
+          } else {
             route = $L.executeConstantJS(['auduo', 'ROUTE_SPEAKER'])
           }
           $L.executeObjFunJS([player, 'setRoute'], route)
@@ -1332,7 +1625,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native audio   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
   var filename;
   var resolution;
@@ -1346,11 +1639,11 @@ var app = (function(global) {
       }
       $L.executeNativeJS(['camera', 'captureImage'], function(capturedFile) {
         if ($L.isFunction(success)) {
-          success.call(null, capturedFile);
+          success.call(global, capturedFile);
         }
       }, function(err) {
         if ($L.isFunction(error)) {
-          error.call(null, err);
+          error.call(global, err);
         }
       }, options)
 
@@ -1363,11 +1656,11 @@ var app = (function(global) {
       }
       $L.executeNativeJS(['camera', 'captureVideo'], function(capturedFile) {
         if ($L.isFunction(success)) {
-          success.call(null, capturedFile);
+          success.call(global, capturedFile);
         }
       }, function(err) {
         if ($L.isFunction(error)) {
-          error.call(null, err);
+          error.call(global, err);
         }
       }, options)
 
@@ -1407,7 +1700,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native contacts   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
   var AddressBook = function(type) {
     if (type == 1) {
@@ -1418,11 +1711,11 @@ var app = (function(global) {
     this.create = function(success, error) {
       $L.executeNativeJS(['contacts', 'getAddressBook'], type, function(addressbook) {
         if ($L.isFunction(success)) {
-          success.call(null, addressbook.create());
+          success.call(global, addressbook.create());
         }
       }, function(err) {
         if ($L.isFunction(error)) {
-          error.call(null, err);
+          error.call(global, err);
         }
       });
     };
@@ -1432,12 +1725,12 @@ var app = (function(global) {
           addressbook.find(function(res) {
               if ($L.isFunction(success)) {
                 res = res || []
-                success.call(null, res);
+                success.call(global, res);
               }
             },
             function(err) {
               if ($L.isFunction(error)) {
-                error.call(null, err);
+                error.call(global, err);
               }
             },
             findOptions
@@ -1445,7 +1738,7 @@ var app = (function(global) {
         },
         function(err) {
           if ($L.isFunction(error)) {
-            error.call(null, err);
+            error.call(global, err);
           }
         }
       );
@@ -1466,7 +1759,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native database   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
 
 	var dataBaseObj = function(databaseName) {
@@ -1506,12 +1799,7 @@ var app = (function(global) {
 			if (typeof sql === undefined) {
 				throw new Error("请传入有效的sql语句！");
 			}
-			var res = $L.executeObjFunJS([dataBase, 'selectAll'], sql);
-			if(res && $L.isArray(res)){
-				return res 
-			}else{
-				return []
-			}
+			return $L.executeObjFunJS([dataBase, 'selectAll'], sql);
 		}
 
 		/*
@@ -1557,7 +1845,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native device   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
 	$L.device = {
 		/*
@@ -1657,7 +1945,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native downloader   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
 	var downloader = function(url, option, download) {
 		if (!download) download = $L.executeNativeJS(['downloader', 'createDownload'], url, option);
@@ -1706,7 +1994,7 @@ var app = (function(global) {
 		this.addEventListener = function(listener) {
 			$L.executeObjFunJS([download, 'addEventListener'],function(dl,status){
 				if ($L.isFunction(listener)) {
-					listener.call(null, this,status);
+					listener.call(global, this,status);
 				}
 			})
 		}
@@ -1716,7 +2004,7 @@ var app = (function(global) {
 		this.addCompletedListener = function(listener) {
 			$L.executeObjFunJS([download, 'addCompletedListener'],function(dl,status){
 				if ($L.isFunction(listener)) {
-					listener.call(null, this,status);
+					listener.call(global, this,status);
 				}
 			})
 		}
@@ -1736,8 +2024,17 @@ var app = (function(global) {
 		},
 
 		/*
-		 * 枚举指定任务状态的下载任务
+		 * 清除指定状态的下载任务。
 		 * @param state: ( 下载任务状态 ) 必选 要清除下载任务的状态。
+		 */
+		clear: function(state) {
+			if(!state) state = -1;
+			$L.executeNativeJS(['downloader', 'clear'], state);
+		},
+
+		/*
+		 * 枚举指定任务状态的下载任务
+		 * @param state: ( 下载任务状态 ) 要清除下载任务的状态。
 		 * @return downloads
 		 */
 		enumerate: function(state) {
@@ -1751,12 +2048,36 @@ var app = (function(global) {
 		},
 
 		/*
-		 * 清除指定状态的下载任务。
-		 * @param state: ( 下载任务状态 ) 必选 要清除下载任务的状态。
+		 * 通过id获取任务，如果当任务下载时，程序出现异常（断网、进程被杀），再次下载时可通过此方法获取以前未下载完的任务执行start继续下载，这样可节约系统资源。
+		 * @param state: ( 下载任务状态 ) 必选 要获取下载任务的id。
+		 * @return download
 		 */
-		clear: function(state) {
-			if(!state) state = -1;
-			$L.executeNativeJS(['downloader', 'clear'], state);
+		getDownLoaderById: function(id) {
+			if(!id) throw new Error("请传入有效的下载任务ID！");
+			var download = $L.executeNativeJS(['downloader', 'enumerateById'], id);
+			return  download;
+		},
+
+		/*
+		 * 清除单个下载任务
+		 * @param id: ( Number ) 必选 要清除下载任务的id。
+		 */
+		remove: function(id) {
+			$L.executeNativeJS(['downloader', 'remove'],id);
+		},
+
+		/*
+		 * 设置并发任务最大数
+		 */
+		setMaxRunningSize: function(num) {
+			$L.executeNativeJS(['downloader', 'setMaxRunningSize'],num);
+		},
+
+		/*
+		 * 设置总下载速度
+		 */
+		setSpeed: function(speed) {
+			$L.executeNativeJS(['downloader', 'setSpeed'],speed);
 		},
 
 		/*
@@ -1766,19 +2087,14 @@ var app = (function(global) {
 			$L.executeNativeJS(['downloader', 'startAll']);
 		},
 
-		/*
-		 * 清除单个下载任务
-		 * @param id: ( Number ) 必选 要清除下载任务的id。
-		 */
-		remove: function(id) {
-			$L.executeNativeJS(['downloader', 'remove'],id);
-		}
+		
 	}
 
 }(app, this));
 /*===============================================================================
 ************   ui native eventListener   ************
 ===============================================================================*/
+;
 (function($L, global) {
 	$L.event = {
 		/*
@@ -1787,11 +2103,17 @@ var app = (function(global) {
 		 * @param callback: 必选 事件回调\
 		 */
 		addEvent: function(eventName, callback) {
-			$L.executeNativeJS(['eventListener', 'addEventListener'], eventName, function(evt) {
-				if ($L.isFunction(callback)) {
-					callback.call(null, evt);
-				}
-			});
+			if ('network_state_changed' == eventName) {
+				this.addNetWorkChangeEvent(callback);
+			} else if ('battery_state_changed' == eventName) {
+				this.addBatteryChangeEvent(callback);
+			} else {
+				$L.executeNativeJS(['eventListener', 'addEventListener'], eventName, function(evt) {
+					if ($L.isFunction(callback)) {
+						callback.call(global, evt);
+					}
+				});
+			}
 		},
 
 		/*
@@ -1809,6 +2131,29 @@ var app = (function(global) {
 		 */
 		sendEvent: function(eventName, evt) {
 			$L.executeNativeJS(['eventListener', 'sendEvent'], eventName, evt);
+		},
+
+		/*
+		 * 添加网络状态变化事件监听
+		 * @param callback: 必选 事件回调
+		 */
+		addNetWorkChangeEvent: function(callback) {
+			$L.executeNativeJS(['eventListener', 'addEventListener'], 'network_state_changed', function(evt) {
+				if ($L.isFunction(callback)) {
+					callback.call(global, evt.state);
+				}
+			});
+		},
+		/*
+		 * 添加电池状态变化事件监听
+		 * @param callback: 必选 事件回调
+		 */
+		addBatteryChangeEvent: function(callback) {
+			$L.executeNativeJS(['eventListener', 'addEventListener'], 'battery_state_changed', function(evt) {
+				if ($L.isFunction(callback)) {
+					callback.call(global, evt.state);
+				}
+			});
 		}
 	}
 
@@ -1816,7 +2161,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native gallery   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
   $L.gallery = {
     pick: function(success, error, opts) {
       var option = {
@@ -1833,22 +2178,22 @@ var app = (function(global) {
       }
       $L.executeNativeJS(['gallery', 'pick'], function(paths) {
         if ($L.isFunction(success)) {
-          success.call(null, paths);
+          success.call(global, paths);
         }
       }, function(err) {
         if ($L.isFunction(error)) {
-          error.call(null, err);
+          error.call(global, err);
         }
       }, option)
     },
     save: function(path, success, error) {
       $L.executeNativeJS(['gallery', 'save'], path, function(info) {
         if ($L.isFunction(success)) {
-          success.call(null, info);
+          success.call(global, info);
         }
       }, function(err) {
         if ($L.isFunction(error)) {
-          error.call(null, err);
+          error.call(global, err);
         }
       })
     }
@@ -1858,7 +2203,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native geolocation   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	$L.geolocation = {
 		/*
 		 * 获取当前设备位置信息
@@ -1872,11 +2217,11 @@ var app = (function(global) {
 			}
 			$L.executeNativeJS(['geolocation', 'getCurrentPosition'], function(position) {
 				if ($L.isFunction(success)) {
-					success.call(null, position);
+					success.call(global, position);
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			}, options);
 		},
@@ -1893,11 +2238,11 @@ var app = (function(global) {
 			}
 			$L.executeNativeJS(['geolocation', 'watchPosition'], function(position) {
 				if ($L.isFunction(success)) {
-					success.call(null, position);
+					success.call(global, position);
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			}, options);
 		},
@@ -1914,7 +2259,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native httpManager   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	var XMLHttpRequest = function() {
 		var isOpened = false;
 		var isAbort = false;
@@ -1945,12 +2290,12 @@ var app = (function(global) {
 			settings.dataType = dataType || 'json';
 			$L.executeNativeJS(['httpManager', 'sendRequest'], settings, function(response, data) {
 				if (self.onSuccess && $L.isFunction(self.onSuccess) && !isAbort) {
-					self.onSuccess.call(null, data, response);
+					self.onSuccess.call(global, data, response);
 				}
 
 			}, function(code, response, Message) {
 				if (self.onError && $L.isFunction(self.onError) && !isAbort) {
-					self.onError.call(null, Message, code, response);
+					self.onError.call(global, Message, code, response);
 				}
 			});
 
@@ -1970,12 +2315,12 @@ var app = (function(global) {
 			settings.dataType = dataType || 'json';
 			$L.executeNativeJS(['httpManager', 'sendRequest'], settings, function(response, data) {
 				if (self.onSuccess && $L.isFunction(self.onSuccess) && !isAbort) {
-					self.onSuccess.call(null, data, response);
+					self.onSuccess.call(global, data, response);
 				}
 
 			}, function(code, response, message) {
 				if (self.onError && $L.isFunction(self.onError) && !isAbort) {
-					self.onError.call(null, message, code, response);
+					self.onError.call(global, message, code, response);
 				}
 			});
 
@@ -2053,12 +2398,12 @@ var app = (function(global) {
 
 				if (settings.success && typeof(settings.success) === "function") {
 					xhr.onSuccess = function(data, response) {
-						settings.success.call(null, data, response);
+						settings.success.call(global, data, response);
 					}
 				}
 				if (settings.error && typeof(settings.error) === "function") {
 					xhr.onError = function(message, code, response) {
-						settings.error.call(null, message, code, response);
+						settings.error.call(global, message, code, response);
 					}
 				}
 
@@ -2123,7 +2468,7 @@ var app = (function(global) {
 
 			if (success && typeof(success) === "function") {
 				xhr.onSuccess = function(data, response) {
-					success.call(null, data, response);
+					success.call(global, data, response);
 				}
 			}
 			xhr.postForm(data, dataType, files);
@@ -2135,7 +2480,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native log   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	$L.log = {
 		/*
 		 * 将Information发送到IDE控制台。
@@ -2166,7 +2511,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native message   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
 	var message = function(type) {
 		var recipients = [];
@@ -2194,7 +2539,7 @@ var app = (function(global) {
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			});
 		}
@@ -2218,7 +2563,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native networkinfo   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
   $L.networkinfo = {
 // 网络连接状态未知 0
 // 未连接网络 1
@@ -2236,7 +2581,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native os   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	$L.os = {
 		/*
 		 * 獲取系统语言信息
@@ -2268,7 +2613,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native popover   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
   var currentView = $L.currentView();
   var popover = function(x, y, width, height) {
       var popoverType = $L.getPopoverType(); //打开窗口类型
@@ -2369,7 +2714,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native progress   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	var fade = 0, //值为 0 进度提示框以渐隐渐显动画呈现
 		zoom = 1; //值为 1 进度提示框以缩放动画呈现
 	$L.progress = {
@@ -2408,7 +2753,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native properties   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
 
 	var properties = function(domain, fileName) {
@@ -2471,7 +2816,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native screen   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 		$L.screen = {
 			/*
 			 * 獲取设备屏幕宽度分辨率
@@ -2534,14 +2879,14 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native socketManager   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
 
 	var socketManager = function(options, callback) {
 		var socket = $L.executeNativeJS(['require'], 'socketManager');
 		$L.executeObjFunJS([socket, 'createSocket'], options, function(state,info){
 			if ($L.isFunction(callback)) {
-					callback.call(null,state,info);
+					callback.call(global,state,info);
 				}
 			});
 
@@ -2579,7 +2924,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native storage   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	$L.storage = {
 		/*
 		 * 获取应用存储区中保存的键值对的个数
@@ -2628,7 +2973,7 @@ var app = (function(global) {
 /*===============================================================================
 ************   ui native zip   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	$L.zip = {
 		/*
 		 * 用于压缩Zip文件
@@ -2644,7 +2989,7 @@ var app = (function(global) {
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			});
 		},
@@ -2662,10 +3007,191 @@ var app = (function(global) {
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			});
 		}
 	}
 
 }(app, this));
+;
+(function($L, global) {
+
+	$L.debug = function() {
+
+		var uuid = 0;
+		var xhr = {}
+		window.addEventListener('message', function(e) {
+			// alert(e.data);
+			var origin = e.origin;
+			// if (origin != 'http://localhost:3000') {
+			var res = JSON.parse(e.data)
+			var type = res.type;
+			if (type == 'ajax') {
+				var token = res.token;
+				var success = xhr[token].success;
+				var error = xhr[token].error;
+				var data = res.data;
+				var dataType = xhr[token].dataType;
+				if (dataType == 'json') {
+					if ($L.isFunction(success)) {
+						data = JSON.parse(data)
+						success.call(null, {}, data)
+					}
+				} else {
+					if ($L.isFunction(success)) {
+						success.call(null, {}, data)
+					}
+				}
+			}
+			// }
+		}, false);
+
+		var GetQueryString = function(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) return (r[2]);
+			return null;
+		}
+		var getPageDir = function() {
+			var div = document.createElement('div');
+			div.innerHTML = '<a href="./"></a>';
+			var pageDir = div.firstChild.href;
+			div = null;
+			return pageDir;
+		}
+		var postMessage = function(js) {
+			window.parent.postMessage(js, '*');
+			// window.parent.postMessage(js, 'http://localhost:3000');
+		}
+
+		$L.executeNativeJS = function() {
+			var args = Array.prototype.slice.call(arguments, 1);
+			if (arguments[0][0] == 'window' && arguments[0][1] == 'openWindow') {
+				var windowname = args[0]
+				var url = getPageDir() + args[2]
+				var js = "openWindow('" + windowname + "','" + url + "')"
+				postMessage(js);
+			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'closeSelf') {
+				var pageId = GetQueryString('pageId');
+				var js = "closeWindow('" + windowname + "','" + pageId + "')"
+				postMessage(js);
+			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'openPopover') {
+				var popname = args[0]
+				var url = getPageDir() + args[2]
+				var rect = JSON.stringify(args[3])
+				var windowname = GetQueryString('pageId');
+				var js = "openPopover('" + popname + "','" + url + "','" + rect + "','" + windowname + "')"
+				postMessage(js);
+			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'closePopover') {
+				var popname = args[0]
+				var pageId = GetQueryString('pageId');
+				var js = "closePopover('" + popname + "','" + pageId + "')"
+				postMessage(js);
+			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'bringPopoverToFront') {
+				var popname = args[0]
+				var js = "openPopover('" + popname + "')"
+				postMessage(js);
+			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'setSlideLayout') {
+				var url = getPageDir()
+				var params = args[0]
+				var type = params.type
+				if (type == 'left') {
+					params.leftPane.url = url + params.leftPane.url
+				} else {
+					params.rightPane.url = url + params.rightPane.url
+				}
+				var params = JSON.stringify(args[0])
+				var js = "setSlideLayout('" + params + "')"
+				postMessage(js);
+			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'openSlidePane') {
+				var params = JSON.stringify(args[0])
+				var js = "openSlidePane('" + params + "')"
+				postMessage(js);
+			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'closeSlidePane') {
+				var js = "closeSlidePane()"
+				postMessage(js);
+			} else if (arguments[0][0] == 'httpManager' && arguments[0][1] == 'sendRequest') {
+				var settings = args[0];
+				var data = settings.body;
+				if (data) {
+					if (data.json && $L.isString(data.json)) data.json = JSON.parse(data.json)
+				}
+				settings = JSON.stringify(settings)
+				var pageId = GetQueryString('pageId');
+				var token = uuid++;
+				xhr[token] = {
+					success: args[1],
+					error: args[2],
+					dataType: args[0].dataType
+				}
+				var js = "sendRequest('" + settings + "','" + pageId + "','" + token + "')"
+				postMessage(js);
+			}
+		}
+		if (window.Dom) {
+			var on = $.fn.on;
+
+			$.fn.on = function(event, selector, data, callback, one) {
+				if (event == 'tap') {
+					event = 'click';
+				}
+				// else if (event == 'touchstart') {
+				// 	event = 'mousedown';
+				// } else if (event == 'touchmove') {
+				// 	event = 'mousemove';
+				// } else if (event == 'touchend') {
+				// 	event = 'mouseup';
+				// }
+				return on.call(this, event, selector, data, callback, one);
+			}
+
+			var off = $.fn.off;
+			$.fn.off = function(event, selector, callback) {
+				if (event == 'tap') {
+					event = 'click';
+				}
+				// else if (event == 'touchstart') {
+				// 	event = 'mousedown';
+				// } else if (event == 'touchmove') {
+				// 	event = 'mousemove';
+				// } else if (event == 'touchend') {
+				// 	event = 'mouseup';
+				// }
+				return off.call(this, event, selector, callback);
+			}
+
+			var trigger = $.fn.trigger;
+			$.fn.trigger = function(event, args) {
+				if (event == 'tap') {
+					event = 'click';
+				}
+				// else if (event == 'touchstart') {
+				// 	event = 'mousedown';
+				// } else if (event == 'touchmove') {
+				// 	event = 'mousemove';
+				// } else if (event == 'touchend') {
+				// 	event = 'mouseup';
+				// }
+				return trigger.call(this, event, args);
+			}
+
+			var one = $.fn.one;
+			$.fn.one = function(event, selector, data, callback) {
+				if (event == 'tap') {
+					event = 'click';
+				}
+				// else if (event == 'touchstart') {
+				// 	event = 'mousedown';
+				// } else if (event == 'touchmove') {
+				// 	event = 'mousemove';
+				// } else if (event == 'touchend') {
+				// 	event = 'mouseup';
+				// }
+				return one.call(this, event, selector, data, callback);
+			}
+
+		}
+
+	}
+}(app, this))

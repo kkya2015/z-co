@@ -14,41 +14,29 @@ var app = (function(global) {
   }
   var DIRNAME_RE = /[^?#]*\//
   var plus = !!global['rd'];
-  var dirname = function(path) {
-    return path.match(DIRNAME_RE)[0]
-  }
-  var getScriptAbsoluteSrc = function(node) {
-    return node.hasAttribute ? node.src : node.getAttribute("src", 4)
-  }
-  var doc = document
-  var cwd = dirname(doc.URL)
-  var scripts = doc.scripts
-  var loaderScript = scripts[scripts.length - 1]
-  var loaderDir = dirname(getScriptAbsoluteSrc(loaderScript) || cwd)
-  var head = doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement
-  var domReady = function(factory) {
+  // var dirname = function(path) {
+  //   return path.match(DIRNAME_RE)[0]
+  // }
+  // var getScriptAbsoluteSrc = function(node) {
+  //     return node.hasAttribute ? node.src : node.getAttribute("src", 4)
+  //   }
+  // var doc = document
+  // var cwd = dirname(doc.URL)
+  // var scripts = doc.scripts
+  // var loaderScript = scripts[scripts.length - 1]
+  // var loaderDir = dirname(getScriptAbsoluteSrc(loaderScript) || cwd)
+  // var head = doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement
+  var domReady = function(factory, require) {
+    if (!require) require = function() {}
     if ($L.isFunction(factory)) {
       if (!(($L.android || $L.ios) && plus)) {
-        var node = doc.createElement("script");
-        node.charset = 'utf-8';
-        node.async = true
-        node.src = loaderDir + 'debug.js'
-        node.onload = function() {
-          node.onload = node.onerror = node.onreadystatechange = null
-          factory.call(null, function() {
-            throw new Error("请引入dom.js和co.js后加载组件！");
-          });
-        }
-        node.onerror = function() {
-          return true;
-        }
-        head.appendChild(node)
+        $L.debug()
+        factory.call(global, require);
       } else {
         setTimeout(function() {
           if (domReady.isReady) {
-            factory.call(null, function() {
-              throw new Error("请引入dom.js和co.js后加载组件！");
-            });
+            $L.init();
+            factory.call(global, require);
           } else {
             setTimeout(arguments.callee, 1);
           }
@@ -84,7 +72,7 @@ var app = (function(global) {
     windowAnimationDirection = 41, // 动画方向--右侧
     windowAnimationDuration = 300, // 动画时间
     windowAnimationCurve = 53, // 动画曲线--从慢到快到慢
-    viewBounces = true, // 页面是否弹动--  仅IOS有效果
+    viewBounces = false, // 页面是否弹动--  仅IOS有效果
     viewBgcolor = '', // 页面背景色  -- 如果字段为空，颜色为白色
     viewVScrollBar = false, //  是否显示水平滚动条
     viewHScrollBar = true, //  是否显示垂直滚动条
@@ -94,11 +82,12 @@ var app = (function(global) {
     viewAnimationType = 11, // 页面关闭动画效果 --推入 
     viewAnimationDirection = 40, // 页面关闭动画方向 -- 左侧
     viewAnimationDuration = 300, // 页面关闭动画时间
-    viewAnimationCurve = 53; // 页面关闭动画曲线--从慢到快到慢
+    viewAnimationCurve = 53, // 页面关闭动画曲线--从慢到快到慢
+    viewSlideBack = true; //是否支持滑动返回，设置window全局，ture表示支持，false表示不支持,Android设备暂时不支持
+
 
 
   var setViewBounces = function(bounces) {
-    if (viewBounces == bounces) return;
     viewBounces = !!bounces;
     var currentView = $L.currentView();
     if (viewBounces) {
@@ -107,14 +96,7 @@ var app = (function(global) {
       currentView.disableBounces();
     }
   }
-  var setViewBgcolor = function(bgcolor) {
-    if (viewBgcolor == bgcolor) return;
-    viewBgcolor = !!bgcolor;
-    var currentView = $L.currentView();
-    currentView.setBgcolor(viewBgcolor);
-  }
   var setViewVScrollBar = function(vScrollBar) {
-    if (viewVScrollBar == vScrollBar) return;
     viewVScrollBar = !!vScrollBar;
     var currentView = $L.currentView();
     if (viewVScrollBar) {
@@ -124,7 +106,6 @@ var app = (function(global) {
     }
   }
   var setViewHScrollBar = function(hScrollBar) {
-    if (viewHScrollBar == hScrollBar) return;
     viewHScrollBar = !!hScrollBar;
     var currentView = $L.currentView();
     if (viewHScrollBar) {
@@ -134,7 +115,6 @@ var app = (function(global) {
     }
   }
   var setViewZoom = function(zoom) {
-    if (viewZoom == zoom) return;
     viewZoom = !!zoom;
     var currentView = $L.currentView();
     if (viewZoom) {
@@ -144,7 +124,6 @@ var app = (function(global) {
     }
   }
   var setViewKeyboard = function(keyboard) {
-    if (viewKeyboard == keyboard) return;
     viewKeyboard = !!keyboard;
     var currentView = $L.currentView();
     if (viewKeyboard) {
@@ -154,7 +133,6 @@ var app = (function(global) {
     }
   }
   var setViewDragDismiss = function(dragDismiss) {
-    if (viewDragDismiss == dragDismiss) return;
     viewDragDismiss = !!dragDismiss;
     var currentView = $L.currentView();
     if (viewDragDismiss) {
@@ -163,29 +141,41 @@ var app = (function(global) {
       currentView.disableDragDismiss();
     }
   }
+
+  var setViewBgcolor = function(bgcolor) {
+    viewBgcolor = bgcolor;
+    var currentView = $L.currentView();
+    currentView.setBgcolor(viewBgcolor);
+  }
   var setViewAnimationType = function(animationType) {
-    if (viewAnimationType == animationType) return;
-    viewAnimationType = !!animationType;
+    viewAnimationType = animationType;
     var currentView = $L.currentView();
     currentView.setAnimationType(viewAnimationType);
   }
   var setViewAnimationDirection = function(animationDirection) {
-    if (viewAnimationDirection == animationDirection) return;
-    viewAnimationDirection = !!animationDirection;
+    viewAnimationDirection = animationDirection;
     var currentView = $L.currentView();
     currentView.setAnimationDirection(viewAnimationDirection);
   }
   var setViewAnimationDuration = function(animationDuration) {
-    if (viewAnimationDuration == animationDuration) return;
-    viewAnimationDuration = !!animationDuration;
+    viewAnimationDuration = animationDuration;
     var currentView = $L.currentView();
     currentView.setAnimationDuration(viewAnimationDuration);
   }
   var setViewAnimationCurve = function(animationCurve) {
-    if (viewAnimationCurve == animationCurve) return;
-    viewAnimationCurve = !!animationCurve;
+    viewAnimationCurve = animationCurve;
     var currentView = $L.currentView();
     currentView.setAnimationCurve(viewAnimationCurve);
+  }
+
+  var setSlideBack = function(slideBack) {
+    viewSlideBack = !!slideBack;
+    var currentView = $L.currentView();
+    if (viewSlideBack) {
+      currentView.enableSlideBack();
+    } else {
+      currentView.disableSlideBack();
+    }
   }
 
 
@@ -310,24 +300,101 @@ var app = (function(global) {
     }
   }
 
-  $L.config = function(opts) {
-    opts.windowType && (windowType = opts.windowType)
-    opts.popoverType && (popoverType = opts.popoverType)
-    opts.windowAnimationType && (windowAnimationType = opts.windowAnimationType)
-    opts.windowAnimationDirection && (windowAnimationDirection = opts.windowAnimationDirection)
-    opts.windowAnimationDuration && (windowAnimationDuration = opts.windowAnimationDuration)
-    opts.windowAnimationCurve && (windowAnimationCurve = opts.windowAnimationCurve)
-    opts.viewBounces && (setViewBounces(opts.viewBounces))
-    opts.viewBgcolor && (setViewBgcolor(opts.viewBgcolor))
-    opts.viewVScrollBar && (setViewVScrollBar(opts.viewVScrollBar))
-    opts.viewHScrollBar && (setViewHScrollBar(opts.viewHScrollBar))
-    opts.viewZoom && (setViewZoom(opts.viewZoom))
-    opts.viewKeyboard && (setViewKeyboard(opts.viewKeyboard))
-    opts.viewDragDismiss && (setViewDragDismiss(opts.viewDragDismiss))
-    opts.viewAnimationType && (setViewAnimationType(opts.viewAnimationType))
-    opts.viewAnimationDirection && (setViewAnimationDirection(opts.viewAnimationDirection))
-    opts.viewAnimationDuration && (setViewAnimationDuration(opts.viewAnimationDuration))
-    opts.viewAnimationCurve && (setViewAnimationCurve(opts.viewAnimationCurve))
+  $L.init = function() {
+    var app_property = app.properties.open('app_property_setting', 'app_property');
+    var propertys = app_property.get('propertys');
+    if (propertys) {
+      var prop = JSON.parse(propertys);
+      this.config(prop);
+    } else {
+      var prop = {}
+      prop.windowType = windowType;
+      prop.popoverType = popoverType;
+      prop.windowAnimationType = windowAnimationType;
+      prop.windowAnimationDirection = windowAnimationDirection;
+      prop.windowAnimationDuration = windowAnimationDuration;
+      prop.windowAnimationCurve = windowAnimationCurve;
+      prop.viewBounces = viewBounces;
+      prop.viewBgcolor = viewBgcolor;
+      prop.viewVScrollBar = viewVScrollBar;
+      prop.viewHScrollBar = viewHScrollBar;
+      prop.viewZoom = viewZoom;
+      prop.viewKeyboard = viewKeyboard;
+      prop.viewDragDismiss = viewDragDismiss;
+      prop.viewAnimationType = viewAnimationType;
+      prop.viewAnimationDirection = viewAnimationDirection;
+      prop.viewAnimationDuration = viewAnimationDuration;
+      prop.viewAnimationCurve = viewAnimationCurve;
+      prop.viewSlideBack = viewSlideBack;
+      this.config(prop);
+    }
+
+  }
+
+
+  $L.config = function(prop) {
+    if (!prop) return;
+
+    prop.windowType && (windowType = prop.windowType)
+    prop.popoverType && (popoverType = prop.popoverType)
+
+    prop.windowAnimationType && (windowAnimationType = prop.windowAnimationType)
+    prop.windowAnimationDirection && (windowAnimationDirection = prop.windowAnimationDirection)
+    prop.windowAnimationDuration && (windowAnimationDuration = prop.windowAnimationDuration)
+    prop.windowAnimationCurve && (windowAnimationCurve = prop.windowAnimationCurve)
+
+    prop.viewAnimationType && (setViewAnimationType(prop.viewAnimationType))
+    prop.viewAnimationDirection && (setViewAnimationDirection(prop.viewAnimationDirection))
+    prop.viewAnimationDuration && (setViewAnimationDuration(prop.viewAnimationDuration))
+    prop.viewAnimationCurve && (setViewAnimationCurve(prop.viewAnimationCurve))
+    prop.viewBgcolor && (setViewBgcolor(prop.viewBgcolor))
+
+    if (prop.viewBounces) {
+      setViewBounces(prop.viewBounces)
+    } else {
+      setViewBounces(viewBounces)
+    }
+
+    if (prop.viewVScrollBar) {
+      setViewVScrollBar(prop.viewVScrollBar)
+    } else {
+      setViewVScrollBar(viewVScrollBar)
+    }
+
+    if (prop.viewHScrollBar) {
+      setViewHScrollBar(prop.viewHScrollBar)
+    } else {
+      setViewHScrollBar(viewHScrollBar)
+    }
+
+    if (prop.viewZoom) {
+      setViewZoom(prop.viewZoom)
+    } else {
+      setViewZoom(viewZoom)
+    }
+
+    if (prop.viewKeyboard) {
+      setViewKeyboard(prop.viewKeyboard)
+    } else {
+      setViewKeyboard(viewKeyboard)
+    }
+
+    if (prop.viewDragDismiss) {
+      setViewDragDismiss(prop.viewDragDismiss)
+    } else {
+      setViewDragDismiss(viewDragDismiss)
+    }
+
+    if (prop.viewSlideBack) {
+      setSlideBack(prop.viewSlideBack)
+    } else {
+      setSlideBack(viewSlideBack)
+    }
+
+    var app_property = app.properties.open('app_property_setting', 'app_property');
+    prop = JSON.stringify(prop);
+    app_property.put('propertys', prop);
+    app_property.save()
   }
   $L.getWindowType = function() {
     return windowType;
@@ -380,6 +447,9 @@ var app = (function(global) {
   $L.getViewAnimationCurve = function() {
     return viewAnimationCurve;
   }
+  $L.getViewAnimationCurve = function() {
+    return viewAnimationCurve;
+  }
 
 
   /*
@@ -409,7 +479,7 @@ var app = (function(global) {
       var slideLayoutParams = {
         type: 'right',
         leftEdge: edge,
-        rightEdge:edge,
+        rightEdge: edge,
         rightPane: {
           name: url,
           url: url
@@ -420,7 +490,7 @@ var app = (function(global) {
       var slideLayoutParams = {
         type: 'left',
         leftEdge: edge,
-        rightEdge:edge,
+        rightEdge: edge,
         leftPane: {
           name: url,
           url: url
@@ -466,18 +536,17 @@ var app = (function(global) {
    * @param String windowName  需要执行JS语句的窗口名称，默认为当前窗口
    * @param String popoverName 需要执行JS语句的pop名称
    */
-  $L.evalScript = function(script, windowName, popoverName) {
-    if (typeof script === 'undefined') {
-      throw new Error("请传入有效的JS语句！");
-    } else if (typeof windowName === 'undefined' && typeof popoverName === 'undefined') {
-      $L.executeNativeJS(['window', 'evaluateScript'], '', '', script)
+  $L.evalScriptInComponent = function(componentName, windowName, popoverName, script) {
+    if (typeof componentName === 'undefined') {
+      throw new Error("请传入有效的componentName！");
     } else if (typeof windowName === 'undefined') {
-      $L.executeNativeJS(['window', 'evaluateScript'], '', popoverName, script)
+      throw new Error("请传入有效的windowName！");
     } else if (typeof popoverName === 'undefined') {
-      $L.executeNativeJS(['window', 'evaluateScript'], windowName, '', script)
-    } else {
-      $L.executeNativeJS(['window', 'evaluateScript'], windowName, popoverName, script)
+      throw new Error("请传入有效的popoverName！");
+    } else if (typeof script === 'undefined') {
+      throw new Error("请传入有效的JS语句！");
     }
+    $L.executeNativeJS(['window', 'evaluateScript'], componentName, windowName, popoverName, script)
   }
 
   /*
@@ -489,9 +558,9 @@ var app = (function(global) {
     if (typeof script === 'undefined') {
       throw new Error("请传入有效的JS语句！");
     } else if (typeof windowName === 'undefined') {
-      $L.executeNativeJS(['window', 'evaluateScript'], '', '', script)
+      $L.executeNativeJS(['window', 'evaluateScript'], '', '', '', script)
     } else {
-      $L.executeNativeJS(['window', 'evaluateScript'], windowName, '', script)
+      $L.executeNativeJS(['window', 'evaluateScript'], '', windowName, '', script)
     }
   }
 
@@ -507,9 +576,9 @@ var app = (function(global) {
     } else if (typeof popoverName === 'undefined') {
       throw new Error("请传入有效的popoverName！");
     } else if (typeof windowName === 'undefined') {
-      $L.executeNativeJS(['window', 'evaluateScript'], '', popoverName, script)
+      $L.executeNativeJS(['window', 'evaluateScript'], '', '', popoverName, script)
     } else {
-      $L.executeNativeJS(['window', 'evaluateScript'], windowName, popoverName, script)
+      $L.executeNativeJS(['window', 'evaluateScript'], '', windowName, popoverName, script)
     }
   }
 
@@ -666,27 +735,7 @@ var app = (function(global) {
       $L.isFunction(callback) && callback.call(global, Tips.buttonIndex, Tips.buttonIndex.text);
     });
   }
-
-  /*
-   * 打开指定component
-   * @param String componentName 必选 component名字
-   * @param String defaultPage 必选 如果传空(''),使用component.xml中配置的url。window的名字默认为root
-   * @param String animation  可选 type默认值为rd.window.ANIMATIONTYPEPUSH, direction默认值为rd.window.ANIMATIONSUBTYPEFROMRIGHT，time默认值为300ms，curve默认值为rd.window.ANIMATIONCURVE_EASEINEASEOUT
-   */
-  $L.openComponent = function(componentName, defaultPage, animation) {
-    $L.executeNativeJS(['window', 'openComponent'], componentName, defaultPage, animation)
-  }
-
-  /*
-   * 关闭指定component
-   * @param String componentName 必选 如果传空(''),关闭当前component,否则，关闭指定名称的component
-   * @param String animation  可选 type默认值为rd.window.ANIMATIONTYPEPUSH, direction默认值为rd.window.ANIMATIONSUBTYPEFROMRIGHT，time默认值为300ms，curve默认值为rd.window.ANIMATIONCURVE_EASEINEASEOUT
-   */
-  $L.closeComponent = function(componentName, animation) {
-    $L.executeNativeJS(['window', 'closeComponent'], componentName, animation)
-  }
-
   return $L;
 }(this));
- window.app = app;
- window.A === undefined && (window.A = app);
+window.app = app;
+window.A === undefined && (window.A = app);

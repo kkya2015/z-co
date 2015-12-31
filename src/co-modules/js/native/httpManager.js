@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native httpManager   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	var XMLHttpRequest = function() {
 		var isOpened = false;
 		var isAbort = false;
@@ -32,12 +32,12 @@
 			settings.dataType = dataType || 'json';
 			$L.executeNativeJS(['httpManager', 'sendRequest'], settings, function(response, data) {
 				if (self.onSuccess && $L.isFunction(self.onSuccess) && !isAbort) {
-					self.onSuccess.call(null, data, response);
+					self.onSuccess.call(global, data, response);
 				}
 
 			}, function(code, response, Message) {
 				if (self.onError && $L.isFunction(self.onError) && !isAbort) {
-					self.onError.call(null, Message, code, response);
+					self.onError.call(global, Message, code, response);
 				}
 			});
 
@@ -57,12 +57,12 @@
 			settings.dataType = dataType || 'json';
 			$L.executeNativeJS(['httpManager', 'sendRequest'], settings, function(response, data) {
 				if (self.onSuccess && $L.isFunction(self.onSuccess) && !isAbort) {
-					self.onSuccess.call(null, data, response);
+					self.onSuccess.call(global, data, response);
 				}
 
 			}, function(code, response, message) {
 				if (self.onError && $L.isFunction(self.onError) && !isAbort) {
-					self.onError.call(null, message, code, response);
+					self.onError.call(global, message, code, response);
 				}
 			});
 
@@ -140,12 +140,12 @@
 
 				if (settings.success && typeof(settings.success) === "function") {
 					xhr.onSuccess = function(data, response) {
-						settings.success.call(null, data, response);
+						settings.success.call(global, data, response);
 					}
 				}
 				if (settings.error && typeof(settings.error) === "function") {
 					xhr.onError = function(message, code, response) {
-						settings.error.call(null, message, code, response);
+						settings.error.call(global, message, code, response);
 					}
 				}
 
@@ -210,7 +210,7 @@
 
 			if (success && typeof(success) === "function") {
 				xhr.onSuccess = function(data, response) {
-					success.call(null, data, response);
+					success.call(global, data, response);
 				}
 			}
 			xhr.postForm(data, dataType, files);

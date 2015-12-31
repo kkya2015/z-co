@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native view   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
   var view = function() {
     // var viewBounces = $L.getViewBounces(); // 页面是否弹动--  仅IOS有效果
     // var viewBgcolor = $L.getViewBgcolor(); // 页面背景色  -- 如果字段为空，颜色为白色
@@ -30,9 +30,8 @@
       })
     }
     this.setBgcolor = function(bgcolor) {
-      var viewBgcolor = !!bgcolor;
       $L.executeNativeJS(['window', 'setAttr'], {
-        bgColor: viewBgcolor
+        bgColor: bgcolor
       })
     }
     this.enableVScrollBar = function() {
@@ -95,17 +94,29 @@
         dragDismiss: viewDragDismiss
       })
     }
-    this.setAnimationType = function(animationType) {
-      viewAnimationType = !!animationType;
+    this.enableSlideBack = function() {
+      var viewSlideBack = true;
+      $L.executeNativeJS(['window', 'setAttr'], {
+        slideBack: viewSlideBack
+      })
     }
-    this.seAnimationDirection = function(animationDirection) {
-      viewAnimationDirection = !!animationDirection;
+    this.disableSlideBack = function() {
+      var viewSlideBack = false;
+      $L.executeNativeJS(['window', 'setAttr'], {
+        slideBack: viewSlideBack
+      })
+    }
+    this.setAnimationType = function(animationType) {
+      viewAnimationType = animationType;
+    }
+    this.setAnimationDirection = function(animationDirection) {
+      viewAnimationDirection = animationDirection;
     }
     this.setAnimationDuration = function(animationDuration) {
-      viewAnimationDuration = !!animationDuration;
+      viewAnimationDuration = animationDuration;
     }
     this.setAnimationCurve = function(animationCurve) {
-      viewAnimationCurve = !!animationCurve;
+      viewAnimationCurve = animationCurve;
     }
 
     /*
@@ -126,15 +137,6 @@
         $L.executeNativeJS(['window', 'backToWindow'], windowname, animation)
       }
     };
-
-    /*
-     * 设置当前页面状态栏文字颜色 0 表示黑色。1 表示白色
-     */
-    this.statusBarFontColor = function(color) {
-      $L.ios() && $L.executeNativeJS(['window', 'statusBarStyle'], color);
-    };
-
-
 
     /*
      * 获取当前窗口的宽度

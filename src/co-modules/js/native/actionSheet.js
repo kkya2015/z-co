@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native actionSheet   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	$L.actionSheet = {
 		/*
 		 * 显示弹出框。
@@ -17,7 +17,7 @@
 		show: function(options, success) {
 			$L.executeNativeJS(['actionSheet', 'show'], options, function(index) {
 				if ($L.isFunction(success)) {
-					success.call(null,index);
+					success.call(global,index);
 				}
 			});
 		}

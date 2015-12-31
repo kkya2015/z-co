@@ -16,9 +16,13 @@ audio模块用于提供音频的录制和播放功能，可调用系统的麦克
 *	[AudioRecorder](#AudioRecorder) ：录音对象
 	-	方法
 		-	[record](#record) ：调用设备麦克风进行录音操作
+		-	[getCurrentTime](#getCurrentTime) ：录音时,获取当前录音时长
+		-	[getDuration](#getDuration) ：获取录音时长上限,如果没有设置录音时长上限,则返回-1
+		-	[addCalculateTimeCallback](#addCalculateTimeCallback) ：添加计时回调
+		-	[addCountDownCallback ](#addCountDownCallback ) ：添加倒计时回调
+		-	[addAveragePowerCallback](#addAveragePowerCallback) ：添加音量监控回调,录音时,当音量分贝有变化时,返回当前音量分贝值
+		-	[playJustRecord](#playJustRecord) ：播放刚刚录制完成的录音文件
 		-	[stop](#stop) ：结束录音操作
-		-	[getSamplerates](#getSamplerates)：获取设备录音支持的采用率
-		-	[getFormats](#getFormats)：获取设备录音支持的文件格式
 
 *	[AudioPlayer](#AudioPlayer) ：音频播放对象
 	-	方法
@@ -37,10 +41,36 @@ audio模块用于提供音频的录制和播放功能，可调用系统的麦克
 ***
 
 ## <div id="getRecorder">getRecorder</div>
--	####app.audio.getRecorder()   ⇒ [AudioRecorder](#AudioRecorder) 
+-	####app.audio.getRecorder([options])   ⇒ [AudioRecorder](#AudioRecorder) 
 		获取当前设备的录音对象
+	-	options : JSON对象，调用麦克风设备进行录音的参数	
+		-	type：JSON
+		-	默认值：无
+		-	keys
+			-	filename：( String )保存录音文件的路径或文件名。若未设置该值，则生成的录音文件由时间戳命名，后缀根据录音文件的格式确定。可设置具体文件名（存在文件后缀，值应同录音文件的格式相同），也可只设置路径，如果只设置路径（无文件后缀则认为是路径），文件名由录音程序自动生成。如果只设置文件名,则保存在默认目录下.iOS:默认目录是temp临时目录.Android:默认目录是协议路径的cache目录.若设置的路径或者文件名插件认为违法,则保存在默认目录下.
+				-	默认值：无
+			-	samplerate：( String )录音文件的采样率
+				-	默认值：'8000'
+				-	取值范围
+					-	8000
+					-	44100
+					-	96000
+			-	format：( String )录音文件的格式 
+				-	默认值：'aac'
+				-	取值范围（Android）
+					-	aac
+					-	amr
+				-	取值范围（iOS）
+					-	aac
+					-	amr
+					-	wav
+			-	duration：(Number) 录音时长上限 如果不设置 录音时长无上限(单位为s).
+				-	默认值：无
+			
 #####示例：
-	var recorder = app.audio.getRecorder()
+	var recorder = app.audio.getRecorder({
+	    filename: 'record.aac'
+	})
 
 
 ##<div id="createPlayer">createPlayer</div>
@@ -62,9 +92,11 @@ audio模块用于提供音频的录制和播放功能，可调用系统的麦克
 
 ##<div id="AudioRecorder">AudioRecorder</div>
 
-	var audioRecorder = app.audio.getRecorder()
+	var recorder = app.audio.getRecorder({
+	    filename: 'record.aac'
+	})
 	
--	#### <div id="record">record(success, [error], [options])   ⇒ void </div>   
+-	#### <div id="record">record(success, [error])   ⇒ void </div>   
 		调用设备麦克风进行录音操作
 	-	success：录音操作成功回调
 		-	type：Function
@@ -79,17 +111,10 @@ audio模块用于提供音频的录制和播放功能，可调用系统的麦克
 			-	err：音频操作的错误信息
 				-	type：String
 	
-	-	options：( JSON )调用麦克风设备进行录音的参数
-		-	默认值：无
-		-	keys
-			-	filename：( String )保存录音文件的路径 可设置具体文件名，也可只设置路径，如果以“/”结尾则表明是路径，文件名由录音程序自动生成。 如未设置则使用默认目录生成随机文件名称，默认目录为应用%APPID%下的documents目录。
-				-	默认值：无
-			-	samplerate：( String )录音文件的采样率 需通过[getSamplerates](#getSamplerates)方法获取设备支持的采样率，若设置无效的值，则使用系统默认的采样率。
-				-	默认值：无
-			-	format：( String )录音文件的格式 需通过[getFormats](#getFormats)方法获取设备支持的录音格式，若设置无效的值，则使用系统默认的录音格式。
-				-	默认值：无
 	-	####示例：
-			var recorder = app.audio.getRecorder();
+			var recorder = app.audio.getRecorder({
+			    filename: 'record.aac'
+			})
 
 			EX-1：
 			recorder.record(function(recordFile) {
@@ -102,31 +127,97 @@ audio模块用于提供音频的录制和播放功能，可调用系统的麦克
 			}, function(err) {
 			    console.log(err);
 			});
-			
-			EX-3：
-			recorder.record(function(recordFile) {
-			    console.log(recordFile);
-			}, {
-			    filename: 'filename',
-			    samplerate: recorder.getSamplerates()[0],
-			    format: recorder.getFormats()[0]
-			});
-			
-			EX-4：
-			recorder.record(function(recordFile) {
-			    console.log(recordFile);
-			}, function(err) {
-			    console.log(err);
-			}, {
-			    filename: 'filename',
-			    samplerate: recorder.getSamplerates()[0],
-			    format: recorder.getFormats()[0]
-			});
 
--	#### <div id="stop">stop()   ⇒ void </div>   
-		调用设备麦克风进行录音操作
+-	#### <div id="getCurrentTime">getCurrentTime()   ⇒ Number </div>   
+		录音时,获取当前录音时长.
 	-	####示例：
-			var recorder = app.audio.getRecorder();
+			var recorder = app.audio.getRecorder({
+			    filename: 'record.aac'
+			})
+			recorder.record(function(recordFile) {
+			    console.log(recordFile);
+			});
+			var currentTime = recorder.getCurrentTime();
+			console.log(currentTime);
+
+-	#### <div id="getDuration">getDuration()   ⇒ Number </div>   
+		获取录音时长上限,如果没有设置录音时长上限,则返回-1.
+	-	####示例：
+			var recorder = app.audio.getRecorder({
+			    filename: 'record.aac'
+			})
+			var curation = recorder.getDuration();
+			console.log(curation);
+
+-	#### <div id="addCalculateTimeCallback">addCalculateTimeCallback(callback)   ⇒ void </div>   
+		如果此回调被添加,则每秒回调一次.通过回调函数返回格式为"mm:ss"的字符串.内容为当前录音时长.
+	-	callback：计时回调函数
+		-	type：Function
+		-	默认值：无
+		-	参数
+			-	time：计时内容 格式为 "mm:ss".
+				-	type：String
+	-	####示例：
+			var recorder = app.audio.getRecorder({
+			    filename: 'record.aac'
+			})
+			recorder.addCalculateTimeCallback(function(time) {
+			    console.log(time)
+			})
+
+-	#### <div id="addCountDownCallback">addCountDownCallback(callback)   ⇒ void </div>   
+		添加倒计时回调.若没有设置录音时长上限,此方法添加的回调函数不会被调用.
+	-	callback：倒计时回调函数
+		-	type：Function
+		-	默认值：无
+		-	参数
+			-	time：计时内容 格式为 "mm:ss".
+				-	type：String
+	-	####示例：
+			var recorder = app.audio.getRecorder({
+			    filename: 'record.aac'
+			})
+			recorder.addCountDownCallback(function(time) {
+			    console.log(time)
+			})
+
+-	#### <div id="addAveragePowerCallback">addAveragePowerCallback(callback)   ⇒ void </div>   
+		添加音量监控回调,录音时,当音量分贝有变化时,返回当前音量分贝值.
+	-	callback：音量监控回调
+		-	type：Function
+		-	默认值：无
+		-	参数
+			-	averagePower：音量分贝值.
+				-	type：Number
+	-	####示例：
+			var recorder = app.audio.getRecorder({
+			    filename: 'record.aac'
+			})
+			recorder.addAveragePowerCallback(function(averagePower) {
+			    console.log(averagePower)
+			})
+
+-	#### <div id="playJustRecord">playJustRecord()   ⇒ void </div>   
+		录音完毕之后,播放刚刚录制的声音文件.
+	-	####示例：
+			var recorder = app.audio.getRecorder({
+			    filename: 'record.aac'
+			})
+			recorder.record(function(recordFile) {
+			    console.log(recordFile);
+			});
+			recorder.stop();
+			recorder.playJustRecord();
+			
+-	#### <div id="stop">stop()   ⇒ void </div>   
+		结束录音操作，通知设备完成录音操作。
+	-	####示例：
+			var recorder = app.audio.getRecorder({
+			    filename: 'record.aac'
+			})
+			recorder.record(function(recordFile) {
+			    console.log(recordFile);
+			});
 			recorder.stop();
 
 ##<div id="AudioPlayer">AudioPlayer</div>

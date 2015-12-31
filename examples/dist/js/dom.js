@@ -1,1093 +1,1018 @@
- /* ===========================
-                                       Dom Library
-                                   ===========================*/
- var Dom = (function() {
-     var emptyArray = [],
-         concat = emptyArray.concat,
-         filter = emptyArray.filter,
-         slice = emptyArray.slice,
-         document = window.document,
-         readyRE = /complete|loaded|interactive/,
-         capitalRE = /([A-Z])/g,
-         cssNumber = {
-             'column-count': 1,
-             'columns': 1,
-             'font-weight': 1,
-             'line-height': 1,
-             'opacity': 1,
-             'z-index': 1,
-             'zoom': 1
-         },
-         fragmentRE = /^\s*<(\w+|!)[^>]*>/,
-         singleTagRE = /^<(\w+)\s*\/?>(?:<\/\1>|)$/,
-         adjacencyOperators = ['after', 'prepend', 'before', 'append'],
-         simpleSelectorRE = /^[\w-]*$/,
-         isAndroid = (/android/gi).test(navigator.appVersion),
-         elementDisplay = {},
-         class2type = {},
-         classCache = {},
-         table = document.createElement('table'),
-         tableRow = document.createElement('tr'),
-         containers = {
-             'tr': document.createElement('tbody'),
-             'tbody': table,
-             'thead': table,
-             'tfoot': table,
-             'td': tableRow,
-             'th': tableRow,
-             '*': document.createElement('div')
-         },
-         toString = class2type.toString,
-         isArray = Array.isArray ||
-         function(object) {
-             return object instanceof Array
-         };
+//     Zepto.js
+//     (c) 2010-2015 Thomas Fuchs
+//     Zepto.js may be freely distributed under the MIT license.
 
-     function type(obj) {
-         return obj == null ? String(obj) :
-             class2type[toString.call(obj)] || "object"
-     };
+var Zepto = (function() {
+  var undefined, key, $, classList, emptyArray = [],
+    concat = emptyArray.concat,
+    filter = emptyArray.filter,
+    slice = emptyArray.slice,
+    document = window.document,
+    elementDisplay = {},
+    classCache = {},
+    cssNumber = {
+      'column-count': 1,
+      'columns': 1,
+      'font-weight': 1,
+      'line-height': 1,
+      'opacity': 1,
+      'z-index': 1,
+      'zoom': 1
+    },
+    fragmentRE = /^\s*<(\w+|!)[^>]*>/,
+    singleTagRE = /^<(\w+)\s*\/?>(?:<\/\1>|)$/,
+    tagExpanderRE = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig,
+    rootNodeRE = /^(?:body|html)$/i,
+    capitalRE = /([A-Z])/g,
 
-     function storage() {
-         var ls = window.localStorage;
-         if (isAndroid) {
-             ls = os.localStorage();
-         }
-         return ls;
-     };
+    // special attributes that should be get/set via method calls
+    methodAttributes = ['val', 'css', 'html', 'text', 'data', 'width', 'height', 'offset'],
 
-     function isFunction(value) {
-         return type(value) == "function"
-     };
+    adjacencyOperators = ['after', 'prepend', 'before', 'append'],
+    table = document.createElement('table'),
+    tableRow = document.createElement('tr'),
+    containers = {
+      'tr': document.createElement('tbody'),
+      'tbody': table,
+      'thead': table,
+      'tfoot': table,
+      'td': tableRow,
+      'th': tableRow,
+      '*': document.createElement('div')
+    },
+    readyRE = /complete|loaded|interactive/,
+    simpleSelectorRE = /^[\w-]*$/,
+    class2type = {},
+    toString = class2type.toString,
+    zepto = {},
+    camelize, uniq,
+    tempParent = document.createElement('div'),
+    propMap = {
+      'tabindex': 'tabIndex',
+      'readonly': 'readOnly',
+      'for': 'htmlFor',
+      'class': 'className',
+      'maxlength': 'maxLength',
+      'cellspacing': 'cellSpacing',
+      'cellpadding': 'cellPadding',
+      'rowspan': 'rowSpan',
+      'colspan': 'colSpan',
+      'usemap': 'useMap',
+      'frameborder': 'frameBorder',
+      'contenteditable': 'contentEditable'
+    },
+    isArray = Array.isArray ||
+    function(object) {
+      return object instanceof Array
+    }
 
-     function isWindow(obj) {
-         return obj != null && obj == obj.window
-     };
+  zepto.matches = function(element, selector) {
+    if (!selector || !element || element.nodeType !== 1) return false
+    var matchesSelector = element.webkitMatchesSelector || element.mozMatchesSelector ||
+      element.oMatchesSelector || element.matchesSelector
+    if (matchesSelector) return matchesSelector.call(element, selector)
+      // fall back to performing a selector:
+    var match, parent = element.parentNode,
+      temp = !parent
+    if (temp)(parent = tempParent).appendChild(element)
+    match = ~zepto.qsa(parent, selector).indexOf(element)
+    temp && tempParent.removeChild(element)
+    return match
+  }
 
-     function isDocument(obj) {
-         return obj != null && obj.nodeType == obj.DOCUMENT_NODE
-     };
+  function type(obj) {
+    return obj == null ? String(obj) :
+      class2type[toString.call(obj)] || "object"
+  }
 
-     function isObject(obj) {
-         return type(obj) == "object"
-     };
+  function isFunction(value) {
+    return type(value) == "function"
+  }
 
-     function flatten(array) {
-         return array.length > 0 ? $.fn.concat.apply([], array) : array
-     };
+  function isWindow(obj) {
+    return obj != null && obj == obj.window
+  }
 
-     function isPlainObject(obj) {
-         return isObject(obj) && !isWindow(obj) && Object.getPrototypeOf(obj) == Object.prototype
-     };
+  function isDocument(obj) {
+    return obj != null && obj.nodeType == obj.DOCUMENT_NODE
+  }
 
-     function likeArray(obj) {
-         return typeof obj.length == 'number'
-     };
+  function isObject(obj) {
+    return type(obj) == "object"
+  }
 
-     function camelize(str) {
-         return str.replace(/-+(.)?/g, function(match, chr) {
-             return chr ? chr.toUpperCase() : ''
-         })
-     };
+  function isPlainObject(obj) {
+    return isObject(obj) && !isWindow(obj) && Object.getPrototypeOf(obj) == Object.prototype
+  }
 
-     function uniq(array) {
-         return filter.call(array, function(item, idx) {
-             return array.indexOf(item) == idx
-         })
-     };
+  function likeArray(obj) {
+    return typeof obj.length == 'number'
+  }
 
-     function dasherize(str) {
-         return str.replace(/::/g, '/')
-             .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
-             .replace(/([a-z\d])([A-Z])/g, '$1_$2')
-             .replace(/_/g, '-')
-             .toLowerCase()
-     };
+  function compact(array) {
+    return filter.call(array, function(item) {
+      return item != null
+    })
+  }
 
-     function maybeAddPx(name, value) {
-         return (typeof value == "number" && !cssNumber[dasherize(name)]) ? value + "px" : value
-     };
+  function flatten(array) {
+    return array.length > 0 ? $.fn.concat.apply([], array) : array
+  }
+  camelize = function(str) {
+    return str.replace(/-+(.)?/g, function(match, chr) {
+      return chr ? chr.toUpperCase() : ''
+    })
+  }
 
-     function defaultDisplay(nodeName) {
-         var element, display
-         if (!elementDisplay[nodeName]) {
-             element = document.createElement(nodeName)
-             document.body.appendChild(element)
-             display = getComputedStyle(element, '').getPropertyValue("display")
-             element.parentNode.removeChild(element)
-             display == "none" && (display = "block")
-             elementDisplay[nodeName] = display
-         }
-         return elementDisplay[nodeName]
-     };
+  function dasherize(str) {
+    return str.replace(/::/g, '/')
+      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+      .replace(/([a-z\d])([A-Z])/g, '$1_$2')
+      .replace(/_/g, '-')
+      .toLowerCase()
+  }
+  uniq = function(array) {
+    return filter.call(array, function(item, idx) {
+      return array.indexOf(item) == idx
+    })
+  }
 
-     function setAttribute(node, name, value) {
-         value == null ? node.removeAttribute(name) : node.setAttribute(name, value)
-     };
+  function classRE(name) {
+    return name in classCache ?
+      classCache[name] : (classCache[name] = new RegExp('(^|\\s)' + name + '(\\s|$)'))
+  }
 
-     function deserializeValue(value) {
-         try {
-             return value ?
-                 value == "true" ||
-                 (value == "false" ? false :
-                     value == "null" ? null :
-                     +value + "" == value ? +value :
-                     /^[\[\{]/.test(value) ? $.parseJSON(value) :
-                     value) : value
-         } catch (e) {
-             return value
-         }
-     }
+  function maybeAddPx(name, value) {
+    return (typeof value == "number" && !cssNumber[dasherize(name)]) ? value + "px" : value
+  }
 
-     function extend(target, source, deep) {
-         for (key in source)
-             if (deep && (isPlainObject(source[key]) || isArray(source[key]))) {
-                 if (isPlainObject(source[key]) && !isPlainObject(target[key]))
-                     target[key] = {}
-                 if (isArray(source[key]) && !isArray(target[key]))
-                     target[key] = []
-                 extend(target[key], source[key], deep)
-             } else if (source[key] !== undefined) target[key] = source[key]
-     };
+  function defaultDisplay(nodeName) {
+    var element, display
+    if (!elementDisplay[nodeName]) {
+      element = document.createElement(nodeName)
+      document.body.appendChild(element)
+      display = getComputedStyle(element, '').getPropertyValue("display")
+      element.parentNode.removeChild(element)
+      display == "none" && (display = "block")
+      elementDisplay[nodeName] = display
+    }
+    return elementDisplay[nodeName]
+  }
 
-     function qsa(element, selector) {
-         var found,
-             maybeID = selector[0] == '#',
-             maybeClass = !maybeID && selector[0] == '.',
-             nameOnly = maybeID || maybeClass ? selector.slice(1) : selector, // Ensure that a 1 char tag name still gets checked
-             isSimple = simpleSelectorRE.test(nameOnly)
-         return (element.getElementById && isSimple && maybeID) ? // Safari DocumentFragment doesn't have getElementById
-             ((found = element.getElementById(nameOnly)) ? [found] : []) :
-             (element.nodeType !== 1 && element.nodeType !== 9 && element.nodeType !== 11) ? [] :
-             slice.call(
-                 isSimple && !maybeID && element.getElementsByClassName ? // DocumentFragment doesn't have getElementsByClassName/TagName
-                 maybeClass ? element.getElementsByClassName(nameOnly) : // If it's simple, it could be a class
-                 element.getElementsByTagName(selector) : // Or a tag
-                 element.querySelectorAll(selector) // Or it's not simple, and we need to query all
-             )
-     };
+  function children(element) {
+    return 'children' in element ?
+      slice.call(element.children) :
+      $.map(element.childNodes, function(node) {
+        if (node.nodeType == 1) return node
+      })
+  }
 
-     function matches(element, selector) {
-         if (!selector || !element || element.nodeType !== 1) return false
-         var matchesSelector = element.webkitMatchesSelector || element.mozMatchesSelector ||
-             element.oMatchesSelector || element.matchesSelector
-         if (matchesSelector) return matchesSelector.call(element, selector)
-             // fall back to performing a selector:
-         var match, parent = element.parentNode,
-             temp = !parent
-         if (temp)(parent = tempParent).appendChild(element)
-         match = ~qsa(parent, selector).indexOf(element)
-         temp && tempParent.removeChild(element)
-         return match
-     };
+  function Z(dom, selector) {
+    var i, len = dom ? dom.length : 0
+    for (i = 0; i < len; i++) this[i] = dom[i]
+    this.length = len
+    this.selector = selector || ''
+  }
 
-     var fragment = function(html, name) {
-         if (name === undefined) name = fragmentRE.test(html) && RegExp.$1
-         if (!(name in containers)) name = '*'
-         var container = containers[name]
-         container.innerHTML = '' + html
-         return $.each(slice.call(container.childNodes), function() {
-             container.removeChild(this)
-         })
-     }
+  // `$.zepto.fragment` takes a html string and an optional tag name
+  // to generate DOM nodes from the given html string.
+  // The generated DOM nodes are returned as an array.
+  // This function can be overridden in plugins for example to make
+  // it compatible with browsers that don't support the DOM fully.
+  zepto.fragment = function(html, name, properties) {
+    var dom, nodes, container
 
-     var Dom = function(arr) {
-         var _this = this,
-             i = 0;
-         // Create array-like object
-         for (i = 0; i < arr.length; i++) {
-             _this[i] = arr[i];
-         }
-         _this.length = arr.length;
-         // Return collection with methods
-         return this;
-     };
-     var $ = function(selector, context) {
-         var arr = [],
-             i = 0;
-         if (selector && !context) {
-             if (selector instanceof Dom) {
-                 return selector;
-             }
-         }
-         if (selector) {
-             // String
-             if (typeof selector === 'string') {
-                 var els, container, html = selector.trim();
-                 if (html.indexOf('<') >= 0 && html.indexOf('>') >= 0) {
-                     var toCreate = 'div';
-                     if (html.indexOf('<li') === 0) toCreate = 'ul';
-                     if (html.indexOf('<tr') === 0) toCreate = 'tbody';
-                     if (html.indexOf('<td') === 0 || html.indexOf('<th') === 0) toCreate = 'tr';
-                     if (html.indexOf('<tbody') === 0) toCreate = 'table';
-                     if (html.indexOf('<option') === 0) toCreate = 'select';
-                     container = document.createElement(toCreate);
-                     container.innerHTML = '' + html;
-                     arr = $.each(slice.call(container.childNodes), function() {
-                         container.removeChild(this)
-                     })
-                 } else {
-                     if (!context && selector[0] === '#' && !selector.match(/[ .<>:~]/)) {
-                         // Pure ID selector
-                         els = [document.getElementById(selector.split('#')[1])];
-                     } else {
-                         if (context !== undefined) els = $(context).find(selector)
-                         else els = document.querySelectorAll(selector);
-                         // Other selectors
+    // A special case optimization for a single tag
+    if (singleTagRE.test(html)) dom = $(document.createElement(RegExp.$1))
 
-                     }
-                     for (i = 0; i < els.length; i++) {
-                         if (els[i]) arr.push(els[i]);
-                     }
-                 }
-             }
-             // Node/element
-             else if (selector.nodeType || selector === window || selector === document) {
-                 arr.push(selector);
-             } else if (isFunction(selector)) return $(document).ready(selector)
-                 //Array of elements or instance of Dom
-             else if (selector.length > 0 && selector[0].nodeType) {
-                 for (i = 0; i < selector.length; i++) {
-                     arr.push(selector[i]);
-                 }
-             }
-         }
-         return new Dom(arr);
-     };
+    if (!dom) {
+      if (html.replace) html = html.replace(tagExpanderRE, "<$1></$2>")
+      if (name === undefined) name = fragmentRE.test(html) && RegExp.$1
+      if (!(name in containers)) name = '*'
 
-     Dom.isD = function(object) {
-         return object instanceof Dom
-     }
+      container = containers[name]
+      container.innerHTML = '' + html
+      dom = $.each(slice.call(container.childNodes), function() {
+        container.removeChild(this)
+      })
+    }
 
-     Dom.prototype = {
-         // Classes and attriutes
-         addClass: function(className) {
-             if (typeof className === 'undefined') {
-                 return this;
-             }
-             var classes = className.split(' ');
-             for (var i = 0; i < classes.length; i++) {
-                 if (classes[i]) {
-                     for (var j = 0; j < this.length; j++) {
-                         if (typeof this[j].classList !== 'undefined') this[j].classList.add(classes[i]);
-                     }
-                 }
-             }
-             return this;
-         },
-         removeClass: function(className) {
-             var classes = className.split(' ');
-             for (var i = 0; i < classes.length; i++) {
-                 if (classes[i]) {
-                     for (var j = 0; j < this.length; j++) {
-                         if (typeof this[j].classList !== 'undefined') this[j].classList.remove(classes[i]);
-                     }
-                 }
-             }
-             return this;
-         },
-         hasClass: function(className) {
-             if (!this[0]) return false;
-             else return this[0].classList.contains(className);
-         },
-         toggleClass: function(className) {
-             var classes = className.split(' ');
-             for (var i = 0; i < classes.length; i++) {
-                 if (classes[i]) {
-                     for (var j = 0; j < this.length; j++) {
-                         if (typeof this[j].classList !== 'undefined') this[j].classList.toggle(classes[i]);
-                     }
-                 }
-             }
-             return this;
-         },
+    if (isPlainObject(properties)) {
+      nodes = $(dom)
+      $.each(properties, function(key, value) {
+        if (methodAttributes.indexOf(key) > -1) nodes[key](value)
+        else nodes.attr(key, value)
+      })
+    }
 
-         scrollTop: function(value) {
-             if (!this.length) return
-             var hasScrollTop = 'scrollTop' in this[0]
-             if (value === undefined) return hasScrollTop ? this[0].scrollTop : this[0].pageYOffset
-             return this.each(hasScrollTop ?
-                 function() {
-                     this.scrollTop = value
-                 } :
-                 function() {
-                     this.scrollTo(this.scrollX, value)
-                 })
-         },
-         scrollLeft: function(value) {
-             if (!this.length) return
-             var hasScrollLeft = 'scrollLeft' in this[0]
-             if (value === undefined) return hasScrollLeft ? this[0].scrollLeft : this[0].pageXOffset
-             return this.each(hasScrollLeft ?
-                 function() {
-                     this.scrollLeft = value
-                 } :
-                 function() {
-                     this.scrollTo(value, this.scrollY)
-                 })
-         },
+    return dom
+  }
 
-         ready: function(callback) {
-             if (readyRE.test(document.readyState) && document.body) callback($)
-             else document.addEventListener('DOMContentLoaded', function() {
-                 callback($)
-             }, false)
-         },
-         attr: function(attrs, value) {
-             if (arguments.length === 1 && typeof attrs === 'string') {
-                 // Get attr
-                 if (this[0]) return this[0].getAttribute(attrs);
-                 else return undefined;
-             } else {
-                 // Set attrs
-                 for (var i = 0; i < this.length; i++) {
-                     if (arguments.length === 2) {
-                         // String
-                         setAttribute(this[i], attrs, value)
-                     } else {
-                         // Object
-                         for (var attrName in attrs) {
-                             this[i][attrName] = attrs[attrName];
-                             setAttribute(this[i], attrName, attrs[attrName]);
-                         }
-                     }
-                 }
-                 return this;
-             }
-         },
-         removeAttr: function(attr) {
-             for (var i = 0; i < this.length; i++) {
-                 this[i].removeAttribute(attr);
-             }
-             return this;
-         },
-         prop: function(props, value) {
-             if (arguments.length === 1 && typeof props === 'string') {
-                 // Get prop
-                 if (this[0]) return this[0][props];
-                 else return undefined;
-             } else {
-                 // Set props
-                 for (var i = 0; i < this.length; i++) {
-                     if (arguments.length === 2) {
-                         // String
-                         this[i][props] = value;
-                     } else {
-                         // Object
-                         for (var propName in props) {
-                             this[i][propName] = props[propName];
-                         }
-                     }
-                 }
-                 return this;
-             }
-         },
-         data: function(name, value) {
-             var attrName = 'data-' + name.replace(capitalRE, '-$1').toLowerCase()
+  // `$.zepto.Z` swaps out the prototype of the given `dom` array
+  // of nodes with `$.fn` and thus supplying all the Zepto functions
+  // to the array. This method can be overridden in plugins.
+  zepto.Z = function(dom, selector) {
+    return new Z(dom, selector)
+  }
 
-             var data = (1 in arguments) ?
-                 this.attr(attrName, value) :
-                 this.attr(attrName)
+  // `$.zepto.isZ` should return `true` if the given object is a Zepto
+  // collection. This method can be overridden in plugins.
+  zepto.isZ = function(object) {
+    return object instanceof zepto.Z
+  }
 
-             return data !== null ? deserializeValue(data) : undefined
-         },
-         val: function(value) {
-             if (typeof value === 'undefined') {
-                 if (this[0]) return this[0].value;
-                 else return undefined;
-             } else {
-                 for (var i = 0; i < this.length; i++) {
-                     this[i].value = value;
-                 }
-                 return this;
-             }
-         },
-         // Transforms
-         transform: function(transform) {
-             for (var i = 0; i < this.length; i++) {
-                 var elStyle = this[i].style;
-                 elStyle.webkitTransform = elStyle.MsTransform = elStyle.msTransform = elStyle.MozTransform = elStyle.OTransform = elStyle.transform = transform;
-             }
-             return this;
-         },
-         transition: function(duration) {
-             if (typeof duration !== 'string') {
-                 duration = duration + 'ms';
-             }
-             for (var i = 0; i < this.length; i++) {
-                 var elStyle = this[i].style;
-                 elStyle.webkitTransitionDuration = elStyle.MsTransitionDuration = elStyle.msTransitionDuration = elStyle.MozTransitionDuration = elStyle.OTransitionDuration = elStyle.transitionDuration = duration;
-             }
-             return this;
-         },
-         transitionEnd: function(callback) {
-             var events = ['webkitTransitionEnd', 'transitionend', 'oTransitionEnd', 'MSTransitionEnd', 'msTransitionEnd'],
-                 i, j, dom = this;
+  // `$.zepto.init` is Zepto's counterpart to jQuery's `$.fn.init` and
+  // takes a CSS selector and an optional context (and handles various
+  // special cases).
+  // This method can be overridden in plugins.
+  zepto.init = function(selector, context) {
+    var dom
+      // If nothing given, return an empty Zepto collection
+    if (!selector) return zepto.Z()
+      // Optimize for string selectors
+    else if (typeof selector == 'string') {
+      selector = selector.trim()
+        // If it's a html fragment, create nodes from it
+        // Note: In both Chrome 21 and Firefox 15, DOM error 12
+        // is thrown if the fragment doesn't begin with <
+      if (selector[0] == '<' && fragmentRE.test(selector))
+        dom = zepto.fragment(selector, RegExp.$1, context), selector = null
+        // If there's a context, create a collection on that context first, and select
+        // nodes from there
+      else if (context !== undefined) return $(context).find(selector)
+        // If it's a CSS selector, use it to select nodes.
+      else dom = zepto.qsa(document, selector)
+    }
+    // If a function is given, call it when the DOM is ready
+    else if (isFunction(selector)) return $(document).ready(selector)
+      // If a Zepto collection is given, just return it
+    else if (zepto.isZ(selector)) return selector
+    else {
+      // normalize array if an array of nodes is given
+      if (isArray(selector)) dom = compact(selector)
+        // Wrap DOM nodes.
+      else if (isObject(selector))
+        dom = [selector], selector = null
+        // If it's a html fragment, create nodes from it
+      else if (fragmentRE.test(selector))
+        dom = zepto.fragment(selector.trim(), RegExp.$1, context), selector = null
+        // If there's a context, create a collection on that context first, and select
+        // nodes from there
+      else if (context !== undefined) return $(context).find(selector)
+        // And last but no least, if it's a CSS selector, use it to select nodes.
+      else dom = zepto.qsa(document, selector)
+    }
+    // create a new Zepto collection from the nodes found
+    return zepto.Z(dom, selector)
+  }
 
-             function fireCallBack(e) {
-                 /*jshint validthis:true */
-                 if (e.target !== this) return;
-                 callback.call(this, e);
-                 for (i = 0; i < events.length; i++) {
-                     dom.off(events[i], fireCallBack);
-                 }
-             }
-             if (callback) {
-                 for (i = 0; i < events.length; i++) {
-                     dom.on(events[i], fireCallBack);
-                 }
-             }
-             return this;
-         },
-         animationEnd: function(callback) {
-             var events = ['webkitAnimationEnd', 'OAnimationEnd', 'MSAnimationEnd', 'animationend'],
-                 i, j, dom = this;
+  // `$` will be the base `Zepto` object. When calling this
+  // function just call `$.zepto.init, which makes the implementation
+  // details of selecting nodes and creating Zepto collections
+  // patchable in plugins.
+  $ = function(selector, context) {
+    return zepto.init(selector, context)
+  }
 
-             function fireCallBack(e) {
-                 callback(e);
-                 for (i = 0; i < events.length; i++) {
-                     dom.off(events[i], fireCallBack);
-                 }
-             }
-             if (callback) {
-                 for (i = 0; i < events.length; i++) {
-                     dom.on(events[i], fireCallBack);
-                 }
-             }
-             return this;
-         },
-         outerWidth: function(includeMargins) {
-             if (this.length > 0) {
-                 if (includeMargins) {
-                     var styles = this.styles();
-                     return this[0].offsetWidth + parseFloat(styles.getPropertyValue('margin-right')) + parseFloat(styles.getPropertyValue('margin-left'));
-                 } else
-                     return this[0].offsetWidth;
-             } else return null;
-         },
-         outerHeight: function(includeMargins) {
-             if (this.length > 0) {
-                 if (includeMargins) {
-                     var styles = this.styles();
-                     return this[0].offsetHeight + parseFloat(styles.getPropertyValue('margin-top')) + parseFloat(styles.getPropertyValue('margin-bottom'));
-                 } else
-                     return this[0].offsetHeight;
-             } else return null;
-         },
-         offset: function() {
-             if (this.length > 0) {
-                 var el = this[0];
-                 var box = el.getBoundingClientRect();
-                 var body = document.body;
-                 var clientTop = el.clientTop || body.clientTop || 0;
-                 var clientLeft = el.clientLeft || body.clientLeft || 0;
-                 var scrollTop = window.pageYOffset || el.scrollTop;
-                 var scrollLeft = window.pageXOffset || el.scrollLeft;
-                 return {
-                     top: box.top + scrollTop - clientTop,
-                     left: box.left + scrollLeft - clientLeft,
-                     width: Math.round(box.width),
-                     height: Math.round(box.height)
-                 };
-             } else {
-                 return null;
-             }
-         },
-         map: function(fn) {
-             return $($.map(this, function(el, i) {
-                 return fn.call(el, i, el)
-             }))
-         },
-         clone: function() {
-             return this.map(function() {
-                 return this.cloneNode(true)
-             })
-         },
-         hide: function() {
-             return this.css("display", "none")
-         },
-         show: function() {
-             return this.each(function() {
-                 this.style.display == "none" && (this.style.display = '')
-                 if (getComputedStyle(this, '').getPropertyValue("display") == "none")
-                     this.style.display = defaultDisplay(this.nodeName)
-             })
-         },
-         size: function() {
-             return this.length
-         },
-         styles: function() {
-             var i, styles;
-             if (this[0]) return window.getComputedStyle(this[0], null);
-             else return undefined;
-         },
-         css: function(property, value) {
-             if (arguments.length < 2) {
-                 var computedStyle, element = this[0]
-                 if (!element) return
-                 computedStyle = getComputedStyle(element, '')
-                 if (typeof property == 'string')
-                     return element.style[camelize(property)] || computedStyle.getPropertyValue(property)
-                 else if (isArray(property)) {
-                     var props = {}
-                     $.each(property, function(_, prop) {
-                         props[prop] = (element.style[camelize(prop)] || computedStyle.getPropertyValue(prop))
-                     })
-                     return props
-                 }
-             }
+  function extend(target, source, deep) {
+    for (key in source)
+      if (deep && (isPlainObject(source[key]) || isArray(source[key]))) {
+        if (isPlainObject(source[key]) && !isPlainObject(target[key]))
+          target[key] = {}
+        if (isArray(source[key]) && !isArray(target[key]))
+          target[key] = []
+        extend(target[key], source[key], deep)
+      } else if (source[key] !== undefined) target[key] = source[key]
+  }
 
-             var css = ''
-             if (type(property) == 'string') {
-                 if (!value && value !== 0)
-                     this.each(function() {
-                         this.style.removeProperty(dasherize(property))
-                     })
-                 else
-                     css = dasherize(property) + ":" + maybeAddPx(property, value)
-             } else {
-                 for (key in property)
-                     if (!property[key] && property[key] !== 0)
-                         this.each(function() {
-                             this.style.removeProperty(dasherize(key))
-                         })
-                     else
-                         css += dasherize(key) + ':' + maybeAddPx(key, property[key]) + ';'
-             }
+  // Copy all but undefined properties from one or more
+  // objects to the `target` object.
+  $.extend = function(target) {
+    var deep, args = slice.call(arguments, 1)
+    if (typeof target == 'boolean') {
+      deep = target
+      target = args.shift()
+    }
+    args.forEach(function(arg) {
+      extend(target, arg, deep)
+    })
+    return target
+  }
 
-             return this.each(function() {
-                 this.style.cssText += ';' + css
-             })
-         },
+  // `$.zepto.qsa` is Zepto's CSS selector implementation which
+  // uses `document.querySelectorAll` and optimizes for some special cases, like `#id`.
+  // This method can be overridden in plugins.
+  zepto.qsa = function(element, selector) {
+    var found,
+      maybeID = selector[0] == '#',
+      maybeClass = !maybeID && selector[0] == '.',
+      nameOnly = maybeID || maybeClass ? selector.slice(1) : selector, // Ensure that a 1 char tag name still gets checked
+      isSimple = simpleSelectorRE.test(nameOnly)
+    return (element.getElementById && isSimple && maybeID) ? // Safari DocumentFragment doesn't have getElementById
+      ((found = element.getElementById(nameOnly)) ? [found] : []) :
+      (element.nodeType !== 1 && element.nodeType !== 9 && element.nodeType !== 11) ? [] :
+      slice.call(
+        isSimple && !maybeID && element.getElementsByClassName ? // DocumentFragment doesn't have getElementsByClassName/TagName
+        maybeClass ? element.getElementsByClassName(nameOnly) : // If it's simple, it could be a class
+        element.getElementsByTagName(selector) : // Or a tag
+        element.querySelectorAll(selector) // Or it's not simple, and we need to query all
+      )
+  }
 
-         //Dom manipulation
-         each: function(callback) {
-             emptyArray.every.call(this, function(el, idx) {
-                 return callback.call(el, idx, el) !== false
-             })
-             return this
-         },
-         filter: function(selector) {
-             if (isFunction(selector)) return this.not(this.not(selector))
-             return $(filter.call(this, function(element) {
-                 return matches(element, selector)
-             }))
-         },
-         not: function(selector) {
-             var nodes = []
-             if (isFunction(selector) && selector.call !== undefined)
-                 this.each(function(idx) {
-                     if (!selector.call(this, idx)) nodes.push(this)
-                 })
-             else {
-                 var excludes = typeof selector == 'string' ? this.filter(selector) :
-                     (likeArray(selector) && isFunction(selector.item)) ? slice.call(selector) : $(selector)
-                 this.forEach(function(el) {
-                     if (excludes.indexOf(el) < 0) nodes.push(el)
-                 })
-             }
-             return $(nodes)
-         },
-         html: function(html) {
-             if (typeof html === 'undefined') {
-                 return this[0] ? this[0].innerHTML : undefined;
-             } else {
-                 for (var i = 0; i < this.length; i++) {
-                     this[i].innerHTML = html;
-                 }
-                 return this;
-             }
-         },
-         text: function(text) {
-             if (typeof text === 'undefined') {
-                 if (this[0]) {
-                     return this[0].textContent.trim();
-                 } else return null;
-             } else {
-                 for (var i = 0; i < this.length; i++) {
-                     this[i].textContent = text;
-                 }
-             }
-         },
-         concat: function() {
-             var i, value, args = []
-             for (i = 0; i < arguments.length; i++) {
-                 value = arguments[i]
-                 args[i] = Dom.isD(value) ? value.toArray() : value
-             }
-             return concat.apply(Dom.isD(this) ? this.toArray() : this, args)
-         },
-         get: function(idx) {
-             return idx === undefined ? slice.call(this) : this[idx >= 0 ? idx : idx + this.length]
-         },
-         toArray: function() {
-             return this.get()
-         },
-         is: function(selector) {
-             if (!this[0] || typeof selector === 'undefined') return false;
-             var compareWith, i;
-             if (typeof selector === 'string') {
-                 var el = this[0];
-                 if (el === document) return selector === document;
-                 if (el === window) return selector === window;
+  function filtered(nodes, selector) {
+    return selector == null ? $(nodes) : $(nodes).filter(selector)
+  }
 
-                 if (el.matches) return el.matches(selector);
-                 else if (el.webkitMatchesSelector) return el.webkitMatchesSelector(selector);
-                 else if (el.mozMatchesSelector) return el.mozMatchesSelector(selector);
-                 else if (el.msMatchesSelector) return el.msMatchesSelector(selector);
-                 else {
-                     compareWith = $(selector);
-                     for (i = 0; i < compareWith.length; i++) {
-                         if (compareWith[i] === this[0]) return true;
-                     }
-                     return false;
-                 }
-             } else if (selector === document) return this[0] === document;
-             else if (selector === window) return this[0] === window;
-             else {
-                 if (selector.nodeType || selector instanceof Dom) {
-                     compareWith = selector.nodeType ? [selector] : selector;
-                     for (i = 0; i < compareWith.length; i++) {
-                         if (compareWith[i] === this[0]) return true;
-                     }
-                     return false;
-                 }
-                 return false;
-             }
+  $.contains = document.documentElement.contains ?
+    function(parent, node) {
+      return parent !== node && parent.contains(node)
+    } :
+    function(parent, node) {
+      while (node && (node = node.parentNode))
+        if (node === parent) return true
+      return false
+    }
 
-         },
-         indexOf: function(el) {
-             for (var i = 0; i < this.length; i++) {
-                 if (this[i] === el) return i;
-             }
-         },
-         index: function() {
-             if (this[0]) {
-                 var child = this[0];
-                 var i = 0;
-                 while ((child = child.previousSibling) !== null) {
-                     if (child.nodeType === 1) i++;
-                 }
-                 return i;
-             } else return undefined;
-         },
-         eq: function(index) {
-             if (typeof index === 'undefined') return this;
-             var length = this.length;
-             var returnIndex;
-             if (index > length - 1) {
-                 return new Dom([]);
-             }
-             if (index < 0) {
-                 returnIndex = length + index;
-                 if (returnIndex < 0) return new Dom([]);
-                 else return new Dom([this[returnIndex]]);
-             }
-             return new Dom([this[index]]);
-         },
-         first: function() {
-             var el = this[0]
-             return el && !isObject(el) ? el : $(el)
-         },
-         last: function() {
-             var el = this[this.length - 1]
-             return el && !isObject(el) ? el : $(el)
-         },
-         next: function(selector) {
-             if (this.length > 0) {
-                 if (selector) {
-                     if (this[0].nextElementSibling && $(this[0].nextElementSibling).is(selector)) return new Dom([this[0].nextElementSibling]);
-                     else return new Dom([]);
-                 } else {
-                     if (this[0].nextElementSibling) return new Dom([this[0].nextElementSibling]);
-                     else return new Dom([]);
-                 }
-             } else return new Dom([]);
-         },
-         nextAll: function(selector) {
-             var nextEls = [];
-             var el = this[0];
-             if (!el) return new Dom([]);
-             while (el.nextElementSibling) {
-                 var next = el.nextElementSibling;
-                 if (selector) {
-                     if ($(next).is(selector)) nextEls.push(next);
-                 } else nextEls.push(next);
-                 el = next;
-             }
-             return new Dom(nextEls);
-         },
-         prev: function(selector) {
-             if (this.length > 0) {
-                 if (selector) {
-                     if (this[0].previousElementSibling && $(this[0].previousElementSibling).is(selector)) return new Dom([this[0].previousElementSibling]);
-                     else return new Dom([]);
-                 } else {
-                     if (this[0].previousElementSibling) return new Dom([this[0].previousElementSibling]);
-                     else return new Dom([]);
-                 }
-             } else return new Dom([]);
-         },
-         prevAll: function(selector) {
-             var prevEls = [];
-             var el = this[0];
-             if (!el) return new Dom([]);
-             while (el.previousElementSibling) {
-                 var prev = el.previousElementSibling;
-                 if (selector) {
-                     if ($(prev).is(selector)) prevEls.push(prev);
-                 } else prevEls.push(prev);
-                 el = prev;
-             }
-             return new Dom(prevEls);
-         },
-         wrap: function(structure) {
-             var func = isFunction(structure)
-             if (this[0] && !func)
-                 var dom = $(structure).get(0),
-                     clone = dom.parentNode || this.length > 1
+  function funcArg(context, arg, idx, payload) {
+    return isFunction(arg) ? arg.call(context, idx, payload) : arg
+  }
 
-             return this.each(function(index) {
-                 $(this).wrapAll(
-                     func ? structure.call(this, index) :
-                     clone ? dom.cloneNode(true) : dom
-                 )
-             })
-         },
-         wrapAll: function(structure) {
-             if (this[0]) {
-                 structure = $(structure);
-                 structure.insertBefore($(this[0]))
-                 var children
-                     // drill down to the inmost element
-                 while ((children = structure.children()).length) structure = children.first()
-                 $(structure).append(this)
-             }
-             return this
-         },
-         parent: function(selector) {
-             var parents = [];
-             for (var i = 0; i < this.length; i++) {
-                 if (selector) {
-                     if ($(this[i].parentNode).is(selector)) parents.push(this[i].parentNode);
-                 } else {
-                     parents.push(this[i].parentNode);
-                 }
-             }
-             return $($.unique(parents));
-         },
-         parents: function(selector) {
-             var parents = [];
-             for (var i = 0; i < this.length; i++) {
-                 var parent = this[i].parentNode;
-                 while (parent) {
-                     if (selector) {
-                         if ($(parent).is(selector)) parents.push(parent);
-                     } else {
-                         parents.push(parent);
-                     }
-                     parent = parent.parentNode;
-                 }
-             }
-             return $($.unique(parents));
-         },
-         closest: function(selector, context) {
-             var node = this[0],
-                 collection = false
-             if (typeof selector == 'object') collection = $(selector)
-             while (node && !(collection ? collection.indexOf(node) >= 0 : matches(node, selector)))
-                 node = node !== context && !isDocument(node) && node.parentNode
-             return $(node)
-         },
-         find: function(selector) {
-             var foundElements = [];
-             for (var i = 0; i < this.length; i++) {
-                 var found = this[i].querySelectorAll(selector);
-                 for (var j = 0; j < found.length; j++) {
-                     foundElements.push(found[j]);
-                 }
-             }
-             return new Dom(foundElements);
-         },
-         children: function(selector) {
-             var children = [];
-             for (var i = 0; i < this.length; i++) {
-                 var childNodes = this[i].childNodes;
+  function setAttribute(node, name, value) {
+    value == null ? node.removeAttribute(name) : node.setAttribute(name, value)
+  }
 
-                 for (var j = 0; j < childNodes.length; j++) {
-                     var node = childNodes[j];
-                     if (!selector) {
-                         if (node.nodeType === 1 && node.nodeName.toUpperCase() !== 'SCRIPT') children.push(childNodes[j]);
-                     } else {
-                         if (node.nodeType === 1 && node.nodeName.toUpperCase() !== 'SCRIPT' && $(node).is(selector)) children.push(node);
-                     }
-                 }
-             }
-             return new Dom($.unique(children));
-         },
-         remove: function() {
-             for (var i = 0; i < this.length; i++) {
-                 if (this[i].parentNode) this[i].parentNode.removeChild(this[i]);
-             }
-             return this;
-         },
-         empty: function() {
-             return this.each(function() {
-                 this.innerHTML = ''
-             })
-         },
-         detach: function() {
-             return this.remove();
-         },
-         add: function(selector, context) {
-             return $(uniq(this.concat($(selector, context))))
-         },
-     };
+  // access className property while respecting SVGAnimatedString
+  function className(node, value) {
+    var klass = node.className || '',
+      svg = klass && klass.baseVal !== undefined
 
-     // Link to prototype
-     $.fn = Dom.prototype;
+    if (value === undefined) return svg ? klass.baseVal : klass
+    svg ? (klass.baseVal = value) : (node.className = value)
+  }
 
-     // Generate the `width` and `height` functions
-     ['width', 'height'].forEach(function(dimension) {
-         var dimensionProperty =
-             dimension.replace(/./, function(m) {
-                 return m[0].toUpperCase()
-             })
+  // "true"  => true
+  // "false" => false
+  // "null"  => null
+  // "42"    => 42
+  // "42.5"  => 42.5
+  // "08"    => "08"
+  // JSON    => parse if valid
+  // String  => self
+  function deserializeValue(value) {
+    try {
+      return value ?
+        value == "true" ||
+        (value == "false" ? false :
+          value == "null" ? null :
+          +value + "" == value ? +value :
+          /^[\[\{]/.test(value) ? $.parseJSON(value) :
+          value) : value
+    } catch (e) {
+      return value
+    }
+  }
 
-         $.fn[dimension] = function(value) {
-             var offset, el = this[0]
-             if (value === undefined) return isWindow(el) ? el['inner' + dimensionProperty] :
-                 isDocument(el) ? el.documentElement['scroll' + dimensionProperty] :
-                 (offset = this.offset()) && offset[dimension]
-             else return this.each(function(idx) {
-                 el = $(this)
-                 el.css(dimension, value)
-             })
-         }
-     })
+  $.type = type
+  $.isFunction = isFunction
+  $.isWindow = isWindow
+  $.isArray = isArray
+  $.isPlainObject = isPlainObject
 
-     function insert(operator, target, node) {
-         var parent = (operator % 2) ? target : target.parentNode
-         parent ? parent.insertBefore(node, !operator ? target.nextSibling : // after
-                 operator == 1 ? parent.firstChild : // prepend
-                 operator == 2 ? target : // before
-                 null) : // append
-             $(node).remove()
-     }
+  $.isEmptyObject = function(obj) {
+    var name
+    for (name in obj) return false
+    return true
+  }
 
-     function traverseNode(node, fun) {
-         fun(node)
-         for (var i = 0, len = node.childNodes.length; i < len; i++)
-             traverseNode(node.childNodes[i], fun)
-     }
+  $.inArray = function(elem, array, i) {
+    return emptyArray.indexOf.call(array, elem, i)
+  }
 
-     // Generate the `after`, `prepend`, `before`, `append`,
-     // `insertAfter`, `insertBefore`, `appendTo`, and `prependTo` methods.
-     adjacencyOperators.forEach(function(key, operator) {
-         $.fn[key] = function() {
-             // arguments can be nodes, arrays of nodes, Zepto objects and HTML strings
-             var nodes = $.map(arguments, function(n) {
-                 return isObject(n) ? n : fragment(n)
-             })
-             if (nodes.length < 1) return this
-             var size = this.length,
-                 copyByClone = size > 1,
-                 inReverse = operator < 2
+  $.camelCase = camelize
+  $.trim = function(str) {
+    return str == null ? "" : String.prototype.trim.call(str)
+  }
 
-             return this.each(function(index, target) {
-                 for (var i = 0; i < nodes.length; i++) {
-                     var node = nodes[inReverse ? nodes.length - i - 1 : i]
-                     if (copyByClone && index < size - 1) node = node.cloneNode(true)
-                     insert(operator, target, node)
-                 }
-             })
-         }
-         $.fn[(operator % 2) ? key + 'To' : 'insert' + (operator ? 'Before' : 'After')] = function(html) {
-             $(html)[key](this)
-             return this
-         }
-     })
+  // plugin compatibility
+  $.uuid = 0
+  $.support = {}
+  $.expr = {}
+  $.noop = function() {}
 
-     // DOM Library Utilites
-     $.uuid = 0
-     $.type = type
-     $.isFunction = isFunction
-     $.isWindow = isWindow
-     $.isArray = isArray
-     $.isPlainObject = isPlainObject
-     $.camelCase = camelize
-     $.deserializeValue = deserializeValue
-     if (window.JSON) $.parseJSON = JSON.parse
-     $.parseUrlQuery = function(url) {
-         var query = {},
-             i, params, param;
-         if (url.indexOf('?') >= 0) url = url.split('?')[1];
-         else return query;
-         params = url.split('&');
-         for (i = 0; i < params.length; i++) {
-             param = params[i].split('=');
-             query[param[0]] = param[1];
-         }
-         return query;
-     };
-     $.map = function(elements, callback) {
-         var value, values = [],
-             i, key
-         if (likeArray(elements))
-             for (i = 0; i < elements.length; i++) {
-                 value = callback(elements[i], i)
-                 if (value != null) values.push(value)
-             } else
-                 for (key in elements) {
-                     value = callback(elements[key], key)
-                     if (value != null) values.push(value)
-                 }
-         return flatten(values)
-     }
-     $.isArray = function(arr) {
-         if (Object.prototype.toString.apply(arr) === '[object Array]') return true;
-         else return false;
-     };
-     $.each = function(elements, callback) {
-             var i, key
-             if (likeArray(elements)) {
-                 for (i = 0; i < elements.length; i++)
-                     if (callback.call(elements[i], i, elements[i]) === false) return elements
-             } else {
-                 for (key in elements)
-                     if (callback.call(elements[key], key, elements[key]) === false) return elements
-             }
+  $.map = function(elements, callback) {
+    var value, values = [],
+      i, key
+    if (likeArray(elements))
+      for (i = 0; i < elements.length; i++) {
+        value = callback(elements[i], i)
+        if (value != null) values.push(value)
+      } else
+      for (key in elements) {
+        value = callback(elements[key], key)
+        if (value != null) values.push(value)
+      }
+    return flatten(values)
+  }
 
-             return elements
-         }
-         // Populate the class2type map
-     $.each("Boolean Number String Function Array Date RegExp Object Error".split(" "), function(i, name) {
-             class2type["[object " + name + "]"] = name.toLowerCase()
-         })
-         // Copy all but undefined properties from one or more
-         // objects to the `target` object.
-     $.extend = function(target) {
-         var deep, args = slice.call(arguments, 1)
-         if (typeof target == 'boolean') {
-             deep = target
-             target = args.shift()
-         }
-         args.forEach(function(arg) {
-             extend(target, arg, deep)
-         })
-         return target
-     };
-     $.trim = function(str) {
-         return str == null ? "" : String.prototype.trim.call(str)
-     };
-     $.contains = document.documentElement.contains ?
-         function(parent, node) {
-             return parent !== node && parent.contains(node)
-         } :
-         function(parent, node) {
-             while (node && (node = node.parentNode))
-                 if (node === parent) return true
-             return false
-         };
-     $.unique = function(arr) {
-         var unique = [];
-         for (var i = 0; i < arr.length; i++) {
-             if (unique.indexOf(arr[i]) === -1) unique.push(arr[i]);
-         }
-         return unique;
-     };
-     $.serializeObject = function(obj) {
-         if (typeof obj === 'string') return obj;
-         var resultArray = [];
-         var separator = '&';
-         for (var prop in obj) {
-             if (obj.hasOwnProperty(prop)) {
-                 if ($.isArray(obj[prop])) {
-                     var toPush = [];
-                     for (var i = 0; i < obj[prop].length; i++) {
-                         toPush.push(encodeURIComponent(prop) + '=' + encodeURIComponent(obj[prop][i]));
-                     }
-                     if (toPush.length > 0) resultArray.push(toPush.join(separator));
-                 } else {
-                     // Should be string
-                     resultArray.push(encodeURIComponent(prop) + '=' + encodeURIComponent(obj[prop]));
-                 }
-             }
+  $.each = function(elements, callback) {
+    var i, key
+    if (likeArray(elements)) {
+      for (i = 0; i < elements.length; i++)
+        if (callback.call(elements[i], i, elements[i]) === false) return elements
+    } else {
+      for (key in elements)
+        if (callback.call(elements[key], key, elements[key]) === false) return elements
+    }
 
-         }
+    return elements
+  }
 
-         return resultArray.join(separator);
-     };
-     $.getTranslate = function(el, axis) {
-         var matrix, curTransform, curStyle, transformMatrix;
+  $.grep = function(elements, callback) {
+    return filter.call(elements, callback)
+  }
 
-         // automatic axis detection
-         if (typeof axis === 'undefined') {
-             axis = 'x';
-         }
+  if (window.JSON) $.parseJSON = JSON.parse
 
-         curStyle = window.getComputedStyle(el, null);
-         if (window.WebKitCSSMatrix) {
-             // Some old versions of Webkit choke when 'none' is passed; pass
-             // empty string instead in this case
-             transformMatrix = new WebKitCSSMatrix(curStyle.webkitTransform === 'none' ? '' : curStyle.webkitTransform);
-         } else {
-             transformMatrix = curStyle.MozTransform || curStyle.OTransform || curStyle.MsTransform || curStyle.msTransform || curStyle.transform || curStyle.getPropertyValue('transform').replace('translate(', 'matrix(1, 0, 0, 1,');
-             matrix = transformMatrix.toString().split(',');
-         }
+  // Populate the class2type map
+  $.each("Boolean Number String Function Array Date RegExp Object Error".split(" "), function(i, name) {
+    class2type["[object " + name + "]"] = name.toLowerCase()
+  })
 
-         if (axis === 'x') {
-             //Latest Chrome and webkits Fix
-             if (window.WebKitCSSMatrix)
-                 curTransform = transformMatrix.m41;
-             //Crazy IE10 Matrix
-             else if (matrix.length === 16)
-                 curTransform = parseFloat(matrix[12]);
-             //Normal Browsers
-             else
-                 curTransform = parseFloat(matrix[4]);
-         }
-         if (axis === 'y') {
-             //Latest Chrome and webkits Fix
-             if (window.WebKitCSSMatrix)
-                 curTransform = transformMatrix.m42;
-             //Crazy IE10 Matrix
-             else if (matrix.length === 16)
-                 curTransform = parseFloat(matrix[13]);
-             //Normal Browsers
-             else
-                 curTransform = parseFloat(matrix[5]);
-         }
+  // Define methods that will be available on all
+  // Zepto collections
+  $.fn = {
+    constructor: zepto.Z,
+    length: 0,
 
-         return curTransform || 0;
-     };
+    // Because a collection acts like an array
+    // copy over these useful array functions.
+    forEach: emptyArray.forEach,
+    reduce: emptyArray.reduce,
+    push: emptyArray.push,
+    sort: emptyArray.sort,
+    splice: emptyArray.splice,
+    indexOf: emptyArray.indexOf,
+    concat: function() {
+      var i, value, args = []
+      for (i = 0; i < arguments.length; i++) {
+        value = arguments[i]
+        args[i] = zepto.isZ(value) ? value.toArray() : value
+      }
+      return concat.apply(zepto.isZ(this) ? this.toArray() : this, args)
+    },
 
-     $.requestAnimationFrame = function(callback) {
-         if (window.requestAnimationFrame) return window.requestAnimationFrame(callback);
-         else if (window.webkitRequestAnimationFrame) return window.webkitRequestAnimationFrame(callback);
-         else if (window.mozRequestAnimationFrame) return window.mozRequestAnimationFrame(callback);
-         else {
-             return window.setTimeout(callback, 1000 / 60);
-         }
-     };
-     $.cancelAnimationFrame = function(id) {
-         if (window.cancelAnimationFrame) return window.cancelAnimationFrame(id);
-         else if (window.webkitCancelAnimationFrame) return window.webkitCancelAnimationFrame(id);
-         else if (window.mozCancelAnimationFrame) return window.mozCancelAnimationFrame(id);
-         else {
-             return window.clearTimeout(id);
-         }
-     };
-     $.supportTouch = !!(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch);
+    // `map` and `slice` in the jQuery API work differently
+    // from their array counterparts
+    map: function(fn) {
+      return $($.map(this, function(el, i) {
+        return fn.call(el, i, el)
+      }))
+    },
+    slice: function() {
+      return $(slice.apply(this, arguments))
+    },
 
+    ready: function(callback) {
+      // need to check if document.body exists for IE as that browser reports
+      // document ready when it hasn't yet created the body element
+      if (readyRE.test(document.readyState) && document.body) callback($)
+      else document.addEventListener('DOMContentLoaded', function() {
+        callback($)
+      }, false)
+      return this
+    },
+    get: function(idx) {
+      return idx === undefined ? slice.call(this) : this[idx >= 0 ? idx : idx + this.length]
+    },
+    toArray: function() {
+      return this.get()
+    },
+    size: function() {
+      return this.length
+    },
+    remove: function() {
+      return this.each(function() {
+        if (this.parentNode != null)
+          this.parentNode.removeChild(this)
+      })
+    },
+    each: function(callback) {
+      emptyArray.every.call(this, function(el, idx) {
+        return callback.call(el, idx, el) !== false
+      })
+      return this
+    },
+    filter: function(selector) {
+      if (isFunction(selector)) return this.not(this.not(selector))
+      return $(filter.call(this, function(element) {
+        return zepto.matches(element, selector)
+      }))
+    },
+    add: function(selector, context) {
+      return $(uniq(this.concat($(selector, context))))
+    },
+    is: function(selector) {
+      return this.length > 0 && zepto.matches(this[0], selector)
+    },
+    not: function(selector) {
+      var nodes = []
+      if (isFunction(selector) && selector.call !== undefined)
+        this.each(function(idx) {
+          if (!selector.call(this, idx)) nodes.push(this)
+        })
+      else {
+        var excludes = typeof selector == 'string' ? this.filter(selector) :
+          (likeArray(selector) && isFunction(selector.item)) ? slice.call(selector) : $(selector)
+        this.forEach(function(el) {
+          if (excludes.indexOf(el) < 0) nodes.push(el)
+        })
+      }
+      return $(nodes)
+    },
+    has: function(selector) {
+      return this.filter(function() {
+        return isObject(selector) ?
+          $.contains(this, selector) :
+          $(this).find(selector).size()
+      })
+    },
+    eq: function(idx) {
+      return idx === -1 ? this.slice(idx) : this.slice(idx, +idx + 1)
+    },
+    first: function() {
+      var el = this[0]
+      return el && !isObject(el) ? el : $(el)
+    },
+    last: function() {
+      var el = this[this.length - 1]
+      return el && !isObject(el) ? el : $(el)
+    },
+    find: function(selector) {
+      var result, $this = this
+      if (!selector) result = $()
+      else if (typeof selector == 'object')
+        result = $(selector).filter(function() {
+          var node = this
+          return emptyArray.some.call($this, function(parent) {
+            return $.contains(parent, node)
+          })
+        })
+      else if (this.length == 1) result = $(zepto.qsa(this[0], selector))
+      else result = this.map(function() {
+        return zepto.qsa(this, selector)
+      })
+      return result
+    },
+    closest: function(selector, context) {
+      var node = this[0],
+        collection = false
+      if (typeof selector == 'object') collection = $(selector)
+      while (node && !(collection ? collection.indexOf(node) >= 0 : zepto.matches(node, selector)))
+        node = node !== context && !isDocument(node) && node.parentNode
+      return $(node)
+    },
+    parents: function(selector) {
+      var ancestors = [],
+        nodes = this
+      while (nodes.length > 0)
+        nodes = $.map(nodes, function(node) {
+          if ((node = node.parentNode) && !isDocument(node) && ancestors.indexOf(node) < 0) {
+            ancestors.push(node)
+            return node
+          }
+        })
+      return filtered(ancestors, selector)
+    },
+    parent: function(selector) {
+      return filtered(uniq(this.pluck('parentNode')), selector)
+    },
+    children: function(selector) {
+      return filtered(this.map(function() {
+        return children(this)
+      }), selector)
+    },
+    contents: function() {
+      return this.map(function() {
+        return this.contentDocument || slice.call(this.childNodes)
+      })
+    },
+    siblings: function(selector) {
+      return filtered(this.map(function(i, el) {
+        return filter.call(children(el.parentNode), function(child) {
+          return child !== el
+        })
+      }), selector)
+    },
+    empty: function() {
+      return this.each(function() {
+        this.innerHTML = ''
+      })
+    },
+    // `pluck` is borrowed from Prototype.js
+    pluck: function(property) {
+      return $.map(this, function(el) {
+        return el[property]
+      })
+    },
+    show: function() {
+      return this.each(function() {
+        this.style.display == "none" && (this.style.display = '')
+        if (getComputedStyle(this, '').getPropertyValue("display") == "none")
+          this.style.display = defaultDisplay(this.nodeName)
+      })
+    },
+    replaceWith: function(newContent) {
+      return this.before(newContent).remove()
+    },
+    wrap: function(structure) {
+      var func = isFunction(structure)
+      if (this[0] && !func)
+        var dom = $(structure).get(0),
+          clone = dom.parentNode || this.length > 1
 
+      return this.each(function(index) {
+        $(this).wrapAll(
+          func ? structure.call(this, index) :
+          clone ? dom.cloneNode(true) : dom
+        )
+      })
+    },
+    wrapAll: function(structure) {
+      if (this[0]) {
+        $(this[0]).before(structure = $(structure))
+        var children
+          // drill down to the inmost element
+        while ((children = structure.children()).length) structure = children.first()
+        $(structure).append(this)
+      }
+      return this
+    },
+    wrapInner: function(structure) {
+      var func = isFunction(structure)
+      return this.each(function(index) {
+        var self = $(this),
+          contents = self.contents(),
+          dom = func ? structure.call(this, index) : structure
+        contents.length ? contents.wrapAll(dom) : self.append(dom)
+      })
+    },
+    unwrap: function() {
+      this.parent().each(function() {
+        $(this).replaceWith($(this).children())
+      })
+      return this
+    },
+    clone: function() {
+      return this.map(function() {
+        return this.cloneNode(true)
+      })
+    },
+    hide: function() {
+      return this.css("display", "none")
+    },
+    toggle: function(setting) {
+      return this.each(function() {
+        var el = $(this);
+        (setting === undefined ? el.css("display") == "none" : setting) ? el.show(): el.hide()
+      })
+    },
+    prev: function(selector) {
+      return $(this.pluck('previousElementSibling')).filter(selector || '*')
+    },
+    next: function(selector) {
+      return $(this.pluck('nextElementSibling')).filter(selector || '*')
+    },
+    html: function(html) {
+      return 0 in arguments ?
+        this.each(function(idx) {
+          var originHtml = this.innerHTML
+          $(this).empty().append(funcArg(this, html, idx, originHtml))
+        }) :
+        (0 in this ? this[0].innerHTML : null)
+    },
+    text: function(text) {
+      return 0 in arguments ?
+        this.each(function(idx) {
+          var newText = funcArg(this, text, idx, this.textContent)
+          this.textContent = newText == null ? '' : '' + newText
+        }) :
+        (0 in this ? this.pluck('textContent').join("") : null)
+    },
+    attr: function(name, value) {
+      var result
+      return (typeof name == 'string' && !(1 in arguments)) ?
+        (!this.length || this[0].nodeType !== 1 ? undefined :
+          (!(result = this[0].getAttribute(name)) && name in this[0]) ? this[0][name] : result
+        ) :
+        this.each(function(idx) {
+          if (this.nodeType !== 1) return
+          if (isObject(name))
+            for (key in name) setAttribute(this, key, name[key])
+          else setAttribute(this, name, funcArg(this, value, idx, this.getAttribute(name)))
+        })
+    },
+    removeAttr: function(name) {
+      return this.each(function() {
+        this.nodeType === 1 && name.split(' ').forEach(function(attribute) {
+          setAttribute(this, attribute)
+        }, this)
+      })
+    },
+    prop: function(name, value) {
+      name = propMap[name] || name
+      return (1 in arguments) ?
+        this.each(function(idx) {
+          this[name] = funcArg(this, value, idx, this[name])
+        }) :
+        (this[0] && this[0][name])
+    },
+    data: function(name, value) {
+      var attrName = 'data-' + name.replace(capitalRE, '-$1').toLowerCase()
 
-     return $;
- })();
+      var data = (1 in arguments) ?
+        this.attr(attrName, value) :
+        this.attr(attrName)
 
- // Export to Window
- window.Dom = Dom;
- window.$ === undefined && (window.$ = Dom);
+      return data !== null ? deserializeValue(data) : undefined
+    },
+    val: function(value) {
+      return 0 in arguments ?
+        this.each(function(idx) {
+          this.value = funcArg(this, value, idx, this.value)
+        }) :
+        (this[0] && (this[0].multiple ?
+          $(this[0]).find('option').filter(function() {
+            return this.selected
+          }).pluck('value') :
+          this[0].value))
+    },
+    offset: function(coordinates) {
+      if (coordinates) return this.each(function(index) {
+        var $this = $(this),
+          coords = funcArg(this, coordinates, index, $this.offset()),
+          parentOffset = $this.offsetParent().offset(),
+          props = {
+            top: coords.top - parentOffset.top,
+            left: coords.left - parentOffset.left
+          }
+
+        if ($this.css('position') == 'static') props['position'] = 'relative'
+        $this.css(props)
+      })
+      if (!this.length) return null
+      if (!$.contains(document.documentElement, this[0]))
+        return {
+          top: 0,
+          left: 0
+        }
+      var obj = this[0].getBoundingClientRect()
+      return {
+        left: obj.left + window.pageXOffset,
+        top: obj.top + window.pageYOffset,
+        width: Math.round(obj.width),
+        height: Math.round(obj.height)
+      }
+    },
+    css: function(property, value) {
+      if (arguments.length < 2) {
+        var computedStyle, element = this[0]
+        if (!element) return
+        computedStyle = getComputedStyle(element, '')
+        if (typeof property == 'string')
+          return element.style[camelize(property)] || computedStyle.getPropertyValue(property)
+        else if (isArray(property)) {
+          var props = {}
+          $.each(property, function(_, prop) {
+            props[prop] = (element.style[camelize(prop)] || computedStyle.getPropertyValue(prop))
+          })
+          return props
+        }
+      }
+
+      var css = ''
+      if (type(property) == 'string') {
+        if (!value && value !== 0)
+          this.each(function() {
+            this.style.removeProperty(dasherize(property))
+          })
+        else
+          css = dasherize(property) + ":" + maybeAddPx(property, value)
+      } else {
+        for (key in property)
+          if (!property[key] && property[key] !== 0)
+            this.each(function() {
+              this.style.removeProperty(dasherize(key))
+            })
+          else
+            css += dasherize(key) + ':' + maybeAddPx(key, property[key]) + ';'
+      }
+
+      return this.each(function() {
+        this.style.cssText += ';' + css
+      })
+    },
+    index: function(element) {
+      return element ? this.indexOf($(element)[0]) : this.parent().children().indexOf(this[0])
+    },
+    hasClass: function(name) {
+      if (!name) return false
+      return emptyArray.some.call(this, function(el) {
+        return this.test(className(el))
+      }, classRE(name))
+    },
+    addClass: function(name) {
+      if (!name) return this
+      return this.each(function(idx) {
+        if (!('className' in this)) return
+        classList = []
+        var cls = className(this),
+          newName = funcArg(this, name, idx, cls)
+        newName.split(/\s+/g).forEach(function(klass) {
+          if (!$(this).hasClass(klass)) classList.push(klass)
+        }, this)
+        classList.length && className(this, cls + (cls ? " " : "") + classList.join(" "))
+      })
+    },
+    removeClass: function(name) {
+      return this.each(function(idx) {
+        if (!('className' in this)) return
+        if (name === undefined) return className(this, '')
+        classList = className(this)
+        funcArg(this, name, idx, classList).split(/\s+/g).forEach(function(klass) {
+          classList = classList.replace(classRE(klass), " ")
+        })
+        className(this, classList.trim())
+      })
+    },
+    toggleClass: function(name, when) {
+      if (!name) return this
+      return this.each(function(idx) {
+        var $this = $(this),
+          names = funcArg(this, name, idx, className(this))
+        names.split(/\s+/g).forEach(function(klass) {
+          (when === undefined ? !$this.hasClass(klass) : when) ?
+          $this.addClass(klass): $this.removeClass(klass)
+        })
+      })
+    },
+    scrollTop: function(value) {
+      if (!this.length) return
+      var hasScrollTop = 'scrollTop' in this[0]
+      if (value === undefined) return hasScrollTop ? this[0].scrollTop : this[0].pageYOffset
+      return this.each(hasScrollTop ?
+        function() {
+          this.scrollTop = value
+        } :
+        function() {
+          this.scrollTo(this.scrollX, value)
+        })
+    },
+    scrollLeft: function(value) {
+      if (!this.length) return
+      var hasScrollLeft = 'scrollLeft' in this[0]
+      if (value === undefined) return hasScrollLeft ? this[0].scrollLeft : this[0].pageXOffset
+      return this.each(hasScrollLeft ?
+        function() {
+          this.scrollLeft = value
+        } :
+        function() {
+          this.scrollTo(value, this.scrollY)
+        })
+    },
+    position: function() {
+      if (!this.length) return
+
+      var elem = this[0],
+        // Get *real* offsetParent
+        offsetParent = this.offsetParent(),
+        // Get correct offsets
+        offset = this.offset(),
+        parentOffset = rootNodeRE.test(offsetParent[0].nodeName) ? {
+          top: 0,
+          left: 0
+        } : offsetParent.offset()
+
+      // Subtract element margins
+      // note: when an element has margin: auto the offsetLeft and marginLeft
+      // are the same in Safari causing offset.left to incorrectly be 0
+      offset.top -= parseFloat($(elem).css('margin-top')) || 0
+      offset.left -= parseFloat($(elem).css('margin-left')) || 0
+
+      // Add offsetParent borders
+      parentOffset.top += parseFloat($(offsetParent[0]).css('border-top-width')) || 0
+      parentOffset.left += parseFloat($(offsetParent[0]).css('border-left-width')) || 0
+
+      // Subtract the two offsets
+      return {
+        top: offset.top - parentOffset.top,
+        left: offset.left - parentOffset.left
+      }
+    },
+    offsetParent: function() {
+      return this.map(function() {
+        var parent = this.offsetParent || document.body
+        while (parent && !rootNodeRE.test(parent.nodeName) && $(parent).css("position") == "static")
+          parent = parent.offsetParent
+        return parent
+      })
+    }
+  }
+
+  // for now
+  $.fn.detach = $.fn.remove
+
+  // Generate the `width` and `height` functions
+  ;
+  ['width', 'height'].forEach(function(dimension) {
+    var dimensionProperty =
+      dimension.replace(/./, function(m) {
+        return m[0].toUpperCase()
+      })
+
+    $.fn[dimension] = function(value) {
+      var offset, el = this[0]
+      if (value === undefined) return isWindow(el) ? el['inner' + dimensionProperty] :
+        isDocument(el) ? el.documentElement['scroll' + dimensionProperty] :
+        (offset = this.offset()) && offset[dimension]
+      else return this.each(function(idx) {
+        el = $(this)
+        el.css(dimension, funcArg(this, value, idx, el[dimension]()))
+      })
+    }
+  })
+
+  function traverseNode(node, fun) {
+    fun(node)
+    for (var i = 0, len = node.childNodes.length; i < len; i++)
+      traverseNode(node.childNodes[i], fun)
+  }
+
+  // Generate the `after`, `prepend`, `before`, `append`,
+  // `insertAfter`, `insertBefore`, `appendTo`, and `prependTo` methods.
+  adjacencyOperators.forEach(function(operator, operatorIndex) {
+    var inside = operatorIndex % 2 //=> prepend, append
+
+    $.fn[operator] = function() {
+      // arguments can be nodes, arrays of nodes, Zepto objects and HTML strings
+      var argType, nodes = $.map(arguments, function(arg) {
+          argType = type(arg)
+          return argType == "object" || argType == "array" || arg == null ?
+            arg : zepto.fragment(arg)
+        }),
+        parent, copyByClone = this.length > 1
+      if (nodes.length < 1) return this
+
+      return this.each(function(_, target) {
+        parent = inside ? target : target.parentNode
+
+        // convert all methods to a "before" operation
+        target = operatorIndex == 0 ? target.nextSibling :
+          operatorIndex == 1 ? target.firstChild :
+          operatorIndex == 2 ? target :
+          null
+
+        var parentInDocument = $.contains(document.documentElement, parent)
+
+        nodes.forEach(function(node) {
+          if (copyByClone) node = node.cloneNode(true)
+          else if (!parent) return $(node).remove()
+
+          parent.insertBefore(node, target)
+          if (parentInDocument) traverseNode(node, function(el) {
+            if (el.nodeName != null && el.nodeName.toUpperCase() === 'SCRIPT' &&
+              (!el.type || el.type === 'text/javascript') && !el.src)
+              window['eval'].call(window, el.innerHTML)
+          })
+        })
+      })
+    }
+
+    // after    => insertAfter
+    // prepend  => prependTo
+    // before   => insertBefore
+    // append   => appendTo
+    $.fn[inside ? operator + 'To' : 'insert' + (operatorIndex ? 'Before' : 'After')] = function(html) {
+      $(html)[operator](this)
+      return this
+    }
+  })
+
+  zepto.Z.prototype = Z.prototype = $.fn
+
+  // Export internal API functions in the `$.zepto` namespace
+  zepto.uniq = uniq
+  zepto.deserializeValue = deserializeValue
+  $.zepto = zepto
+
+  return $
+})()
+
+// If `$` is not yet defined, point it to `Zepto`
+window.Zepto = Zepto
+window.$ === undefined && (window.$ = Zepto)
+//     Zepto.js
+//     (c) 2010-2015 Thomas Fuchs
+//     Zepto.js may be freely distributed under the MIT license.
 
 ;(function($){
   var _zid = 1, undefined,
@@ -1357,21 +1282,24 @@
     return compatible(event)
   }
 
-})(Dom)
+})(Zepto)
 
-;
-(function($) {
+//     Zepto.js
+//     (c) 2010-2015 Thomas Fuchs
+//     Zepto.js may be freely distributed under the MIT license.
+
+;(function($){
   var jsonpID = 0,
-    document = window.document,
-    key,
-    name,
-    rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-    scriptTypeRE = /^(?:text|application)\/javascript/i,
-    xmlTypeRE = /^(?:text|application)\/xml/i,
-    jsonType = 'application/json',
-    htmlType = 'text/html',
-    blankRE = /^\s*$/,
-    originAnchor = document.createElement('a')
+      document = window.document,
+      key,
+      name,
+      rscript = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+      scriptTypeRE = /^(?:text|application)\/javascript/i,
+      xmlTypeRE = /^(?:text|application)\/xml/i,
+      jsonType = 'application/json',
+      htmlType = 'text/html',
+      blankRE = /^\s*$/,
+      originAnchor = document.createElement('a')
 
   originAnchor.href = window.location.href
 
@@ -1393,7 +1321,6 @@
   function ajaxStart(settings) {
     if (settings.global && $.active++ === 0) triggerGlobal(settings, null, 'ajaxStart')
   }
-
   function ajaxStop(settings) {
     if (settings.global && !(--$.active)) triggerGlobal(settings, null, 'ajaxStop')
   }
@@ -1402,15 +1329,13 @@
   function ajaxBeforeSend(xhr, settings) {
     var context = settings.context
     if (settings.beforeSend.call(context, xhr, settings) === false ||
-      triggerGlobal(settings, context, 'ajaxBeforeSend', [xhr, settings]) === false)
+        triggerGlobal(settings, context, 'ajaxBeforeSend', [xhr, settings]) === false)
       return false
 
     triggerGlobal(settings, context, 'ajaxSend', [xhr, settings])
   }
-
   function ajaxSuccess(data, xhr, settings, deferred) {
-    var context = settings.context,
-      status = 'success'
+    var context = settings.context, status = 'success'
     settings.success.call(context, data, status, xhr)
     if (deferred) deferred.resolveWith(context, [data, status, xhr])
     triggerGlobal(settings, context, 'ajaxSuccess', [xhr, settings, data])
@@ -1435,7 +1360,7 @@
   // Empty function, used as default callback
   function empty() {}
 
-  $.ajaxJSONP = function(options, deferred) {
+  $.ajaxJSONP = function(options, deferred){
     if (!('type' in options)) return $.ajax(options)
 
     var _callbackName = options.jsonpCallback,
@@ -1447,14 +1372,11 @@
       abort = function(errorType) {
         $(script).triggerHandler('error', errorType || 'abort')
       },
-      xhr = {
-        abort: abort
-      },
-      abortTimeout
+      xhr = { abort: abort }, abortTimeout
 
     if (deferred) deferred.promise(xhr)
 
-    $(script).on('load error', function(e, errorType) {
+    $(script).on('load error', function(e, errorType){
       clearTimeout(abortTimeout)
       $(script).off().remove()
 
@@ -1476,14 +1398,14 @@
       return xhr
     }
 
-    window[callbackName] = function() {
+    window[callbackName] = function(){
       responseData = arguments
     }
 
     script.src = options.url.replace(/\?(.+)=\?/, '?$1=' + callbackName)
     document.head.appendChild(script)
 
-    if (options.timeout > 0) abortTimeout = setTimeout(function() {
+    if (options.timeout > 0) abortTimeout = setTimeout(function(){
       abort('timeout')
     }, options.timeout)
 
@@ -1506,17 +1428,17 @@
     // Whether to trigger "global" Ajax events
     global: true,
     // Transport
-    xhr: function() {
+    xhr: function () {
       return new window.XMLHttpRequest()
     },
     // MIME types mapping
     // IIS returns Javascript as "application/x-javascript"
     accepts: {
       script: 'text/javascript, application/javascript, application/x-javascript',
-      json: jsonType,
-      xml: 'application/xml, text/xml',
-      html: htmlType,
-      text: 'text/plain'
+      json:   jsonType,
+      xml:    'application/xml, text/xml',
+      html:   htmlType,
+      text:   'text/plain'
     },
     // Whether the request is to another domain
     crossDomain: false,
@@ -1530,10 +1452,10 @@
 
   function mimeToDataType(mime) {
     if (mime) mime = mime.split(';', 2)[0]
-    return mime && (mime == htmlType ? 'html' :
+    return mime && ( mime == htmlType ? 'html' :
       mime == jsonType ? 'json' :
       scriptTypeRE.test(mime) ? 'script' :
-      xmlTypeRE.test(mime) && 'xml') || 'text'
+      xmlTypeRE.test(mime) && 'xml' ) || 'text'
   }
 
   function appendQuery(url, query) {
@@ -1549,18 +1471,18 @@
       options.url = appendQuery(options.url, options.data), options.data = undefined
   }
 
-  $.ajax = function(options) {
+  $.ajax = function(options){
     var settings = $.extend({}, options || {}),
-      deferred = $.Deferred && $.Deferred(),
-      urlAnchor, hashIndex
-    for (key in $.ajaxSettings)
-      if (settings[key] === undefined) settings[key] = $.ajaxSettings[key]
+        deferred = $.Deferred && $.Deferred(),
+        urlAnchor, hashIndex
+    for (key in $.ajaxSettings) if (settings[key] === undefined) settings[key] = $.ajaxSettings[key]
 
     ajaxStart(settings)
 
     if (!settings.crossDomain) {
       urlAnchor = document.createElement('a')
       urlAnchor.href = settings.url
+      // cleans up URL for .href (IE only), see https://github.com/madrobby/zepto/pull/1049
       urlAnchor.href = urlAnchor.href
       settings.crossDomain = (originAnchor.protocol + '//' + originAnchor.host) !== (urlAnchor.protocol + '//' + urlAnchor.host)
     }
@@ -1569,14 +1491,13 @@
     if ((hashIndex = settings.url.indexOf('#')) > -1) settings.url = settings.url.slice(0, hashIndex)
     serializeData(settings)
 
-    var dataType = settings.dataType,
-      hasPlaceholder = /\?.+=\?/.test(settings.url)
+    var dataType = settings.dataType, hasPlaceholder = /\?.+=\?/.test(settings.url)
     if (hasPlaceholder) dataType = 'jsonp'
 
     if (settings.cache === false || (
-        (!options || options.cache !== true) &&
-        ('script' == dataType || 'jsonp' == dataType)
-      ))
+         (!options || options.cache !== true) &&
+         ('script' == dataType || 'jsonp' == dataType)
+        ))
       settings.url = appendQuery(settings.url, '_=' + Date.now())
 
     if ('jsonp' == dataType) {
@@ -1587,14 +1508,12 @@
     }
 
     var mime = settings.accepts[dataType],
-      headers = {},
-      setHeader = function(name, value) {
-        headers[name.toLowerCase()] = [name, value]
-      },
-      protocol = /^([\w-]+:)\/\//.test(settings.url) ? RegExp.$1 : window.location.protocol,
-      xhr = settings.xhr(),
-      nativeSetHeader = xhr.setRequestHeader,
-      abortTimeout
+        headers = { },
+        setHeader = function(name, value) { headers[name.toLowerCase()] = [name, value] },
+        protocol = /^([\w-]+:)\/\//.test(settings.url) ? RegExp.$1 : window.location.protocol,
+        xhr = settings.xhr(),
+        nativeSetHeader = xhr.setRequestHeader,
+        abortTimeout
 
     if (deferred) deferred.promise(xhr)
 
@@ -1607,30 +1526,33 @@
     if (settings.contentType || (settings.contentType !== false && settings.data && settings.type.toUpperCase() != 'GET'))
       setHeader('Content-Type', settings.contentType || 'application/x-www-form-urlencoded')
 
-    if (settings.headers)
-      for (name in settings.headers) setHeader(name, settings.headers[name])
+    if (settings.headers) for (name in settings.headers) setHeader(name, settings.headers[name])
     xhr.setRequestHeader = setHeader
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function(){
       if (xhr.readyState == 4) {
         xhr.onreadystatechange = empty
         clearTimeout(abortTimeout)
         var result, error = false
         if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304 || (xhr.status == 0 && protocol == 'file:')) {
           dataType = dataType || mimeToDataType(settings.mimeType || xhr.getResponseHeader('content-type'))
-          result = xhr.responseText
+          
+          if (xhr.responseType == 'arraybuffer' || xhr.responseType == 'blob')
+            result = xhr.response
+          else {
+            result = xhr.responseText
 
-          try {
-            // http://perfectionkills.com/global-eval-what-are-the-options/
-            if (dataType == 'script')(1, eval)(result)
-            else if (dataType == 'xml') result = xhr.responseXML
-            else if (dataType == 'json') result = blankRE.test(result) ? null : $.parseJSON(result)
-          } catch (e) {
-            error = e
+            try {
+              // http://perfectionkills.com/global-eval-what-are-the-options/
+              if (dataType == 'script')    (1,eval)(result)
+              else if (dataType == 'xml')  result = xhr.responseXML
+              else if (dataType == 'json') result = blankRE.test(result) ? null : $.parseJSON(result)
+            } catch (e) { error = e }
+
+            if (error) return ajaxError(error, 'parsererror', xhr, settings, deferred)
           }
 
-          if (error) ajaxError(error, 'parsererror', xhr, settings, deferred)
-          else ajaxSuccess(result, xhr, settings, deferred)
+          ajaxSuccess(result, xhr, settings, deferred)
         } else {
           ajaxError(xhr.statusText || null, xhr.status ? 'error' : 'abort', xhr, settings, deferred)
         }
@@ -1643,19 +1565,18 @@
       return xhr
     }
 
-    if (settings.xhrFields)
-      for (name in settings.xhrFields) xhr[name] = settings.xhrFields[name]
+    if (settings.xhrFields) for (name in settings.xhrFields) xhr[name] = settings.xhrFields[name]
 
     var async = 'async' in settings ? settings.async : true
     xhr.open(settings.type, settings.url, async, settings.username, settings.password)
 
     for (name in headers) nativeSetHeader.apply(xhr, headers[name])
 
-    if (settings.timeout > 0) abortTimeout = setTimeout(function() {
-      xhr.onreadystatechange = empty
-      xhr.abort()
-      ajaxError(null, 'timeout', xhr, settings, deferred)
-    }, settings.timeout)
+    if (settings.timeout > 0) abortTimeout = setTimeout(function(){
+        xhr.onreadystatechange = empty
+        xhr.abort()
+        ajaxError(null, 'timeout', xhr, settings, deferred)
+      }, settings.timeout)
 
     // avoid sending empty string (#319)
     xhr.send(settings.data ? settings.data : null)
@@ -1667,40 +1588,39 @@
     if ($.isFunction(data)) dataType = success, success = data, data = undefined
     if (!$.isFunction(success)) dataType = success, success = undefined
     return {
-      url: url,
-      data: data,
-      success: success,
-      dataType: dataType
+      url: url
+    , data: data
+    , success: success
+    , dataType: dataType
     }
   }
 
-  $.get = function( /* url, data, success, dataType */ ) {
+  $.get = function(/* url, data, success, dataType */){
     return $.ajax(parseArguments.apply(null, arguments))
   }
 
-  $.post = function( /* url, data, success, dataType */ ) {
+  $.post = function(/* url, data, success, dataType */){
     var options = parseArguments.apply(null, arguments)
     options.type = 'POST'
     return $.ajax(options)
   }
 
-  $.getJSON = function( /* url, data, success */ ) {
+  $.getJSON = function(/* url, data, success */){
     var options = parseArguments.apply(null, arguments)
     options.dataType = 'json'
     return $.ajax(options)
   }
 
-  $.fn.load = function(url, data, success) {
+  $.fn.load = function(url, data, success){
     if (!this.length) return this
-    var self = this,
-      parts = url.split(/\s/),
-      selector,
-      options = parseArguments(url, data, success),
-      callback = options.success
+    var self = this, parts = url.split(/\s/), selector,
+        options = parseArguments(url, data, success),
+        callback = options.success
     if (parts.length > 1) options.url = parts[0], selector = parts[1]
-    options.success = function(response) {
+    options.success = function(response){
       self.html(selector ?
-        $('<div>').html(response.replace(rscript, "")).find(selector) : response)
+        $('<div>').html(response.replace(rscript, "")).find(selector)
+        : response)
       callback && callback.apply(self, arguments)
     }
     $.ajax(options)
@@ -1709,23 +1629,22 @@
 
   var escape = encodeURIComponent
 
-  function serialize(params, obj, traditional, scope) {
-    var type, array = $.isArray(obj),
-      hash = $.isPlainObject(obj)
+  function serialize(params, obj, traditional, scope){
+    var type, array = $.isArray(obj), hash = $.isPlainObject(obj)
     $.each(obj, function(key, value) {
       type = $.type(value)
       if (scope) key = traditional ? scope :
         scope + '[' + (hash || type == 'object' || type == 'array' ? key : '') + ']'
-        // handle data in serializeArray() format
+      // handle data in serializeArray() format
       if (!scope && array) params.add(value.name, value.value)
-        // recurse into nested objects
+      // recurse into nested objects
       else if (type == "array" || (!traditional && type == "object"))
         serialize(params, value, traditional, key)
       else params.add(key, value)
     })
   }
 
-  $.param = function(obj, traditional) {
+  $.param = function(obj, traditional){
     var params = []
     params.add = function(key, value) {
       if ($.isFunction(value)) value = value()
@@ -1735,7 +1654,11 @@
     serialize(params, obj, traditional)
     return params.join('&').replace(/%20/g, '+')
   }
-})(Dom)
+})(Zepto)
+
+//     Zepto.js
+//     (c) 2010-2015 Thomas Fuchs
+//     Zepto.js may be freely distributed under the MIT license.
 
 ;(function($, undefined){
   var prefix = '', eventPrefix,
@@ -1855,9 +1778,12 @@
   }
 
   testEl = null
-})(Dom)
+})(Zepto)
 
-//  fx
+//     Zepto.js
+//     (c) 2010-2015 Thomas Fuchs
+//     Zepto.js may be freely distributed under the MIT license.
+
 ;(function($, undefined){
   var document = window.document, docElem = document.documentElement,
     origShow = $.fn.show, origHide = $.fn.hide, origToggle = $.fn.toggle
@@ -1924,13 +1850,17 @@
     })
   }
 
-})(Dom)
+})(Zepto)
 
+//     Zepto.js
+//     (c) 2010-2015 Thomas Fuchs
+//     Zepto.js may be freely distributed under the MIT license.
 
+// The following code is heavily inspired by jQuery's $.fn.data()
 
 ;(function($){
   var data = {}, dataAttr = $.fn.data, camelize = $.camelCase,
-    exp = $.expando = 'Dom' + (+new Date()), emptyArray = []
+    exp = $.expando = 'Zepto' + (+new Date()), emptyArray = []
 
   // Get value from node:
   // 1. first try key as given,
@@ -1963,7 +1893,7 @@
     $.each(node.attributes || emptyArray, function(i, attr){
       if (attr.name.indexOf('data-') == 0)
         store[camelize(attr.name.replace('data-', ''))] =
-          $.deserializeValue(attr.value)
+          $.zepto.deserializeValue(attr.value)
     })
     return store
   }
@@ -2001,7 +1931,7 @@
       return origFn.call(this)
     }
   })
-})(Dom)
+})(Zepto)
 
 /**
  *  @file 实现了通用highlight方法。
@@ -2061,9 +1991,11 @@
             } );
         });
     };
-})( Dom );
+})( Zepto );
 
-
+//     Zepto.js
+//     (c) 2010-2015 Thomas Fuchs
+//     Zepto.js may be freely distributed under the MIT license.
 
 ;(function($){
   function detect(ua, platform){
@@ -2134,10 +2066,13 @@
   // make available to unit tests
   $.__detect = detect
 
-})(Dom)
+})(Zepto)
 
-;
-(function($) {
+//     Zepto.js
+//     (c) 2010-2015 Thomas Fuchs
+//     Zepto.js may be freely distributed under the MIT license.
+
+;(function($){
   var touch = {},
     touchTimeout, tapTimeout, swipeTimeout, longTapTimeout,
     longTapDelay = 750,
@@ -2170,20 +2105,19 @@
     touch = {}
   }
 
-  function isPrimaryTouch(event) {
+  function isPrimaryTouch(event){
     return (event.pointerType == 'touch' ||
-      event.pointerType == event.MSPOINTER_TYPE_TOUCH) && event.isPrimary
+      event.pointerType == event.MSPOINTER_TYPE_TOUCH)
+      && event.isPrimary
   }
 
-  function isPointerEventType(e, type) {
-    return (e.type == 'pointer' + type ||
-      e.type.toLowerCase() == 'mspointer' + type)
+  function isPointerEventType(e, type){
+    return (e.type == 'pointer'+type ||
+      e.type.toLowerCase() == 'mspointer'+type)
   }
 
-  $(document).ready(function() {
-    var now, delta, deltaX = 0,
-      deltaY = 0,
-      firstTouch, _isPointerType
+  $(document).ready(function(){
+    var now, delta, deltaX = 0, deltaY = 0, firstTouch, _isPointerType
 
     if ('MSGesture' in window) {
       gesture = new MSGesture()
@@ -2191,16 +2125,16 @@
     }
 
     $(document)
-      .bind('MSGestureEnd', function(e) {
+      .bind('MSGestureEnd', function(e){
         var swipeDirectionFromVelocity =
           e.velocityX > 1 ? 'Right' : e.velocityX < -1 ? 'Left' : e.velocityY > 1 ? 'Down' : e.velocityY < -1 ? 'Up' : null;
         if (swipeDirectionFromVelocity) {
           touch.el.trigger('swipe')
-          touch.el.trigger('swipe' + swipeDirectionFromVelocity)
+          touch.el.trigger('swipe'+ swipeDirectionFromVelocity)
         }
       })
-      .on('touchstart MSPointerDown pointerdown', function(e) {
-        if ((_isPointerType = isPointerEventType(e, 'down')) &&
+      .on('touchstart MSPointerDown pointerdown', function(e){
+        if((_isPointerType = isPointerEventType(e, 'down')) &&
           !isPrimaryTouch(e)) return
         firstTouch = _isPointerType ? e : e.touches[0]
         if (e.touches && e.touches.length === 1 && touch.x2) {
@@ -2219,11 +2153,11 @@
         if (delta > 0 && delta <= 250) touch.isDoubleTap = true
         touch.last = now
         longTapTimeout = setTimeout(longTap, longTapDelay)
-          // adds the current touch contact for IE gesture recognition
+        // adds the current touch contact for IE gesture recognition
         if (gesture && _isPointerType) gesture.addPointer(e.pointerId);
       })
-      .on('touchmove MSPointerMove pointermove', function(e) {
-        if ((_isPointerType = isPointerEventType(e, 'move')) &&
+      .on('touchmove MSPointerMove pointermove', function(e){
+        if((_isPointerType = isPointerEventType(e, 'move')) &&
           !isPrimaryTouch(e)) return
         firstTouch = _isPointerType ? e : e.touches[0]
         cancelLongTap()
@@ -2233,27 +2167,25 @@
         deltaX += Math.abs(touch.x1 - touch.x2)
         deltaY += Math.abs(touch.y1 - touch.y2)
       })
-      .on('touchend MSPointerUp pointerup', function(e) {
-        if ((_isPointerType = isPointerEventType(e, 'up')) &&
+      .on('touchend MSPointerUp pointerup', function(e){
+        if((_isPointerType = isPointerEventType(e, 'up')) &&
           !isPrimaryTouch(e)) return
         cancelLongTap()
 
         // swipe
         if ((touch.x2 && Math.abs(touch.x1 - touch.x2) > 30) ||
-          (touch.y2 && Math.abs(touch.y1 - touch.y2) > 30))
+            (touch.y2 && Math.abs(touch.y1 - touch.y2) > 30))
 
           swipeTimeout = setTimeout(function() {
-          if (touch && touch.el) {
             touch.el.trigger('swipe')
             touch.el.trigger('swipe' + (swipeDirection(touch.x1, touch.x2, touch.y1, touch.y2)))
             touch = {}
-          }
-        }, 0)
+          }, 0)
 
         // normal tap
         else if ('last' in touch)
-        // don't fire tap when delta position changed by more than 30 pixels,
-        // for instance when moving to a point and back to origin
+          // don't fire tap when delta position changed by more than 30 pixels,
+          // for instance when moving to a point and back to origin
           if (deltaX < 30 && deltaY < 30) {
             // delay by one tick so we can cancel the 'tap' event if 'scroll' fires
             // ('tap' fires before 'scroll')
@@ -2273,7 +2205,7 @@
 
               // trigger single tap after 250ms of inactivity
               else {
-                touchTimeout = setTimeout(function() {
+                touchTimeout = setTimeout(function(){
                   touchTimeout = null
                   if (touch.el) touch.el.trigger('singleTap')
                   touch = {}
@@ -2283,7 +2215,7 @@
           } else {
             touch = {}
           }
-        deltaX = deltaY = 0
+          deltaX = deltaY = 0
 
       })
       // when the browser window loses focus,
@@ -2296,15 +2228,12 @@
     $(window).on('scroll', cancelAll)
   })
 
-  ;
-  ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown',
-    'doubleTap', 'tap', 'singleTap', 'longTap'
-  ].forEach(function(eventName) {
-    $.fn[eventName] = function(callback) {
-      return this.on(eventName, callback)
-    }
+  ;['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown',
+    'doubleTap', 'tap', 'singleTap', 'longTap'].forEach(function(eventName){
+    $.fn[eventName] = function(callback){ return this.on(eventName, callback) }
   })
-})(Dom);
+})(Zepto)
+
 /**
  * @file 媒体查询
  */
@@ -2377,738 +2306,7 @@
             return ret;
         };
     }());
-})(Dom);
-/*===============================================================================
-************   $ extend   ************
-===============================================================================*/
-(function($) {
-    $.animationFrame = function(cb) {
-        var args, isQueued, context;
-        return function() {
-            args = arguments;
-            context = this;
-            if (!isQueued) {
-                isQueued = true;
-                requestAnimationFrame(function() {
-                    cb.apply(context, args);
-                    isQueued = false;
-                });
-            }
-        };
-    };
-
-    $.trimLeft = function(str) {
-        return str == null ? "" : String.prototype.trimLeft.call(str)
-    };
-    $.trimRight = function(str) {
-        return str == null ? "" : String.prototype.trimRight.call(str)
-    };
-    $.trimAll = function(str) {
-        return str == null ? "" : str.replace(/\s*/g, '');
-    };
-    $.cellPhone = function(v) {
-        var cellphone = /^1[3|4|5|8][0-9]\d{8}$/;
-        return cellphone.test(v);
-    };
-    $.email = function(v) {
-        var email = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i;
-        return email.test(v);
-    };
-    //全数字
-    $.isDigit = function(v) {
-        var patrn = /^[0-9]{1,20}$/;
-        return patrn.test(v);
-    };
-
-    //校验登录名：只能输入5-20个以字母开头、可带数字、“_”、“.”的字串 
-    $.isRegisterUserName = function(v) {
-        var patrn = /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){4,19}$/;
-        return patrn.test(v);
-    };
-
-    //校验密码：只能输入6-20个字母、数字、下划线   
-    $.registerPasswd = function(v) {
-        var patrn = /^(\w){6,20}$/;
-        return patrn.test(v);
-    };
-    // 至少一个小写字母
-    $.charOne = function(v) {
-        var patrn = /[a-z]/;
-        return patrn.test(v);
-    };
-    // 至少一个大写字母
-    $.upperCharOne = function(v) {
-        var patrn = /[A-Z]/;
-        return patrn.test(v);
-    };
-
-    $.idcard = function(num) {
-        num = num.toUpperCase();
-        if (!(/(^\d{15}$)|(^\d{17}([0-9]|X)$)/.test(num))) {
-            //            alert('输入的身份证号长度不对，或者号码不符合规定！\n15位号码应全为数字，18位号码末位可以为数字或X。 ');
-            return false;
-        }
-        // 校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
-        // 下面分别分析出生日期和校验位
-        var len, re;
-        len = num.length;
-        if (len == 15) {
-            re = new RegExp(/^(\d{6})(\d{2})(\d{2})(\d{2})(\d{3})$/);
-            var arrSplit = num.match(re); // 检查生日日期是否正确
-            var dtmBirth = new Date('19' + arrSplit[2] + '/' + arrSplit[3] + '/' + arrSplit[4]);
-            var bGoodDay;
-            bGoodDay = (dtmBirth.getYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
-            if (!bGoodDay) {
-                //                alert('输入的身份证号里出生日期不对！');
-                return false;
-            } else { // 将15位身份证转成18位 //校验位按照ISO 7064:1983.MOD
-                // 11-2的规定生成，X可以认为是数字10。
-                var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
-                var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
-                var nTemp = 0,
-                    i;
-                num = num.substr(0, 6) + '19' + num.substr(6, num.length - 6);
-                for (i = 0; i < 17; i++) {
-                    nTemp += num.substr(i, 1) * arrInt[i];
-                }
-                num += arrCh[nTemp % 11];
-                return true;
-            }
-        }
-        if (len == 18) {
-            re = new RegExp(/^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$/);
-            var arrSplit = num.match(re); // 检查生日日期是否正确
-            var dtmBirth = new Date(arrSplit[2] + "/" + arrSplit[3] + "/" + arrSplit[4]);
-            var bGoodDay;
-            bGoodDay = (dtmBirth.getFullYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
-            if (!bGoodDay) {
-                //                alert('输入的身份证号里出生日期不对！');
-                return false;
-            } else { // 检验18位身份证的校验码是否正确。 //校验位按照ISO 7064:1983.MOD
-                // 11-2的规定生成，X可以认为是数字10。
-                var valnum;
-                var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
-                var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
-                var nTemp = 0,
-                    i;
-                for (i = 0; i < 17; i++) {
-                    nTemp += num.substr(i, 1) * arrInt[i];
-                }
-                valnum = arrCh[nTemp % 11];
-                if (valnum != num.substr(17, 1)) {
-                    //                    alert('18位身份证的校验码不正确！应该为：' + valnum);
-                    return false;
-                }
-                return true;
-            }
-        }
-
-        return false;
-    };
-    //获取字符串的字节长度
-    $.getBytesLength = function(str) {
-        if (!str) {
-            return 0;
-        }
-        var totalLength = 0;
-        var charCode;
-        var len = str.length
-        for (var i = 0; i < len; i++) {
-            charCode = str.charCodeAt(i);
-            if (charCode < 0x007f) {
-                totalLength++;
-            } else if ((0x0080 <= charCode) && (charCode <= 0x07ff)) {
-                totalLength += 2;
-            } else if ((0x0800 <= charCode) && (charCode <= 0xffff)) {
-                totalLength += 3;
-            } else {
-                totalLength += 4;
-            }
-        }
-        return totalLength;
-    };
-    
-    $.chk = function(obj) {
-        return !!((obj && obj !== 'null' && obj !== 'undefined') || obj === 0);
-    };
-
-}($));
-/*===============================================================================
-************   $ extend end  ************
-************   $ dateFormat begin  ************
-===============================================================================*/
-
-(function($) {
-    /**
-     * dataFormat工具类接口
-     */
-    // 下面是日期的format的格式转换的规则
-    /*
-    Full Form和Short Form之间可以实现笛卡尔积式的搭配
-
-     Field        | Full Form          | Short Form                            中文日期，所有Full Form 不处理(除了年)
-     -------------+--------------------+-----------------------
-     Year         | yyyy (4 digits)    | yy (2 digits), y (2 or 4 digits)      NNNN  NN  N
-     Month        | MMM (name or abbr.)| MM (2 digits), M (1 or 2 digits)      Y
-                  | NNN (abbr.)        |
-     Day of Month | dd (2 digits)      | d (1 or 2 digits)                     R
-     Day of Week  | EE (name)          | E (abbr)
-     Hour (1-12)  | hh (2 digits)      | h (1 or 2 digits)                     S
-     Hour (0-23)  | HH (2 digits)      | H (1 or 2 digits)                     T
-     Hour (0-11)  | KK (2 digits)      | K (1 or 2 digits)                     U
-     Hour (1-24)  | kk (2 digits)      | k (1 or 2 digits)                     V
-     Minute       | mm (2 digits)      | m (1 or 2 digits)                     F
-     Second       | ss (2 digits)      | s (1 or 2 digits)                     W
-     AM/PM        | a                  |
-
-     */
-    //
-    //例子
-    //dataFormat.formatDateToString(new Date(),"yyyymmdd");//
-    //dataFormat.formatStringToDate("1992_09_22","yyyy_mm_dd");
-    //dataFormat.formatStringToString("1992_09_22","yyyy_mm_dd","yy______mmdd");
-    //dataFormat.compareDates("1992_09_22","yyyy_mm_dd","1992_09_23","yyyy_mm_dd");//返回false
-    //dataFormat.isDate("1992_09_________22","yyyy_mm_________dd");//返回true
-    //
-    var dataFormat = {
-        MONTH_NAMES: new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',
-            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-        ),
-        DAY_NAMES: new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
-            'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
-        ),
-        //    chi : [ '一', '二', '三', '四', '五', '六', '七', '八', '九','十'],
-        toChi: function(year) { //转换中文，不进位   //todo 需要优化为一条正则表达式
-            return year.replace(/0/g, '零').replace(/1/g, '一').
-            replace(/2/g, '二').replace(/3/g, '三').replace(/4/g, '四')
-                .replace(/5/g, '五').replace(/6/g, '六').replace(/7/g, '七')
-                .replace(/8/g, '八').replace(/9/g, '九');
-        },
-
-        toChiNum: function(n) { //转换中文，进位,只支持到十位数
-            var num = n / 1;
-            var num_s = num + '';
-            if (num > 9 && num < 20) {
-                num_s = '十' + num_s.charAt(1);
-            } else if (num > 19) {
-                num_s = num_s.charAt(0) + '十' + num_s.charAt(1);
-            }
-            num_s = this.toChi(num_s);
-            if (num != 0) num_s = num_s.replace(/零/g, '');
-            return num_s;
-        },
-        toNum: function(year) { //中文转换阿拉伯数字，纯替换  //todo 需要优化为一条正则表达式
-            return year.replace(/零/g, '0').replace(/一/g, '1').
-            replace(/二/g, '2').replace(/三/g, '3').replace(/四/g, '4')
-                .replace(/五/g, '5').replace(/六/g, '6').replace(/七/g, '7')
-                .replace(/八/g, '8').replace(/九/g, '9');
-        },
-        toNum2: function(year) { //中文转换阿拉伯数字，带进位，支持2位数 //todo 需要优化为一条正则表达式
-            var l = year.length;
-            if (year == '十') return 10;
-            if (l == 1 && '十' != year) return this.toNum(year); //零 到 九
-            if (l == 2 && '十' != year.charAt(l - 1)) return this.toNum(year.replace(/十/g, '一')); //十一 到 十九
-            if (l == 2 && '十' == year.charAt(l - 1)) return this.toNum(year.replace(/十/g, '零')); //二十 到 九十 的整数
-            if (l == 3) return this.toNum(year.replace(/十/g, '')); //二十一 到 九十九 的三位中文数字
-        },
-
-        LZ: function(x) {
-            return (x < 0 || x > 9 ? "" : "0") + x;
-        },
-        isDate: function(val, format) { //看看给定的字符串是否为Date类型
-            var date = this.formatStringToDate(val, format);
-            if (date == 0) {
-                return false;
-            }
-            return true;
-        },
-        compareDates: function(date1, dateformat1, date2, dateformat2) { //比较大小
-            var d1 = this.formatStringToDate(date1, dateformat1);
-            var d2 = this.formatStringToDate(date2, dateformat2);
-            if (d1 == 0 || d2 == 0) {
-                alert("format格式转换有问题");
-                return;
-            } else if (d1 > d2) {
-                return true;
-            }
-            return false;
-        },
-        formatDateToString: function(date, format) { //将日期转化为Str
-            //赋值
-            format = format + "";
-            var result = ""; //返回的结果字符串
-            var i_format = 0; //format字符串的位置指针
-            var c = "";
-            var token = ""; //format字符串中的子串
-            var y = date.getFullYear() + "";
-            var M = date.getMonth() + 1;
-            var d = date.getDate();
-            var E = date.getDay();
-            var H = date.getHours();
-            var m = date.getMinutes();
-            var s = date.getSeconds();
-            var yyyy, yy, MMM, MM, dd, hh, h, mm, ss, ampm, HH, H, KK, K, kk, k;
-
-            //将所有的规则的key加入到value对象的key中,将传入的date取出来的值加入到value对象的value中
-            var value = new Object();
-            value["y"] = "" + y;
-            value["yyyy"] = y;
-            value["yy"] = y.substring(2, 4);
-
-            value["M"] = M;
-            value["MM"] = this.LZ(M);
-            value["MMM"] = this.MONTH_NAMES[M - 1];
-            value["NNN"] = this.MONTH_NAMES[M + 11];
-
-            value["d"] = d;
-            value["dd"] = this.LZ(d);
-            value["E"] = this.DAY_NAMES[E + 7];
-            value["EE"] = this.DAY_NAMES[E];
-
-            value["H"] = H;
-            value["HH"] = this.LZ(H);
-            if (H == 0) {
-                value["h"] = 12;
-            } else if (H > 12) {
-                value["h"] = H - 12;
-            } else {
-                value["h"] = H;
-            }
-            value["hh"] = this.LZ(value["h"]);
-            if (H > 11) {
-                value["K"] = H - 12;
-            } else {
-                value["K"] = H;
-            }
-            value["k"] = H + 1;
-            value["KK"] = this.LZ(value["K"]);
-            value["kk"] = this.LZ(value["k"]);
-
-            if (H > 11) {
-                value["a"] = "PM";
-            } else {
-                value["a"] = "AM";
-            }
-
-            value["m"] = m;
-            value["mm"] = this.LZ(m);
-
-            value["s"] = s;
-            value["ss"] = this.LZ(s);
-
-            value["NNNN"] = this.toChi(value["yyyy"]);
-            value["NN"] = this.toChi(value["yy"]);
-            value["N"] = this.toChi(value["y"]);
-            value["Y"] = this.toChiNum(M);
-            value["R"] = this.toChiNum(d);
-            value["S"] = this.toChiNum(value["h"]);
-            value["T"] = this.toChiNum(value["H"]);
-            value["U"] = this.toChiNum(value["K"]);
-            value["V"] = this.toChiNum(value["k"]);
-            value["F"] = this.toChiNum(m);
-            value["W"] = this.toChiNum(s);
-
-
-            //开始进行校验
-            while (i_format < format.length) { //以i_format为记录解析format的指针,进行遍历
-                c = format.charAt(i_format);
-                token = "";
-                while ((format.charAt(i_format) == c) && (i_format < format.length)) { //当进行遍历的字符相同的时候,token取的就是当前遍历的相同字符,例如yyyy mm dd,这里就是三个循环yyyy mm dd
-                    token += format.charAt(i_format++);
-                }
-                if (value[token] != null) {
-                    result = result + value[token]; //循环叠加value
-                } else {
-                    result = result + token;
-                }
-            }
-            return result; //最后返回格式化的字符串
-        },
-        _isInteger: function(val) {
-            //return ['0','1','2','3','4','5','6','7','8','9'].contains(val);
-            var digits = "1234567890";
-            for (var i = 0; i < val.length; i++) {
-                if (digits.indexOf(val.charAt(i)) == -1) {
-                    return false;
-                }
-            }
-            return true;
-        },
-        _isInteger_chi: function(val) {
-            //return ['0','1','2','3','4','5','6','7','8','9'].contains(val);
-            var digits = "零一二三四五六七八九十";
-            for (var i = 0; i < val.length; i++) {
-                if (digits.indexOf(val.charAt(i)) == -1) {
-                    return false;
-                }
-            }
-            return true;
-        },
-        _getInt: function(str, i, minlength, maxlength) {
-            for (var x = maxlength; x >= minlength; x--) {
-                var token = str.substring(i, i + x);
-                if (token.length < minlength) {
-                    return null;
-                }
-                if (this._isInteger(token)) {
-                    return token;
-                }
-            }
-            return null;
-        },
-        _getInt2: function(str, i, minlength, maxlength) {
-            for (var x = maxlength; x >= minlength; x--) {
-                var token = str.substring(i, i + x);
-                if (token.length < minlength) {
-                    return null;
-                }
-                if (token) {
-                    return token;
-                }
-            }
-            return null;
-        },
-
-        _getInt_month: function(str, i) {
-            for (var x = 2; x >= 1; x--) {
-                var token = str.substring(i, i + x);
-                if (token.length < 1) {
-                    return null;
-                }
-                if (token.length == 1) {
-                    return token;
-                }
-                if (['十一', '十二'].contains(token)) {
-                    return token;
-                }
-            }
-            return null;
-        },
-
-        _getInt_date: function(str, i) {
-            for (var x = 3; x >= 1; x--) {
-                var token = str.substring(i, i + x);
-                if (token.length < 1) {
-                    return null;
-                }
-                if (token.length == 1) return token;
-                if (this._isInteger_chi(token)) return token;
-            }
-            return null;
-        },
-        formatStringToDate: function(val, format) { //将字符串转化为Date
-            //赋值
-            val = val + "";
-            format = format + "";
-            var i_val = 0; //val字符串的指针
-            var i_format = 0; //format字符串的指针
-            var c = "";
-            var token = "";
-            var token2 = "";
-            var x, y;
-            var now = new Date();
-            var year = now.getFullYear();
-            var month = now.getMonth() + 1;
-            var date = 1;
-            var hh = now.getHours();
-            var mm = now.getMinutes();
-            var ss = now.getSeconds();
-            var ampm = "";
-
-            while (i_format < format.length) {
-                //根据类似yyyy,mm同名的字符串的规则,可以取得yyyy或者mm等format字符串
-                c = format.charAt(i_format);
-                token = "";
-                while ((format.charAt(i_format) == c) && (i_format < format.length)) {
-                    token += format.charAt(i_format++);
-                }
-                //从val中通过format中的token解析,进行规则转换
-                if (token == "NNNN" || token == "NN" || token == "N") { //年 中文
-                    if (token == "NNNN") {
-                        x = 4;
-                        y = 4;
-                    }
-                    if (token == "NN") {
-                        x = 2;
-                        y = 2;
-                    }
-                    if (token == "N") {
-                        x = 2;
-                        y = 4;
-                    }
-                    year = this._getInt2(val, i_val, x, y); //从val字符串中根据val的指针i_val,定义的最小/大长度(如上面的y,它所允许的最大长度就是4,最小长度就是2,例如2009,09等)
-                    if (year == null) {
-                        return 0;
-                    }
-                    year = this.toNum(year);
-                    i_val += year.length; //修改val的指针i_val,使其指向当前的变量
-                    if (year.length == 2) { //年输入两位数的作用
-                        if (year > 70) {
-                            year = 1900 + (year - 0); //如果>70年的话,肯定不是现在了,加1900就行了
-                        } else {
-                            year = 2000 + (year - 0);
-                        }
-                    }
-                } else if (token == "Y") { //月_数字_大写
-
-                    month = this._getInt_month(val, i_val);
-                    i_val += month.length;
-                    month = this.toNum2(month);
-                    if (month == null || (month < 1) || (month > 12)) {
-                        return 0;
-                    }
-
-                } else if (token == "R") { //日 数字 中文
-
-                    date = this._getInt_date(val, i_val);
-                    i_val += date.length;
-                    date = this.toNum2(date);
-                    if (date == null || (date < 1) || (date > 31)) {
-                        return 0;
-                    }
-
-                } else if (token == "S") { //小时 数字 中文 h
-                    hh = this._getInt_date(val, i_val);
-                    i_val += hh.length;
-                    hh = this.toNum2(hh);
-                    if (hh == null || (hh < 1) || (hh > 12)) {
-                        return 0;
-                    }
-                } else if (token == "T") { //小时 数字 中文  H
-                    hh = this._getInt_date(val, i_val);
-                    i_val += hh.length;
-                    hh = this.toNum2(hh);
-                    if (hh == null || (hh < 0) || (hh > 23)) {
-                        return 0;
-                    }
-                } else if (token == "U") { //小时 数字 中文 K
-                    hh = this._getInt_date(val, i_val);
-                    i_val += hh.length;
-                    hh = this.toNum2(hh);
-                    if (hh == null || (hh < 0) || (hh > 11)) {
-                        return 0;
-                    }
-                } else if (token == "V") { //小时 数字 中文 k
-                    hh = this._getInt_date(val, i_val);
-                    i_val += hh.length;
-                    hh = this.toNum2(hh);
-                    hh--;
-                    if (hh == null || (hh < 1) || (hh > 24)) {
-                        return 0;
-                    }
-                } else if (token == "F") { //分 数字 中文
-                    mm = this._getInt_date(val, i_val);
-                    i_val += mm.length;
-                    mm = this.toNum2(mm);
-                    if (mm == null || (mm < 0) || (mm > 59)) {
-                        return 0;
-                    }
-                } else if (token == "W") { //秒 数字 中文
-                    ss = this._getInt_date(val, i_val);
-                    i_val += ss.length;
-                    ss = this.toNum2(ss);
-                    if (ss == null || (ss < 0) || (ss > 59)) {
-                        return 0;
-                    }
-                } else if (token == "yyyy" || token == "yy" || token == "y") { //年
-                    if (token == "yyyy") {
-                        x = 4;
-                        y = 4;
-                    }
-                    if (token == "yy") {
-                        x = 2;
-                        y = 2;
-                    }
-                    if (token == "y") {
-                        x = 2;
-                        y = 4;
-                    }
-                    year = this._getInt(val, i_val, x, y); //从val字符串中根据val的指针i_val,定义的最小/大长度(如上面的y,它所允许的最大长度就是4,最小长度就是2,例如2009,09等)
-                    if (year == null) {
-                        return 0;
-                    }
-                    i_val += year.length; //修改val的指针i_val,使其指向当前的变量
-                    if (year.length == 2) { //年输入两位数的作用
-                        if (year > 70) {
-                            year = 1900 + (year - 0); //如果>70年的话,肯定不是现在了,加1900就行了
-                        } else {
-                            year = 2000 + (year - 0);
-                        }
-                    }
-                } else if (token == "MMM" || token == "NNN") { //月_name
-                    month = 0;
-                    for (var i = 0; i < this.MONTH_NAMES.length; i++) {
-                        var month_name = this.MONTH_NAMES[i];
-                        if (val.substring(i_val, i_val + month_name.length).toLowerCase() == month_name.toLowerCase()) { //如果指针指向的长度与this.MONTH_NAMES中的任何一项都相同
-                            if (token == "MMM" || (token == "NNN" && i > 11)) {
-                                month = i + 1; //将month转换为数字,+1是js中的month比实际的小1
-                                if (month > 12) {
-                                    month -= 12;
-                                }
-                                i_val += month_name.length;
-                                break;
-                            }
-                        }
-                    }
-                    if ((month < 1) || (month > 12)) {
-                        return 0;
-                    } //不符合规则返回0
-                } else if (token == "EE" || token == "E") { //日
-                    for (var i = 0; i < this.DAY_NAMES.length; i++) {
-                        var day_name = this.DAY_NAMES[i];
-                        if (val.substring(i_val, i_val + day_name.length).toLowerCase() == day_name.toLowerCase()) {
-                            i_val += day_name.length;
-                            break;
-                        }
-                    }
-                } else if (token == "MM" || token == "M") { //月_数字
-                    month = this._getInt(val, i_val, token.length, 2);
-                    if (month == null || (month < 1) || (month > 12)) {
-                        return 0;
-                    }
-                    i_val += month.length;
-                } else if (token == "dd" || token == "d") {
-                    date = this._getInt(val, i_val, token.length, 2);
-                    if (date == null || (date < 1) || (date > 31)) {
-                        return 0;
-                    }
-                    i_val += date.length;
-                } else if (token == "hh" || token == "h") {
-                    hh = this._getInt(val, i_val, token.length, 2);
-                    if (hh == null || (hh < 1) || (hh > 12)) {
-                        return 0;
-                    }
-                    i_val += hh.length;
-                } else if (token == "HH" || token == "H") {
-                    hh = this._getInt(val, i_val, token.length, 2);
-                    if (hh == null || (hh < 0) || (hh > 23)) {
-                        return 0;
-                    }
-                    i_val += hh.length;
-                } else if (token == "KK" || token == "K") {
-                    hh = this._getInt(val, i_val, token.length, 2);
-                    if (hh == null || (hh < 0) || (hh > 11)) {
-                        return 0;
-                    }
-                    i_val += hh.length;
-                } else if (token == "kk" || token == "k") {
-                    hh = this._getInt(val, i_val, token.length, 2);
-                    if (hh == null || (hh < 1) || (hh > 24)) {
-                        return 0;
-                    }
-                    i_val += hh.length;
-                    hh--;
-                } else if (token == "mm" || token == "m") {
-                    mm = this._getInt(val, i_val, token.length, 2);
-                    if (mm == null || (mm < 0) || (mm > 59)) {
-                        return 0;
-                    }
-                    i_val += mm.length;
-                } else if (token == "ss" || token == "s") {
-                    ss = this._getInt(val, i_val, token.length, 2);
-                    if (ss == null || (ss < 0) || (ss > 59)) {
-                        return 0;
-                    }
-                    i_val += ss.length;
-                } else if (token == "a") { //上午下午
-                    if (val.substring(i_val, i_val + 2).toLowerCase() == "am") {
-                        ampm = "AM";
-                    } else if (val.substring(i_val, i_val + 2).toLowerCase() == "pm") {
-                        ampm = "PM";
-                    } else {
-                        return 0;
-                    }
-                    i_val += 2;
-                } else { //最后,没有提供关键字的,将指针继续往下移
-                    if (val.substring(i_val, i_val + token.length) != token) {
-                        return 0;
-                    } else {
-                        i_val += token.length;
-                    }
-                }
-            }
-            //如果有其他的尾随字符导致字符串解析不下去了,那么返回0
-            /*if (i_val != val.length) { return 0; }*/ //todo此处有问题
-            //对于特殊月份:2月,偶数月的天数进行校验
-            if (month == 2) {
-                if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) { //测试是否是闰年
-                    if (date > 29) {
-                        return 0;
-                    }
-                } else {
-                    if (date > 28) {
-                        return 0;
-                    }
-                }
-            }
-            if ((month == 4) || (month == 6) || (month == 9) || (month == 11)) {
-                if (date > 30) {
-                    return 0;
-                }
-            }
-            //对于上午下午的具体显示小时数,进行加减
-            if (hh < 12 && ampm == "PM") {
-                hh = hh - 0 + 12;
-            } else if (hh > 11 && ampm == "AM") {
-                hh -= 12;
-            }
-
-            //将给定的字符串解析成Data
-            var newdate = new Date(year, month - 1, date, hh, mm, ss);
-            return newdate;
-        },
-        formatStringToString: function(val, format1, format2) { //将一个字符串从原来的format1的字符串格式输出到format2字符格式
-            var tempDate = this.formatStringToDate(val, format1);
-            if (tempDate == 0) {
-                return val;
-            }
-            var returnVal = this.formatDateToString(tempDate, format2);
-            if (returnVal == 0) {
-                return val;
-            }
-            return returnVal;
-        }
-
-    };
-
-    $.formatStringToDate = function(val) { //将字符串转化为Date
-        // return dataFormat.formatStringToDate(val, format);
-        function getDate(strDate) {
-            var date = eval('new Date(' + strDate.replace(/\d+(?=-[^-]+$)/,
-                function(a) {
-                    return parseInt(a, 10) - 1;
-                }).match(/\d+/g) + ')');
-            return date;
-        }
-        return getDate(val);
-    };
-    $.formatDateToString = function(date, format) { //将日期转化为Str
-        !format && (format = 'yyyy-MM-dd HH:mm:ss');
-        return dataFormat.formatDateToString(date, format);
-    };
-
-    $.getDays = function(format) { //获取当前时间
-        return $.formatDateToString(new Date(), format);
-    };
-
-    $.milliseconds = function(str) {
-        return $.formatStringToDate(str).getTime();
-    };
-
-    $.msToDateStr = function(ms, format) {
-        return $.formatDateToString(new Date(ms), format);
-    }
-
-    $.daysBetween = function(startDate, endDate) {
-        var res = $.getMilliseconds(startDate) - $.getMilliseconds(endDate);
-        return Math.abs(res / 86400000);
-    };
-
-}($));
-
-/*/*===============================================================================
-************   $ dateFormat end  ************
-===============================================================================*/
+})(Zepto);
 
 $(function () {
     /**
@@ -3128,48 +2326,3 @@ $(function () {
         $(window).trigger('ortchange');
     });
 });
-/*===============================================================================
-************   $.fn extend   ************
-===============================================================================*/
-(function($) {
-	$.fn.button = function(callback) {
-		var self = this;
-		self.on('tap', function(evt) {
-			var ele = evt.currentTarget;
-			if ($.isFunction(callback)) {
-				callback.apply(self, [ele, evt]);
-			}
-		});
-		return self;
-	};
-
-
-	['checkbox', 'radio'].forEach(function(eventName) {
-		$.fn[eventName] = function(callback) {
-			var self = this;
-			var els = eventName == 'checkbox' ? self.find('input[type=checkbox]') : self.find('input[type=radio]');
-			els.on('change', function(evt) {
-				var ele = evt.currentTarget;
-				if ($.isFunction(callback)) {
-					callback.apply(self, [ele, evt]);
-				}
-			});
-			return self;
-		}
-	});
-
-	$.fn.select = function(callback) {
-		var self = this;
-		self.find('select').on("change", function(evt) {
-			var sel = evt.currentTarget;
-			if ($.isFunction(callback)) {
-				callback.apply(self, [sel.options[sel.selectedIndex], evt]);
-			}
-		});
-		return self;
-	};
-}($));
-
-/*===============================================================================
-************   $.fn extend end ************
-===============================================================================*/

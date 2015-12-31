@@ -3,80 +3,226 @@
 	************   co start   ************
 	===============================================================================*/
 ;
-(function(global, loader, undefined) {
+(function(global, $, undefined) {
 	var co = global.co = {
-		// The current version of co.js being used
-		version: "1.0.1",
-		verticalSwipe: true //是否可以纵向滑动
-	}
+			// The current version of co.js being used
+			version: "1.0.1",
+			verticalSwipe: true //是否可以纵向滑动
+		},
+		$ui = {},
+		Base = {};
 	var readyRE = /complete|loaded|interactive/;
 
 	var REQUIRE_RE = /"(?:\\"|[^"])*"|'(?:\\'|[^'])*'|\/\*[\S\s]*?\*\/|\/(?:\\\/|[^\/\r\n])+\/(?=[^\/])|\/\/.*|\.\s*require|(?:^|[^$])\brequire\s*\(\s*(["'])(.+?)\1\s*\)/g
 	var SLASH_RE = /\\\\/g
 
-	function parseDependencies(code) {
-		var ret = []
+	var getWidget = function(name) {
+		return $ui.widgets[name]
+	};
 
-		code.replace(SLASH_RE, "")
-			.replace(REQUIRE_RE, function(m, m1, m2) {
-				if (m2) {
-					ret.push(m2)
-				}
+	Base.eachObj = function(obj, iterator) {
+		obj && Object.keys(obj).forEach(function(key) {
+			iterator(key, obj[key]);
+		});
+	};
+	Base.getWidget = getWidget;
+	Base.register = function(name, callback) {
+		if ($.isFunction(callback)) {
+			callback.call(global, $ui.plugins[name])
+		}
+	};
+	Base.init = function() {};
+	/**
+	 * @name extend
+	 * @desc 扩充现有组件
+	 */
+	Base.extend = function(obj) {
+		var proto = this.prototype;
+		Base.eachObj(obj, function(key, val) {
+			proto[key] = val;
+		});
+		return this;
+	};
+
+	Base.parseTpl = function(str, data) {
+		var tmpl = 'var __p=[];' + 'with(obj||{}){__p.push(\'' +
+			str.replace(/\\/g, '\\\\')
+			.replace(/'/g, '\\\'')
+			.replace(/<%=([\s\S]+?)%>/g, function(match, code) {
+				return '\',' + code.replace(/\\'/, '\'') + ',\'';
 			})
+			.replace(/<%([\s\S]+?)%>/g, function(match, code) {
+				return '\');' + code.replace(/\\'/, '\'')
+					.replace(/[\r\n\t]/g, ' ') + '__p.push(\'';
+			})
+			.replace(/\r/g, '\\r')
+			.replace(/\n/g, '\\n')
+			.replace(/\t/g, '\\t') +
+			'\');}return __p.join("");',
 
-		return ret
-	}
-	if (($.os.android || $.os.ios)) {
-		// if (($.os.ios) && rd.app.isFullScreen()) {
+			func = new Function('obj', tmpl);
+
+		return data ? func(data) : func;
+	};
+
+	/*
+	      判断是否Touch屏幕
+	  */
+	Base.isTouchScreen = function() {
+		return (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch);
+	};
+
+	Base.touchEve = function() {
+		return this.isTouchScreen() ? "tap" : "click"
+	};
+
+	Base.touchStart = function() {
+		return this.isTouchScreen() ? "touchstart" : "mousedown"
+	};
+
+	Base.touchEnd = function() {
+		return this.isTouchScreen() ? "touchend" : "mouseup"
+	};
+
+	Base.touchCancel = function() {
+		return this.isTouchScreen() ? "touchcancel" : "mouseup"
+	};
+
+	Base.touchMove = function() {
+		return this.isTouchScreen() ? "touchmove" : "mouseup"
+	};
+
+	Base.longTap = function() {
+		return this.isTouchScreen() ? "longTap" : "mouseup"
+	};
+
+	Base.touchOver = function() {
+		return this.isTouchScreen() ? "touchend touchmove" : "mouseup"
+	};
+
+
+	Base.log = function(str) {
+		console.log(str);
+		return this;
+	};
+	Base.callZ = (function() {
+		instance = $();
+		instance.length = 1;
+
+		return function(item) {
+			instance[0] = item;
+			return instance;
+		};
+	})()
+
+	Base.stopPropagation = function(e) {
+		e.stopPropagation();
+		return this;
+	};
+
+	Base.preventDefault = function(e) {
+		e.preventDefault();
+		return this;
+	};
+
+
+	Base.focus = function(element) {
 		if ($.os.ios) {
+			setTimeout(function() {
+				element.focus();
+			}, 10);
+		} else {
+			element.focus();
+		}
+		return this;
+	};
+
+	$ui.uuid = 0;
+	$ui.data = {};
+	$ui.widgets = {};
+	$ui.plugins = {};
+	$ui.module = {};
+	$ui.define = function(name, options) {
+		if ($ui.widgets[name]) return $ui.widgets[name];
+		var defOpts = {
+			/**
+			 * 参照对象
+			 * @property {String} [ref=null]
+			 */
+			ref: null, //参照目标 
+
+			/**
+			 * 点击回调函数
+			 * @type {function}
+			 */
+			callback: null
+		}
+		var klass = function(opts) {
+			var baseOpts = $.extend(true, {}, this.options);
+			this.opts = $.extend(true, baseOpts, opts);
+			this.ref = $(this.opts.ref);
+			this.callback = this.opts.callback;
+			this.$family = {
+				name: name
+			}
+			this.init();
+		}
+		$ui.widgets[name] = Base.extend.call(klass, Base);
+		$ui.widgets[name].prototype.options = $.extend(defOpts, options);
+		return $ui.widgets[name];
+	};
+
+	$ui.plugin = function(name, factory) {
+		$ui.plugins[name] = factory
+	};
+
+	var define = function(factory) {
+		if ($.isFunction(factory)) {
+			var module = factory.call(global, $ui)
+		}
+	};
+
+	var require = function(widget) {
+		var widget = getWidget(widget);
+		return widget;
+	}
+
+	if (($.os.android || $.os.ios)) {
+		if (($.os.ios) && window.app && window.app.isFullScreen()) {
 			$(document.body).addClass('ui-ios7');
 		}
 	}
 
-
-	var domReady = function(factory) {
-		if ($.isFunction(factory)) {
-			var deps = parseDependencies(factory.toString())
-			if (!(($.os.android || $.os.ios) && co.plus)) {
-				deps.splice(0, 0, "debug")
-			}
-			loader.use(deps, function() {
-				if (($.os.android || $.os.ios) && co.plus) {
-					setTimeout(function() {
-						if (domReady.isReady) {
-							factory.call(null, loader.require);
-						} else {
-							setTimeout(arguments.callee, 1);
-						}
-					}, 1);
-				} else {
-					factory.call(null, loader.require);
-				}
-
-				$(document).find('.ui-action-back').button(function(evt) {
-					if (app) {
-						app.currentView().back();
-					} else if (rd) {
-						rd.window.closeSelf();
-					}
-				})
-			})
+	$(document).find('.ui-action-back').button(function(evt) {
+		if (window.app) {
+			window.app.currentView().back();
+		} else if (window.rd) {
+			window.rd.window.closeSelf();
+		} else {
+			window.history.back()
 		}
-	};
-
-	co.plus = !!global['rd'];
-	global.onLoad = function() {
-		domReady.isReady = true;
-		co.plus = !!global['rd'];
-	};
+	})
 
 	$.fn.ready = function(callback) {
-		if (readyRE.test(document.readyState) && document.body) domReady(callback);
+		if (readyRE.test(document.readyState) && document.body) global.domReady(callback);
 		else document.addEventListener('DOMContentLoaded', function() {
-			domReady(callback)
+			global.domReady(callback)
 		}, false)
 		return this
 	};
-
-	global.domReady = domReady;
-})(this, seajs);
+	if (global.domReady) {
+		var domReady = global.domReady;
+		global.domReady = function(factory) {
+			if ($.isFunction(factory)) {
+				domReady.call(global, factory, require);
+			}
+		};
+	} else {
+		global.domReady = function(factory) {
+			if ($.isFunction(factory)) {
+				factory.call(global, require);
+			}
+		};
+	}
+	global.define = define;
+})(this, $);

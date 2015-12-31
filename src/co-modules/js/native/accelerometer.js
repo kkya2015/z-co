@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native accelerometer   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	$L.accelerometer = {
 		/*
 		 * 获取当前设备的加速度信息
@@ -11,11 +11,11 @@
 		getCurrentAcceleration: function(success, error) {
 			$L.executeNativeJS(['accelerometer', 'getCurrentAcceleration'], function(acceleration) {
 				if ($L.isFunction(success)) {
-					success.call(null, acceleration);
+					success.call(global, acceleration);
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			});
 		},
@@ -28,11 +28,11 @@
 		watchAcceleration: function(success, error, options) {
 			$L.executeNativeJS(['accelerometer', 'watchAcceleration'], function(acceleration) {
 				if ($L.isFunction(success)) {
-					success.call(null, acceleration);
+					success.call(global, acceleration);
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			}, options);
 		},

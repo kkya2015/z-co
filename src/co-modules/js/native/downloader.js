@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native downloader   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
 	var downloader = function(url, option, download) {
 		if (!download) download = $L.executeNativeJS(['downloader', 'createDownload'], url, option);
@@ -50,7 +50,7 @@
 		this.addEventListener = function(listener) {
 			$L.executeObjFunJS([download, 'addEventListener'],function(dl,status){
 				if ($L.isFunction(listener)) {
-					listener.call(null, this,status);
+					listener.call(global, this,status);
 				}
 			})
 		}
@@ -60,7 +60,7 @@
 		this.addCompletedListener = function(listener) {
 			$L.executeObjFunJS([download, 'addCompletedListener'],function(dl,status){
 				if ($L.isFunction(listener)) {
-					listener.call(null, this,status);
+					listener.call(global, this,status);
 				}
 			})
 		}
@@ -80,8 +80,17 @@
 		},
 
 		/*
-		 * 枚举指定任务状态的下载任务
+		 * 清除指定状态的下载任务。
 		 * @param state: ( 下载任务状态 ) 必选 要清除下载任务的状态。
+		 */
+		clear: function(state) {
+			if(!state) state = -1;
+			$L.executeNativeJS(['downloader', 'clear'], state);
+		},
+
+		/*
+		 * 枚举指定任务状态的下载任务
+		 * @param state: ( 下载任务状态 ) 要清除下载任务的状态。
 		 * @return downloads
 		 */
 		enumerate: function(state) {
@@ -95,12 +104,36 @@
 		},
 
 		/*
-		 * 清除指定状态的下载任务。
-		 * @param state: ( 下载任务状态 ) 必选 要清除下载任务的状态。
+		 * 通过id获取任务，如果当任务下载时，程序出现异常（断网、进程被杀），再次下载时可通过此方法获取以前未下载完的任务执行start继续下载，这样可节约系统资源。
+		 * @param state: ( 下载任务状态 ) 必选 要获取下载任务的id。
+		 * @return download
 		 */
-		clear: function(state) {
-			if(!state) state = -1;
-			$L.executeNativeJS(['downloader', 'clear'], state);
+		getDownLoaderById: function(id) {
+			if(!id) throw new Error("请传入有效的下载任务ID！");
+			var download = $L.executeNativeJS(['downloader', 'enumerateById'], id);
+			return  download;
+		},
+
+		/*
+		 * 清除单个下载任务
+		 * @param id: ( Number ) 必选 要清除下载任务的id。
+		 */
+		remove: function(id) {
+			$L.executeNativeJS(['downloader', 'remove'],id);
+		},
+
+		/*
+		 * 设置并发任务最大数
+		 */
+		setMaxRunningSize: function(num) {
+			$L.executeNativeJS(['downloader', 'setMaxRunningSize'],num);
+		},
+
+		/*
+		 * 设置总下载速度
+		 */
+		setSpeed: function(speed) {
+			$L.executeNativeJS(['downloader', 'setSpeed'],speed);
 		},
 
 		/*
@@ -110,13 +143,7 @@
 			$L.executeNativeJS(['downloader', 'startAll']);
 		},
 
-		/*
-		 * 清除单个下载任务
-		 * @param id: ( Number ) 必选 要清除下载任务的id。
-		 */
-		remove: function(id) {
-			$L.executeNativeJS(['downloader', 'remove'],id);
-		}
+		
 	}
 
 }(app, this));

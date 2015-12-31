@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native window   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
   var window = function() {
     var windowType = $L.getWindowType(); //打开窗口类型
     var windowAnimationType = $L.getWindowAnimationType(); // 动画效果
@@ -54,7 +54,7 @@
       } else if (typeof windowName === 'undefined') {
         throw new Error("无法在未打开的window窗口中执行JS语句！");
       } else {
-        $L.executeNativeJS(['window', 'evaluateScript'], windowName, '', script)
+        $L.executeNativeJS(['window', 'evaluateScript'], '',windowName, '', script)
       }
     }
 
@@ -70,7 +70,7 @@
       }else if (typeof popoverName === 'undefined') {
         throw new Error("请传入有效的popoverName！");
       } else {
-        $L.executeNativeJS(['window', 'evaluateScript'], windowName, popoverName, script)
+        $L.executeNativeJS(['window', 'evaluateScript'], '',windowName, popoverName, script)
       }
     }
   }

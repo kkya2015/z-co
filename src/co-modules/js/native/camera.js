@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native audio   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
   var filename;
   var resolution;
@@ -15,11 +15,11 @@
       }
       $L.executeNativeJS(['camera', 'captureImage'], function(capturedFile) {
         if ($L.isFunction(success)) {
-          success.call(null, capturedFile);
+          success.call(global, capturedFile);
         }
       }, function(err) {
         if ($L.isFunction(error)) {
-          error.call(null, err);
+          error.call(global, err);
         }
       }, options)
 
@@ -32,11 +32,11 @@
       }
       $L.executeNativeJS(['camera', 'captureVideo'], function(capturedFile) {
         if ($L.isFunction(success)) {
-          success.call(null, capturedFile);
+          success.call(global, capturedFile);
         }
       }, function(err) {
         if ($L.isFunction(error)) {
-          error.call(null, err);
+          error.call(global, err);
         }
       }, options)
 

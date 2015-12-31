@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native message   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 
 	var message = function(type) {
 		var recipients = [];
@@ -29,7 +29,7 @@
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			});
 		}

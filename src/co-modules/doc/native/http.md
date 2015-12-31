@@ -28,8 +28,8 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 		-	[setCertificate](#setCertificate)：设置本次请求使用的数字证书
 
 	-	事件
-		-	[onSuccess](#onSuccess) ：开始播放音频
-		-	[onError](#onError) ：暂停播放音频
+		-	[onSuccess](#onSuccess) ：请求成功回调事件
+		-	[onError](#onError) ：请求失败回调事件
 
 ***
 #<div id="方法">方法</div>
@@ -425,3 +425,36 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 	-	####示例：
 			var xhr = app.http.XMLHttpRequest()
 			xhr.setCertificate('证书地址','证书密码');
+
+-	#### <div id="onSuccess">onSuccess(data, response)   ⇒ void </div>   
+		请求成功之后调用事件。传入返回后的数据，以及服务器响应头信息
+	-	data：服务器返回数据。具体类型依赖于传入的options.dataType字段。
+		-	type：String/JSON
+		-	默认值：无
+	-	response：服务器响应头信息。
+		-	type：JSON 
+		-	默认值：无
+
+	-	####示例：
+			var xhr = app.http.XMLHttpRequest()
+			xhr.onSuccess = function(data, response) {
+			    console.log(data)
+			}
+
+-	#### <div id="onError">onError(message, code, response)   ⇒ void </div>   
+		请求出错时调用。
+	-	message：错误信息
+		-	type：String
+		-	默认值：无
+	-	code：服务器响应状态码
+		-	type：Number 
+		-	默认值：无
+	-	response：服务器响应头信息。
+		-	type：JSON 
+		-	默认值：无
+
+	-	####示例：
+			var xhr = app.http.XMLHttpRequest()
+			xhr.onError = function(data, response) {
+			    console.log(data)
+			}

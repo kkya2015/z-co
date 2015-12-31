@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native gallery   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
   $L.gallery = {
     pick: function(success, error, opts) {
       var option = {
@@ -18,22 +18,22 @@
       }
       $L.executeNativeJS(['gallery', 'pick'], function(paths) {
         if ($L.isFunction(success)) {
-          success.call(null, paths);
+          success.call(global, paths);
         }
       }, function(err) {
         if ($L.isFunction(error)) {
-          error.call(null, err);
+          error.call(global, err);
         }
       }, option)
     },
     save: function(path, success, error) {
       $L.executeNativeJS(['gallery', 'save'], path, function(info) {
         if ($L.isFunction(success)) {
-          success.call(null, info);
+          success.call(global, info);
         }
       }, function(err) {
         if ($L.isFunction(error)) {
-          error.call(null, err);
+          error.call(global, err);
         }
       })
     }

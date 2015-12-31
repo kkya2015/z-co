@@ -33,7 +33,7 @@
 		-	type：String
 		-	默认值：无
 #####示例：
-	var dataBase = rd.dataBase.open('dababaseName');
+	var dataBase = app.dataBase.open('dababaseName');
 
 ***
 #<div id="对象">对象</div>
@@ -41,7 +41,7 @@
 
 ##<div id="DataBase">DataBase</div>
 
-	var dataBase = rd.dataBase.open('dababaseName');
+	var dataBase = app.dataBase.open('dababaseName');
 	
 -	#### <div id="executeSql">executeSql(sql)   ⇒ Number </div>   
 		执行某一个Sql语句，比如建表、插入、删除、修改等语句。成功返回 1， 失败返回 0。
@@ -49,7 +49,7 @@
 		-	type：String
 		-	默认值：无
 	-	####示例：
-			var dataBase = rd.dataBase.open('dababaseName');
+			var dataBase = app.dataBase.open('dababaseName');
 
 			var flag = dataBase.executeSql('CREATE TABLE IF NOT EXISTS t_students (id integer PRIMARY KEY AUTOINCREMENT,name text,age integer,number DOUBLE,buer BOOL)');
 
@@ -60,7 +60,7 @@
 -	#### <div id="close">close()   ⇒ Number </div>   
 		关闭数据库。成功返回 1， 失败返回 0。
 	-	####示例：
-			var dataBase = rd.dataBase.open('dababaseName');
+			var dataBase = app.dataBase.open('dababaseName');
 
 			var flag = dataBase.close()；
 
@@ -71,7 +71,7 @@
 -	#### <div id="deleteDataBase">deleteDataBase()   ⇒ Number </div>   
 		删除数据库。成功返回 1， 失败返回 0。
 	-	####示例：
-			var dataBase = rd.dataBase.open('dababaseName');
+			var dataBase = app.dataBase.open('dababaseName');
 
 			var flag = dataBase.deleteDataBase()；
 
@@ -85,7 +85,7 @@
 		-	type：String
 		-	默认值：无
 	-	####示例：
-			var dataBase = rd.dataBase.open('dababaseName');
+			var dataBase = app.dataBase.open('dababaseName');
 
 			var res = dataBase.selectAll('select * from t_students');
 
@@ -96,20 +96,20 @@
 -	#### <div id="beginTransaction">beginTransaction()   ⇒ void </div>   
 		开始事务。
 	-	####示例：
-			var dataBase = rd.dataBase.open('dababaseName');
+			var dataBase = app.dataBase.open('dababaseName');
 
 			dataBase.beginTransaction()；
 
 -	#### <div id="commit">commit()   ⇒ void </div>   
 		提交事务。
 	-	####示例：
-			var dataBase = rd.dataBase.open('dababaseName');
+			var dataBase = app.dataBase.open('dababaseName');
 
 			dataBase.commit()；
 
 -	#### <div id="rollback">rollback()   ⇒ void </div>   
 		提交事务。
 	-	####示例：
-			var dataBase = rd.dataBase.open('dababaseName');
+			var dataBase = app.dataBase.open('dababaseName');
 
 			dataBase.rollback()；

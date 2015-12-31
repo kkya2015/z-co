@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native geolocation   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	$L.geolocation = {
 		/*
 		 * 获取当前设备位置信息
@@ -15,11 +15,11 @@
 			}
 			$L.executeNativeJS(['geolocation', 'getCurrentPosition'], function(position) {
 				if ($L.isFunction(success)) {
-					success.call(null, position);
+					success.call(global, position);
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			}, options);
 		},
@@ -36,11 +36,11 @@
 			}
 			$L.executeNativeJS(['geolocation', 'watchPosition'], function(position) {
 				if ($L.isFunction(success)) {
-					success.call(null, position);
+					success.call(global, position);
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			}, options);
 		},

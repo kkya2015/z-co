@@ -7,7 +7,7 @@
 ***
 ###[方法](#方法)：
 
-*	[openProperties](#openProperties) ：打开一个property
+*	[open](#open) ：打开一个property
 
 ###[对象](#对象)：
 
@@ -23,7 +23,7 @@
 #<div id="方法">方法</div>
 ***
 
-## <div id="put">put</div>
+## <div id="open">open</div>
 -	####app.properties.open(domain, fileName)   ⇒ [Property](#Property)
 		如果property文件不存在，新建相应的property，如果存在，直接读取
 	-	domain： 一级文件夹

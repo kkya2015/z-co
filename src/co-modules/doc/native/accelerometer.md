@@ -8,19 +8,24 @@ Accelerometer模块管理设备加速度传感器，用于获取感应手机的�
 ***
 ###[方法](#方法)：
 
+*	[clearWatch](#clearWatch) ：关闭监听设备加速度信息
 *	[getCurrentAcceleration](#getCurrentAcceleration) ：获取当前设备的加速度信息
 *	[watchAcceleration](#watchAcceleration) ：监听设备加速度变化信息
-*	[clearWatch](#clearWatch) ：关闭监听设备加速度信息
 
 
 ***
 #<div id="方法">方法</div>
 ***
 
+
+##<div id="clearWatch">clearWatch</div>
+-	#### app.accelerometer.clearWatch()   ⇒ void 
+		关闭监听设备加速度信息
+
+#####示例：
+	app.accelerometer.clearWatch()
+
 ## <div id="getCurrentAcceleration">getCurrentAcceleration</div>
-
-	
-
 -	####app.accelerometer.getCurrentAcceleration(success, [error])   ⇒ void 
 		获取当前设备的加速度信息
 	-	success：获取设备加速度信息成功回调函数
@@ -81,10 +86,4 @@ Accelerometer模块管理设备加速度传感器，用于获取感应手机的�
 	    frequency: 400
 	})
 
-##<div id="clearWatch">clearWatch</div>
--	#### app.accelerometer.clearWatch()   ⇒ void 
-		关闭监听设备加速度信息
-
-#####示例：
-	app.accelerometer.clearWatch()
 

@@ -1,6 +1,7 @@
 /*===============================================================================
 ************   $ extend   ************
 ===============================================================================*/
+;
 (function($) {
     $.animationFrame = function(cb) {
         var args, isQueued, context;
@@ -147,7 +148,7 @@
         }
         return totalLength;
     };
-    
+
     $.chk = function(obj) {
         return !!((obj && obj !== 'null' && obj !== 'undefined') || obj === 0);
     };
@@ -722,6 +723,28 @@
     $.daysBetween = function(startDate, endDate) {
         var res = $.getMilliseconds(startDate) - $.getMilliseconds(endDate);
         return Math.abs(res / 86400000);
+    };
+
+    $.showToast = function(opts) {
+        $.chk(toast) && toast.remove();
+        window.clearTimeout(clearT);
+        opts = $.extend(true, {
+            time: 2000,
+            message: ''
+        }, opts);
+        if (opts.message) {
+            toast = $('<div class="ui-toast"><span class="ui-toast-message">' + opts.message + '</span></div>').appendTo($('body'));
+            var tWidth = toast.width();
+            toast.css({
+                'margin-left': -tWidth / 2
+            });
+        } else {
+            toast = $('<div class="ui-toast"><span class="ui-toast-white ui-spinner"></span></div>').appendTo($('body'));
+        }
+        clearT = setTimeout(function() {
+            toast.remove();
+        }, opts.time);
+        return toast;
     };
 
 }($));

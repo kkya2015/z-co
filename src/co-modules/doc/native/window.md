@@ -12,10 +12,10 @@
 
 *	[open](#open) ：打开新创建的窗口
 *	[setType](#setType) ：设置窗口类型
-*	[setAnimationType](#setAnimationType) ：设置打开时的动画类型
-*	[setAnimationDirection](#setAnimationDirection) ：设置打开时的动画方向
-*	[setAnimationDuration](#setAnimationDuration) ：设置打开时的动画持续时间
-*	[setAnimationCurve](#setAnimationCurve) ：设置打开时的动画曲线
+*	[setAnimationType](#setAnimationType) ：设置打开时的动画类型(仅IOS有效)
+*	[setAnimationDirection](#setAnimationDirection) ：设置打开时的动画方向(仅IOS有效)
+*	[setAnimationDuration](#setAnimationDuration) ：设置打开时的动画持续时间(仅IOS有效)
+*	[setAnimationCurve](#setAnimationCurve) ：设置打开时的动画曲线(仅IOS有效)
 *	[evalScript](#evalScript) ：在当前窗口执行JS语句
 *	[evalScriptInPop](#evalScriptInPop) ：在当前窗口的pop中执行JS语句
 
@@ -74,7 +74,7 @@
 
 ##<div id="setAnimationType">setAnimationType</div>
 -	#### setAnimationType([type])   ⇒ void 
-		设置打开窗口动画效果
+		设置打开窗口动画效果(仅IOS有效)
 	-	type：动画效果类型
 		-	type：Number
 		-	默认值：11
@@ -104,7 +104,7 @@
 
 ##<div id="setAnimationDirection">setAnimationDirection</div>
 -	#### setAnimationDirection([direction])   ⇒ void 
-		设置打开窗口动画方向
+		设置打开窗口动画方向(仅IOS有效)
 	-	direction：动画方向
 		-	type：Number
 		-	默认值：41
@@ -124,7 +124,7 @@
 
 ##<div id="setAnimationDuration">setAnimationDuration</div>
 -	#### setAnimationDuration([duration])   ⇒ void 
-		设置打开窗口动画持续时间
+		设置打开窗口动画持续时间(仅IOS有效)
 	-	duration：动画时间
 		-	type：Number
 		-	默认值：300（单位ms）
@@ -136,7 +136,7 @@
 
 ##<div id="setAnimationCurve">setAnimationCurve</div>
 -	#### setAnimationCurve([curve])   ⇒ void 
-		设置打开窗口动画曲线
+		设置打开窗口动画曲线(仅IOS有效)
 	-	curve:动画曲线类型
 		-	type：Number
 		-	默认值：53

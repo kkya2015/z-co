@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native zip   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
 	$L.zip = {
 		/*
 		 * 用于压缩Zip文件
@@ -17,7 +17,7 @@
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			});
 		},
@@ -35,7 +35,7 @@
 				}
 			}, function(err) {
 				if ($L.isFunction(error)) {
-					error.call(null, err);
+					error.call(global, err);
 				}
 			});
 		}

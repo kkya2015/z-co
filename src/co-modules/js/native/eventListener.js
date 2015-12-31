@@ -1,6 +1,7 @@
 /*===============================================================================
 ************   ui native eventListener   ************
 ===============================================================================*/
+;
 (function($L, global) {
 	$L.event = {
 		/*
@@ -9,11 +10,17 @@
 		 * @param callback: 必选 事件回调\
 		 */
 		addEvent: function(eventName, callback) {
-			$L.executeNativeJS(['eventListener', 'addEventListener'], eventName, function(evt) {
-				if ($L.isFunction(callback)) {
-					callback.call(null, evt);
-				}
-			});
+			if ('network_state_changed' == eventName) {
+				this.addNetWorkChangeEvent(callback);
+			} else if ('battery_state_changed' == eventName) {
+				this.addBatteryChangeEvent(callback);
+			} else {
+				$L.executeNativeJS(['eventListener', 'addEventListener'], eventName, function(evt) {
+					if ($L.isFunction(callback)) {
+						callback.call(global, evt);
+					}
+				});
+			}
 		},
 
 		/*
@@ -31,6 +38,29 @@
 		 */
 		sendEvent: function(eventName, evt) {
 			$L.executeNativeJS(['eventListener', 'sendEvent'], eventName, evt);
+		},
+
+		/*
+		 * 添加网络状态变化事件监听
+		 * @param callback: 必选 事件回调
+		 */
+		addNetWorkChangeEvent: function(callback) {
+			$L.executeNativeJS(['eventListener', 'addEventListener'], 'network_state_changed', function(evt) {
+				if ($L.isFunction(callback)) {
+					callback.call(global, evt.state);
+				}
+			});
+		},
+		/*
+		 * 添加电池状态变化事件监听
+		 * @param callback: 必选 事件回调
+		 */
+		addBatteryChangeEvent: function(callback) {
+			$L.executeNativeJS(['eventListener', 'addEventListener'], 'battery_state_changed', function(evt) {
+				if ($L.isFunction(callback)) {
+					callback.call(global, evt.state);
+				}
+			});
 		}
 	}
 

@@ -1,7 +1,7 @@
 /*===============================================================================
 ************   ui native popover   ************
 ===============================================================================*/
-(function($L, global) {
+;(function($L, global) {
   var currentView = $L.currentView();
   var popover = function(x, y, width, height) {
       var popoverType = $L.getPopoverType(); //打开窗口类型

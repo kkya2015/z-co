@@ -18,7 +18,7 @@ zip模块管理文件压缩和解压。
 
 ## <div id="compress">compress</div>
 -	####app.zip.compress(src, zipfile, success, [error])   ⇒ void
-		获取当前设备的录音对象
+		用于压缩Zip文件
 	-	src： 要压缩的源文件路径，支持文件路径或目录，iOS必须为协议路径。例如："res://...."
 		-	type：String
 		-	默认值：无
@@ -50,7 +50,7 @@ zip模块管理文件压缩和解压。
 
 ## <div id="decompress">decompress</div>
 -	####app.zip.decompress(zipfile, target, success, [error])   ⇒ void
-		获取当前设备的录音对象
+		用于解压缩Zip文件。
 	-	zipfile： 需解压Zip文件路径，iOS必须为协议路径。例如："res://...."
 		-	type：String
 		-	默认值：无
