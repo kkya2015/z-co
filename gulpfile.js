@@ -486,14 +486,14 @@ gulp.task('watch', function(cb) {
 gulp.task('connect', function(cb) {
     connect.server({
         root: [paths.root],
-        port: '3002'
+        port: '3004'
     });
     cb();
 });
 
 gulp.task('open', function(cb) {
     gulp.src(paths.examples.index).pipe(open('', {
-        url: 'http://localhost:3002/' + paths.examples.index
+        url: 'http://localhost:3004/' + paths.examples.index
     }));
     cb();
 });
