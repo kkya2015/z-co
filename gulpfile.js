@@ -460,7 +460,9 @@ gulp.task('cleanDj', function(cb) {
 });
 
 gulp.task('watch', function(cb) {
-    var server = livereload();
+    var server = livereload({
+        port: 35729
+    });
     livereload.listen();
     var watcher = gulp.watch(paths.source.examples + '**/*.*');
     watcher.on('change', function(file) {
