@@ -4,17 +4,16 @@
 	===============================================================================*/
 ;
 (function(global, $, undefined) {
-	var co = global.co = {
+	var co = {
 			// The current version of co.js being used
 			version: "1.0.1",
 			verticalSwipe: true //是否可以纵向滑动
 		},
 		$ui = {},
-		Base = {};
-	var readyRE = /complete|loaded|interactive/;
-
-	var REQUIRE_RE = /"(?:\\"|[^"])*"|'(?:\\'|[^'])*'|\/\*[\S\s]*?\*\/|\/(?:\\\/|[^\/\r\n])+\/(?=[^\/])|\/\/.*|\.\s*require|(?:^|[^$])\brequire\s*\(\s*(["'])(.+?)\1\s*\)/g
-	var SLASH_RE = /\\\\/g
+		Base = {},
+		readyRE = /complete|loaded|interactive/,
+		REQUIRE_RE = /"(?:\\"|[^"])*"|'(?:\\'|[^'])*'|\/\*[\S\s]*?\*\/|\/(?:\\\/|[^\/\r\n])+\/(?=[^\/])|\/\/.*|\.\s*require|(?:^|[^$])\brequire\s*\(\s*(["'])(.+?)\1\s*\)/g,
+		SLASH_RE = /\\\\/g;
 
 	var getWidget = function(name) {
 		return $ui.widgets[name]
@@ -106,7 +105,7 @@
 		return this;
 	};
 	Base.callZ = (function() {
-		instance = $();
+		var instance = $();
 		instance.length = 1;
 
 		return function(item) {
@@ -193,15 +192,17 @@
 		}
 	}
 
-	$(document).find('.ui-action-back').button(function(evt) {
-		if (window.app) {
-			window.app.currentView().back();
-		} else if (window.rd) {
-			window.rd.window.closeSelf();
-		} else {
-			window.history.back()
-		}
-	})
+	setTimeout(function() {
+		$(document).find('.ui-action-back').button(function(evt) {
+			if (window.app) {
+				window.app.currentView().back();
+			} else if (window.rd) {
+				window.rd.window.closeSelf();
+			} else {
+				window.history.back()
+			}
+		})
+	}, 100);
 
 	$.fn.ready = function(callback) {
 		if (readyRE.test(document.readyState) && document.body) global.domReady(callback);
@@ -225,4 +226,5 @@
 		};
 	}
 	global.define = define;
+	global.co = co;
 })(this, $);

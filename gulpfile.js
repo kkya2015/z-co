@@ -69,7 +69,15 @@ var gulp = require('gulp'), //基础库
             'src/co-modules/js/native/socketManager.js',
             'src/co-modules/js/native/storage.js',
             'src/co-modules/js/native/zip.js',
-            'src/co-modules/js/debug.js'
+            'src/co-modules/js/debug.js',
+            'src/co-modules/js/debug/device.js',
+            'src/co-modules/js/debug/os.js',
+            'src/co-modules/js/debug/app.js',
+            'src/co-modules/js/debug/dom.js',
+            'src/co-modules/js/debug/window.js',
+            'src/co-modules/js/debug/http.js',
+            'src/co-modules/js/debug/storage.js',
+            'src/co-modules/js/debug/screen.js'
         ]
     },
     co = {
@@ -282,7 +290,7 @@ gulp.task('co-font', function(cb) {
 });
 
 //co处理
-gulp.task('build-co', gulp.series('cleanCo', 'co-native', 'co-scripts', 'co-dom', 'co-zepto', 'co-css', 'co-font'));
+gulp.task('build-co', gulp.series('cleanCo', 'co-native', 'co-scripts', 'co-zepto', 'co-css', 'co-font'));
 
 // 清空dist样式
 gulp.task('cleanDist', function(cb) {
@@ -417,7 +425,7 @@ gulp.task('examples', function(cb) {
 gulp.task('build-emu', function(cb) {
     gulp.src(emu.js)
         .pipe(concat(emu.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(gulp.dest(paths.examples.root))
         .on('end', function() {
             cb();
@@ -461,7 +469,7 @@ gulp.task('cleanDj', function(cb) {
 
 gulp.task('watch', function(cb) {
     var server = livereload({
-        port: 35729
+        port: 35721
     });
     livereload.listen();
     var watcher = gulp.watch(paths.source.examples + '**/*.*');
@@ -488,14 +496,14 @@ gulp.task('watch', function(cb) {
 gulp.task('connect', function(cb) {
     connect.server({
         root: [paths.root],
-        port: '3004'
+        port: '3002'
     });
     cb();
 });
 
 gulp.task('open', function(cb) {
     gulp.src(paths.examples.index).pipe(open('', {
-        url: 'http://localhost:3004/' + paths.examples.index
+        url: 'http://localhost:3002/' + paths.examples.index
     }));
     cb();
 });

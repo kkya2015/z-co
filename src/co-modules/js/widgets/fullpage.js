@@ -20,9 +20,9 @@
     var defDots = '<p class="' + CLASS_FULLPAGE_DOTS + '"><%= new Array( len + 1 )' +
         '.join("<i></i>") %></p>';
 
-    $(document).on('touchmove', function(e) {
-        e.preventDefault();
-    });
+    // $(document).on('touchmove', function(e) {
+    //     e.preventDefault();
+    // });
     //渲染组件
     var render = function() {
         var _fp = this,

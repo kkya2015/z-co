@@ -41,6 +41,7 @@
         _sl.actionsRightWidth = undefined;
         _sl.translate = undefined;
         _sl.opened = undefined;
+        _sl.closed = undefined;
         _sl.openedActions = undefined;
         _sl.buttonsLeft = undefined;
         _sl.buttonsRight = undefined;
@@ -101,7 +102,7 @@
 
     var handleTouchStart = function(e) {
         var _sl = this;
-        if (!_sl.allowSwipeout) return;
+        if (!_sl.allowSwipeout || _sl.opened) return;
         _sl.isMoved = false;
         _sl.isTouched = true;
         _sl.touchesStart.x = e.type === 'touchstart' ? e.targetTouches[0].pageX : e.pageX;
@@ -230,10 +231,14 @@
     };
 
     var handleTouchEnd = function(e) {
+
         var _sl = this;
+        console.log(_sl.isTouched);
+        console.log(_sl.isMoved);
         if (!_sl.isTouched || !_sl.isMoved) {
             _sl.isTouched = false;
             _sl.isMoved = false;
+            if(!_sl.opened)_sl.swipeOutEl.trigger('tapped');
             return;
         }
 
@@ -278,12 +283,15 @@
             if (_sl.overswipeLeft) {
                 _sl.actionsLeft.find(SELECTOR_SWIPEOUT_OVERSWIPE).trigger('tap');
             }
-        } else {
+        } else if (action === 'close') {
             _sl.swipeOutEl.trigger('close');
             _sl.swipeoutOpenedEl = undefined;
             _sl.swipeOutEl.addClass(CLASS_SWIPEOUT_TRANSITIONING).removeClass(CLASS_SWIPEOUT_OPENED);
             _sl.swipeOutContent.transform('');
             actions.removeClass(CLASS_SWIPEOUT_ACTIONS_OPENED);
+        }else{
+            _sl.swipeOutEl.trigger('tapped');
+            return;
         }
 
         var buttonOffset;
@@ -306,8 +314,9 @@
             }
         }
         _sl.swipeOutContent.transitionEnd(function(e) {
-            if (_sl.opened && action === 'open' || closed && action === 'close') return;
+            if (_sl.opened && action === 'open' || _sl.closed && action === 'close') return;
             _sl.swipeOutEl.trigger(action === 'open' ? 'opened' : 'closed');
+            action === 'open' ? _sl.opened = true : _sl.opened = false
             if (_sl.opened && action === 'close') {
                 if (_sl.actionsRight.length > 0) {
                     _sl.buttonsRight.transform('');
@@ -395,6 +404,7 @@
                 _sl.allowSwipeout = true;
                 // buttons.transform('');
                 el.trigger('closed');
+                _sl.opened = false
                 if (callback) callback.call(el[0]);
                 if (closeTO) clearTimeout(closeTO);
             }

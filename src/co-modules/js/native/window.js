@@ -15,11 +15,11 @@
      * @param String url 要打开窗口的地址
      * @param String windowname 窗口的标识 --  若不传，默认同URL相同
      */
-    this.open = function(url, windowname) { ///打开新窗口
+    this.open = function(url, name) { ///打开新窗口
       if (typeof url === 'undefined') {
         throw new Error("请传入有效的url路径！");
       }
-      windowname = windowname || url;
+      windowname = name || url;
       var options = {
         type: windowAnimationType,
         direction: windowAnimationDirection,
@@ -51,10 +51,10 @@
     this.evalScript = function(script) {
       if (typeof script === 'undefined') {
         throw new Error("请传入有效的JS语句！");
-      } else if (typeof windowName === 'undefined') {
+      } else if (typeof windowname === 'undefined') {
         throw new Error("无法在未打开的window窗口中执行JS语句！");
       } else {
-        $L.executeNativeJS(['window', 'evaluateScript'], '',windowName, '', script)
+        $L.executeNativeJS(['window', 'evaluateScript'], '',windowname, '', script)
       }
     }
 
@@ -65,12 +65,12 @@
     this.evalScriptInPop = function(script,popoverName) {
       if (typeof script === 'undefined') {
         throw new Error("请传入有效的JS语句！");
-      } else if (typeof windowName === 'undefined') {
+      } else if (typeof windowname === 'undefined') {
         throw new Error("无法在未打开的window窗口中执行JS语句！");
       }else if (typeof popoverName === 'undefined') {
         throw new Error("请传入有效的popoverName！");
       } else {
-        $L.executeNativeJS(['window', 'evaluateScript'], '',windowName, popoverName, script)
+        $L.executeNativeJS(['window', 'evaluateScript'], '',windowname, popoverName, script)
       }
     }
   }

@@ -7,8 +7,12 @@
     <link rel="stylesheet" href="dist/css/co.css">
 </head>
 <body >
+<!-- <div class="ui-slider-item">
+                        <img class="ui-slider-img" src="img/1.png">
+                    </div> -->
             <div id="slider" class="ui-slider">
                 <div class="ui-slider-group">
+                    
                     <div class="ui-slider-item">
                         <img class="ui-slider-img" src="img/1.png">
                     </div>
@@ -31,7 +35,7 @@
             gestur:true,
             guide:true,
             mulViewNum:1,
-            fullPage:true
+            heightTarget:'img'
         }).ref.on('slide',function(e,index){
            console.log(index);
         }).on('moveend',function(){

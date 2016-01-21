@@ -10,6 +10,7 @@
       y = y || 0;
       if ($L.android()) {
         y = y * window.devicePixelRatio;
+        height = height * window.devicePixelRatio;
       }
       width = width || 0;
       height = height || 0;
@@ -21,9 +22,6 @@
       this.open = function(url, name) { ///打开新窗口
         if (typeof url === 'undefined') {
           throw new Error("请传入有效的url路径！");
-        } else if (this.popovername) {
-          this.front();
-          return;
         }
         popovername = this.popovername = name || url;
         var rect = {
@@ -39,10 +37,10 @@
       }
       this.setAnimationType = function(type) {}
       this.hide = function() {
-        if (popovername) $L.executeNativeJS(['window', 'setPopoverVisible'], 0, popovername)
+        if (popovername) $L.executeNativeJS(['window', 'setPopoverVisible'], false, popovername)
       }
       this.show = function() {
-        if (popovername) $L.executeNativeJS(['window', 'setPopoverVisible'], 1, popovername)
+        if (popovername) $L.executeNativeJS(['window', 'setPopoverVisible'], true, popovername)
       }
       this.front = function() {
         if (popovername) $L.executeNativeJS(['window', 'bringPopoverToFront'], popovername)
@@ -58,7 +56,7 @@
         if (typeof name === 'undefined') {
           throw new Error("无法操作未打开的popovr！");
         }
-        if (popovername) $L.executeNativeJS(['window', 'bringPopoverBelow'], popovername, popovr)
+        if (popovername) $L.executeNativeJS(['window', 'bringPopoverBelow'], popovername, name)
       }
       this.frontOf = function(popovr) {
         if (typeof popovr === 'undefined') {
@@ -68,7 +66,7 @@
         if (typeof name === 'undefined') {
           throw new Error("无法操作未打开的popovr！");
         }
-        if (popovername) $L.executeNativeJS(['window', 'bringPopoverAbove'], popovername, popovr)
+        if (popovername) $L.executeNativeJS(['window', 'bringPopoverAbove'], popovername, name)
       }
       this.close = function() {
           if (popovername) $L.executeNativeJS(['window', 'closePopover'], popovername)

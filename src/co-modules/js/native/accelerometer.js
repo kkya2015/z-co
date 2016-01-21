@@ -1,7 +1,8 @@
 /*===============================================================================
 ************   ui native accelerometer   ************
 ===============================================================================*/
-;(function($L, global) {
+;
+(function($L, global) {
 	$L.accelerometer = {
 		/*
 		 * 获取当前设备的加速度信息
@@ -26,6 +27,11 @@
 		 * @param options: 加速度信息参数 监听设备加速度信息的参数，更新数据的频率。
 		 */
 		watchAcceleration: function(success, error, options) {
+			if (typeof options === 'undefined') {
+				options = {
+					frequency: 500
+				}
+			}
 			$L.executeNativeJS(['accelerometer', 'watchAcceleration'], function(acceleration) {
 				if ($L.isFunction(success)) {
 					success.call(global, acceleration);

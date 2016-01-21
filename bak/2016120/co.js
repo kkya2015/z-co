@@ -3013,17 +3013,16 @@
 	===============================================================================*/
 ;
 (function(global, $, undefined) {
-	var co = global.co = {
+	var co = {
 			// The current version of co.js being used
 			version: "1.0.1",
 			verticalSwipe: true //是否可以纵向滑动
 		},
 		$ui = {},
-		Base = {};
-	var readyRE = /complete|loaded|interactive/;
-
-	var REQUIRE_RE = /"(?:\\"|[^"])*"|'(?:\\'|[^'])*'|\/\*[\S\s]*?\*\/|\/(?:\\\/|[^\/\r\n])+\/(?=[^\/])|\/\/.*|\.\s*require|(?:^|[^$])\brequire\s*\(\s*(["'])(.+?)\1\s*\)/g
-	var SLASH_RE = /\\\\/g
+		Base = {},
+		readyRE = /complete|loaded|interactive/,
+		REQUIRE_RE = /"(?:\\"|[^"])*"|'(?:\\'|[^'])*'|\/\*[\S\s]*?\*\/|\/(?:\\\/|[^\/\r\n])+\/(?=[^\/])|\/\/.*|\.\s*require|(?:^|[^$])\brequire\s*\(\s*(["'])(.+?)\1\s*\)/g,
+		SLASH_RE = /\\\\/g;
 
 	var getWidget = function(name) {
 		return $ui.widgets[name]
@@ -3115,7 +3114,7 @@
 		return this;
 	};
 	Base.callZ = (function() {
-		instance = $();
+		var instance = $();
 		instance.length = 1;
 
 		return function(item) {
@@ -3202,15 +3201,17 @@
 		}
 	}
 
-	$(document).find('.ui-action-back').button(function(evt) {
-		if (window.app) {
-			window.app.currentView().back();
-		} else if (window.rd) {
-			window.rd.window.closeSelf();
-		} else {
-			window.history.back()
-		}
-	})
+	setTimeout(function() {
+		$(document).find('.ui-action-back').button(function(evt) {
+			if (window.app) {
+				window.app.currentView().back();
+			} else if (window.rd) {
+				window.rd.window.closeSelf();
+			} else {
+				window.history.back()
+			}
+		})
+	}, 100);
 
 	$.fn.ready = function(callback) {
 		if (readyRE.test(document.readyState) && document.body) global.domReady(callback);
@@ -3234,11 +3235,13 @@
 		};
 	}
 	global.define = define;
+	global.co = co;
 })(this, $);
 /**
  * @file 图片轮播组件
  */
-;(function() {
+;
+(function() {
 
     var cssPrefix = $.fx.cssPrefix,
         transitionEnd = $.fx.transitionEnd;
@@ -3375,12 +3378,15 @@
         if ((width = _sl.ref.width()) === _sl.width) {
             return;
         }
+        _sl._container.css('display', 'block');
         if (opts.fullPage) {
             $(document.body).css('position', 'absolute');
             _sl.height = $(document.body).height();
         } else {
             if (opts.heightTarget == 'parent') {
                 _sl.height = _sl.ref.parent().height();
+            } else if (opts.heightTarget == 'img') {
+                _sl.height = _sl._pages.find(SELECTOR_SLIDER_IMG).height();
             } else {
                 _sl.height = _sl.ref.height();
             }
@@ -3391,7 +3397,6 @@
         _sl._pages.find(SELECTOR_SLIDER_IMG).height(_sl.height);
         _sl.width = width;
         _sl.arrange();
-        _sl._container.css('display', 'block');
         _sl.ref.find(SELECTOR_SLIDER_DOTS).css('display', 'block');
         _sl.ref.trigger('hiChange');
         _sl.loading.remove();
@@ -3458,6 +3463,7 @@
              * @namespace options
              */
             gestur: false,
+            touch:true,
             /**
              * @property {Number} [mulViewNum=2] 当slider为multiview模式时，用来指定一页显示多少个图片。
              * @namespace options
@@ -3506,9 +3512,12 @@
             }
 
             //加載觸摸按鈕
-            _sl.register('sTouch', function(st) {
-                st.call(_sl);
-            });
+            if (opts.touch) {
+                _sl.register('sTouch', function(st) {
+                    st.call(_sl);
+                });
+            }
+
             if (opts.guide) {
                 _sl.register('sGuide', function(sg) {
                     sg.call(_sl);
@@ -4485,8 +4494,8 @@
         SELECTOR_ACCORDION_LIST_ITEM_EXPANDED = '.' + CLASS_ACCORDION_LIST_ITEM_EXPANDED,
         SELECTOR_ACCORDION_LIST_ITEM_LINK = '.' + CLASS_ACCORDION_LIST_ITEM_LINK,
         SELECTOR_ACCORDION_LIST_ITEM_CONTENT = '.' + CLASS_ACCORDION_LIST_ITEM_CONTENT,
-        SELECTOR_ACCORDION_LIST_ITEM_INNER = '.' + CLASS_ACCORDION_LIST_ITEM_INNER
-    SELECTOR_ACCORDION_LIST_ITEM_TITLE = '.' + CLASS_ACCORDION_LIST_ITEM_TITLE;
+        SELECTOR_ACCORDION_LIST_ITEM_INNER = '.' + CLASS_ACCORDION_LIST_ITEM_INNER,
+        SELECTOR_ACCORDION_LIST_ITEM_TITLE = '.' + CLASS_ACCORDION_LIST_ITEM_TITLE;
 
     var render = function() {
         var _acd = this,
@@ -4632,9 +4641,9 @@
     var defDots = '<p class="' + CLASS_FULLPAGE_DOTS + '"><%= new Array( len + 1 )' +
         '.join("<i></i>") %></p>';
 
-    $(document).on('touchmove', function(e) {
-        e.preventDefault();
-    });
+    // $(document).on('touchmove', function(e) {
+    //     e.preventDefault();
+    // });
     //渲染组件
     var render = function() {
         var _fp = this,
@@ -6709,6 +6718,7 @@
         _sl.actionsRightWidth = undefined;
         _sl.translate = undefined;
         _sl.opened = undefined;
+        _sl.closed = undefined;
         _sl.openedActions = undefined;
         _sl.buttonsLeft = undefined;
         _sl.buttonsRight = undefined;
@@ -6769,7 +6779,7 @@
 
     var handleTouchStart = function(e) {
         var _sl = this;
-        if (!_sl.allowSwipeout) return;
+        if (!_sl.allowSwipeout || _sl.opened) return;
         _sl.isMoved = false;
         _sl.isTouched = true;
         _sl.touchesStart.x = e.type === 'touchstart' ? e.targetTouches[0].pageX : e.pageX;
@@ -6898,10 +6908,14 @@
     };
 
     var handleTouchEnd = function(e) {
+
         var _sl = this;
+        console.log(_sl.isTouched);
+        console.log(_sl.isMoved);
         if (!_sl.isTouched || !_sl.isMoved) {
             _sl.isTouched = false;
             _sl.isMoved = false;
+            if(!_sl.opened)_sl.swipeOutEl.trigger('tapped');
             return;
         }
 
@@ -6946,12 +6960,15 @@
             if (_sl.overswipeLeft) {
                 _sl.actionsLeft.find(SELECTOR_SWIPEOUT_OVERSWIPE).trigger('tap');
             }
-        } else {
+        } else if (action === 'close') {
             _sl.swipeOutEl.trigger('close');
             _sl.swipeoutOpenedEl = undefined;
             _sl.swipeOutEl.addClass(CLASS_SWIPEOUT_TRANSITIONING).removeClass(CLASS_SWIPEOUT_OPENED);
             _sl.swipeOutContent.transform('');
             actions.removeClass(CLASS_SWIPEOUT_ACTIONS_OPENED);
+        }else{
+            _sl.swipeOutEl.trigger('tapped');
+            return;
         }
 
         var buttonOffset;
@@ -6974,8 +6991,9 @@
             }
         }
         _sl.swipeOutContent.transitionEnd(function(e) {
-            if (_sl.opened && action === 'open' || closed && action === 'close') return;
+            if (_sl.opened && action === 'open' || _sl.closed && action === 'close') return;
             _sl.swipeOutEl.trigger(action === 'open' ? 'opened' : 'closed');
+            action === 'open' ? _sl.opened = true : _sl.opened = false
             if (_sl.opened && action === 'close') {
                 if (_sl.actionsRight.length > 0) {
                     _sl.buttonsRight.transform('');
@@ -7063,6 +7081,7 @@
                 _sl.allowSwipeout = true;
                 // buttons.transform('');
                 el.trigger('closed');
+                _sl.opened = false
                 if (callback) callback.call(el[0]);
                 if (closeTO) clearTimeout(closeTO);
             }

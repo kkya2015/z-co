@@ -67,7 +67,7 @@
 	}
 
 
-	$L.database = {
+	$L.dataBase = {
 		/*
 		 * 打开一个dataBase，获得一个dataBase对象，若存在此对象，则直接返回；若不存在，则创建一个新的dataBase。
 		 * @param databaseName : (String) : 必选 支持名字(在默认路径创建数据库)和协议路径(请参照以下的协议路径)

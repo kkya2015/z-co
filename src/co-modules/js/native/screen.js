@@ -44,19 +44,19 @@
 			 * 获取屏幕亮度值
 			 */
 			getBrightness: function() {
-				return $L.executeConstantJS(['screen', 'getBrightness']);
+				return $L.executeNativeJS(['screen', 'getBrightness']);
 			},
 			/*
 			 * 锁定屏幕方向,iOS不支持.
 			 */
 			lockOrientation: function() {
-				$L.executeConstantJS(['screen', 'lockOrientation']);
+				$L.executeNativeJS(['screen', 'lockOrientation']);
 			},
 			/*
 			 * 解除锁定屏幕方向,iOS不支持.
 			 */
 			unLockOrientation: function() {
-				$L.executeConstantJS(['screen', 'unlockOrientation']);
+				$L.executeNativeJS(['screen', 'unlockOrientation']);
 			}
 	}
 

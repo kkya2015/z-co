@@ -1,7 +1,8 @@
 /*===============================================================================
 ************   ui native audio   ************
 ===============================================================================*/
-;(function($L, global) {
+;
+(function($L, global) {
 
   var recorder;
   var player;
@@ -49,7 +50,7 @@
          *
          */
         getCurrentTime: function() {
-          if(!recorderIsRecord){
+          if (!recorderIsRecord) {
             throw new Error('先执行录音操作后，才可获取当前录音时间！');
           }
           var currentTime = $L.executeObjFunJS([recorder, 'getCurrentTime']);
@@ -109,7 +110,7 @@
          *
          */
         playJustRecord: function() {
-          if(!recorderIsOver){
+          if (!recorderIsOver) {
             throw new Error('先执行录音操作后，并录音完成后，才可执行播放录音操作！');
           }
           $L.executeObjFunJS([recorder, 'playJustRecord']);
@@ -119,7 +120,7 @@
          *
          */
         stop: function() {
-          if(!recorderIsRecord){
+          if (!recorderIsRecord) {
             throw new Error('先执行录音操作后，才可执行录音结束操作！');
           }
           $L.executeObjFunJS([recorder, 'stop'])
@@ -171,18 +172,25 @@
           return $L.executeObjFunJS([player, 'getPosition'])
         },
         setRoute: function(route) {
-          if (typeof path === undefined) {
+          if (typeof route === undefined) {
             throw new Error("请传入有效的音频输出线路！");
           }
           if (route == 1) {
-            route = $L.executeConstantJS(['auduo', 'ROUTE_EARPIECE'])
+            route = $L.executeConstantJS(['audio', 'ROUTE_EARPIECE'])
           } else {
-            route = $L.executeConstantJS(['auduo', 'ROUTE_SPEAKER'])
+            route = $L.executeConstantJS(['audio', 'ROUTE_SPEAKER'])
           }
           $L.executeObjFunJS([player, 'setRoute'], route)
         },
         isPlaying: function() {
           return $L.executeObjFunJS([player, 'isPlaying'])
+        },
+        addFinishCallback: function(callback) {
+          return $L.executeObjFunJS([player, 'addFinishCallback'], function() {
+            if ($L.isFunction(callback)) {
+              callback.call(global);
+            }
+          })
         }
       }
     }

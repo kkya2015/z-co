@@ -19,49 +19,77 @@
             <h1 class="ui-nav-bar-title">Request</h1>
         </div>
     </header>
-            <a id='alertBtn' class="button button-block button-rounded button-primary button-large">新建一个表</a>
-            <a id='confirmBtn' class="button button-block button-rounded button-action button-large">评分框</a>
-            <a id='promptBtn' class="button button-block button-rounded button-highlight button-large">提示框</a>
-            <a id='customBtn' class="button button-block button-rounded button-royal button-large">个性化提示框</a>
-            <a id='toastBtn' class="button button-block button-rounded button-inverse button-large">加载中Toast</a>
-            <a id='mesToastBtn' class="button button-block button-rounded button-caution button-large">带有消息的Toast</a>
+            <a id='alertBtn' class="button button-block button-rounded button-primary button-large">发起请求</a>
+        <script src="../dist/js/native.js"></script>   
         <script src="../dist/js/dom.js"></script>
-        <script src="request.js"></script>
+        <script src="../dist/js/co.js"></script>
+        <script src="config.js"></script>
     </body>
      <script>
             $(function(require){
-                $('#alertBtn').tap(function(btn,el){
-                      RQ.newTable({
-                        appID:'781',
-                        appKey:'189a7f1d7d5d4ce293564d0fff77c97b',
-                        data:{'name':'APP'},
-                        success: function(data){
-                            alert(data);
-                        },
-                        error: function(xhr, type){
-                            alert('Ajax error!')
+
+               
+
+
+                // var view = app.currentView();
+                // alert(view.getWidth())
+                // $('#alertBtn').tap(function(btn,el){
+                    app.http.ajax('http://124.202.153.169:8090/inter/moka/newUser/1/interface', {
+                        type:'POST',
+                        data:  {
+                                'method' : "login",
+                                'userName' : '13811780160',
+                                'passWord' : '12345678',
+                                'type' : "T"
+                            },
+                        success: function(data, response) {
+                            alert(JSON.stringify(data))
                         }
-                      })   
+                    })
+                // })
+
+        //             _DtComment.req("get","/data/list/imgnews",{
+        //     page:nowpage,
+        //     size:10,
+        //     where:null
+        // },{
+        //     appId:""
+        //     ,appKey:""
+        //     ,appSession:""
+        //     ,vs:"v1"
+        //     ,errback :null
+        // },errback,callback);    
+
+    // alert("getPlatformName -- "+app.getPlatformName())
+
+        //              url = hostUrl + 
+
+                    // app.http.ajax('http://124.202.153.169:8090/inter/moka/newUser/1/interface', {
+                        // app.http.ajax('http://www.newug.com/xhrd_mars/interface', {
+                        // type:'POST',
+                        // data:  {
+                        //         'method' : "login",
+                        //         'userName' : '13811780160',
+                        //         'passWord' : '12345678',
+                        //         'type' : "T"
+                        //     },
+                    //     data : {
+                    //         json : JSON.stringify( {
+                    //                 "reqHeader" : {
+                    //                     "reqCode" : 'af768c8d-15cf-4167-b15d-4e30d3e64ad1',
+                    //                     "reqTime" : new Date().getTime(),
+                    //                     "tokenId" : '1021155c-c42b-496f-ae7c-f4c60b8ae181',
+                    //                     "transactionId" : 'af768c8d-15cf-4167-b15d-4e30d3e64ad1',
+                    //                 }
+                    //             }
+                    //         )
+                    //     },
+
+                    //     success: function(data, response) {
+                    //         alert(JSON.stringify(data))
+                    //     }
+                    // })
                     
                 });
-
-                // $('#confirmBtn').button(function(btn,el){
-                       
-                // });
-                // $('#promptBtn').button(function(btn,el){
-                      
-
-                // });
-                // $('#customBtn').button(function(btn,el){
-                       
-
-                // });
-                // $('#toastBtn').button(function(btn,el){
-                   
-                // });
-                // $('#mesToastBtn').button(function(btn,el){
-                   
-                // });
-            });
         </script>
 </html>

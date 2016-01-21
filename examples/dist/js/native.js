@@ -26,28 +26,8 @@ var app = (function(global) {
   // var loaderScript = scripts[scripts.length - 1]
   // var loaderDir = dirname(getScriptAbsoluteSrc(loaderScript) || cwd)
   // var head = doc.head || doc.getElementsByTagName("head")[0] || doc.documentElement
-  var domReady = function(factory, require) {
-    if (!require) require = function() {}
-    if ($L.isFunction(factory)) {
-      if (!(($L.android || $L.ios) && plus)) {
-        $L.debug()
-        factory.call(global, require);
-      } else {
-        setTimeout(function() {
-          if (domReady.isReady) {
-            $L.init();
-            factory.call(global, require);
-          } else {
-            setTimeout(arguments.callee, 1);
-          }
-        }, 1);
-      }
 
-    }
-  };
-
-
-  window.onerror = function(sMsg, sUrl, sLine, columnNumber, error) {
+  var winError = function(sMsg, sUrl, sLine, columnNumber, error) {
     var str = sMsg;
     app.log.error(str);
     str = "Line: " + sLine;
@@ -59,8 +39,57 @@ var app = (function(global) {
     return false;
   }
 
+
+  var GetQueryString = function(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return (r[2]);
+    return null;
+  }
+
+  var domReady = function(factory, require) {
+    var pageId = GetQueryString('pageId');
+    if (!require) require = function() {}
+    if ($L.isFunction(factory)) {
+      if (!(($L.android || $L.ios) && plus)) {
+        if (pageId) {
+          $L.debug()
+          setTimeout(function() {
+            if ($L.debug.isReady) {
+              factory.call(global, require);
+            } else {
+              setTimeout(arguments.callee, 1);
+            }
+          }, 1);
+        } else {
+          factory.call(global, require);
+        }
+      } else {
+        setTimeout(function() {
+          if (domReady.isReady) {
+            factory.call(global, require);
+          } else {
+            setTimeout(arguments.callee, 1);
+          }
+        }, 1);
+      }
+
+    }
+  };
+
+
   global.onLoad = function() {
+    if (window.onerror) {
+      var error = window.onerror
+      window.onerror = function() {
+        error.call(global, arguments);
+        winError.apply(global, Array.prototype.slice.call(arguments))
+      }
+    } else {
+      window.onerror = winError
+    }
     domReady.isReady = true;
+    $L.init();
   };
   global.domReady = domReady;
 
@@ -76,7 +105,7 @@ var app = (function(global) {
     viewBgcolor = '', // 页面背景色  -- 如果字段为空，颜色为白色
     viewVScrollBar = false, //  是否显示水平滚动条
     viewHScrollBar = true, //  是否显示垂直滚动条
-    viewZoom = false, //  页面是否支持缩放
+    // viewZoom = false, //  页面是否支持缩放
     viewKeyboard = false, //  键盘弹出后，输入框是否会自动定位，android暂时不支持
     viewDragDismiss = false, //  是否支持滑动消失键盘，android暂时不支持
     viewAnimationType = 11, // 页面关闭动画效果 --推入 
@@ -106,23 +135,23 @@ var app = (function(global) {
     }
   }
   var setViewHScrollBar = function(hScrollBar) {
-    viewHScrollBar = !!hScrollBar;
-    var currentView = $L.currentView();
-    if (viewHScrollBar) {
-      currentView.enableHScrollBar();
-    } else {
-      currentView.disableHScrollBar();
+      viewHScrollBar = !!hScrollBar;
+      var currentView = $L.currentView();
+      if (viewHScrollBar) {
+        currentView.enableHScrollBar();
+      } else {
+        currentView.disableHScrollBar();
+      }
     }
-  }
-  var setViewZoom = function(zoom) {
-    viewZoom = !!zoom;
-    var currentView = $L.currentView();
-    if (viewZoom) {
-      currentView.enableZoom();
-    } else {
-      currentView.disableZoom();
-    }
-  }
+    // var setViewZoom = function(zoom) {
+    //   viewZoom = !!zoom;
+    //   var currentView = $L.currentView();
+    //   if (viewZoom) {
+    //     currentView.enableZoom();
+    //   } else {
+    //     currentView.disableZoom();
+    //   }
+    // }
   var setViewKeyboard = function(keyboard) {
     viewKeyboard = !!keyboard;
     var currentView = $L.currentView();
@@ -285,7 +314,7 @@ var app = (function(global) {
    */
   $L.executeConstantJS = function() {
     var constant = resolveFun(arguments[0]);
-    if (constant.fun) {
+    if (typeof constant.fun !== 'undefined') {
       return constant.fun;
     }
   }
@@ -295,7 +324,7 @@ var app = (function(global) {
    */
   $L.executeObjConstantJS = function() {
     var constant = arguments[0];
-    if (constant) {
+    if (typeof constant !== 'undefined') {
       return constant[arguments[1]];
     }
   }
@@ -318,7 +347,7 @@ var app = (function(global) {
       prop.viewBgcolor = viewBgcolor;
       prop.viewVScrollBar = viewVScrollBar;
       prop.viewHScrollBar = viewHScrollBar;
-      prop.viewZoom = viewZoom;
+      // prop.viewZoom = viewZoom;
       prop.viewKeyboard = viewKeyboard;
       prop.viewDragDismiss = viewDragDismiss;
       prop.viewAnimationType = viewAnimationType;
@@ -349,46 +378,46 @@ var app = (function(global) {
     prop.viewAnimationCurve && (setViewAnimationCurve(prop.viewAnimationCurve))
     prop.viewBgcolor && (setViewBgcolor(prop.viewBgcolor))
 
-    if (prop.viewBounces) {
-      setViewBounces(prop.viewBounces)
-    } else {
+    if (typeof prop.viewBounces === 'undefined') {
       setViewBounces(viewBounces)
+    } else {
+      setViewBounces(prop.viewBounces)
     }
 
-    if (prop.viewVScrollBar) {
-      setViewVScrollBar(prop.viewVScrollBar)
-    } else {
+    if (typeof prop.viewVScrollBar === 'undefined') {
       setViewVScrollBar(viewVScrollBar)
+    } else {
+      setViewVScrollBar(prop.viewVScrollBar)
     }
 
-    if (prop.viewHScrollBar) {
-      setViewHScrollBar(prop.viewHScrollBar)
-    } else {
+    if (typeof prop.viewHScrollBar === 'undefined') {
       setViewHScrollBar(viewHScrollBar)
+    } else {
+      setViewHScrollBar(prop.viewHScrollBar)
     }
 
-    if (prop.viewZoom) {
-      setViewZoom(prop.viewZoom)
-    } else {
-      setViewZoom(viewZoom)
-    }
+    // if (typeof prop.viewZoom === 'undefined') {
+    //   setViewZoom(viewZoom)
+    // } else {
+    //   setViewZoom(prop.viewZoom)
+    // }
 
-    if (prop.viewKeyboard) {
-      setViewKeyboard(prop.viewKeyboard)
-    } else {
+    if (typeof prop.viewKeyboard === 'undefined') {
       setViewKeyboard(viewKeyboard)
+    } else {
+      setViewKeyboard(prop.viewKeyboard)
     }
 
-    if (prop.viewDragDismiss) {
-      setViewDragDismiss(prop.viewDragDismiss)
-    } else {
+    if (typeof prop.viewDragDismiss === 'undefined') {
       setViewDragDismiss(viewDragDismiss)
+    } else {
+      setViewDragDismiss(prop.viewDragDismiss)
     }
 
-    if (prop.viewSlideBack) {
-      setSlideBack(prop.viewSlideBack)
-    } else {
+    if (typeof prop.viewSlideBack === 'undefined') {
       setSlideBack(viewSlideBack)
+    } else {
+      setSlideBack(prop.viewSlideBack)
     }
 
     var app_property = app.properties.open('app_property_setting', 'app_property');
@@ -424,11 +453,11 @@ var app = (function(global) {
     return viewVScrollBar;
   }
   $L.getViewHScrollBar = function() {
-    return viewHScrollBar;
-  }
-  $L.getViewZoom = function() {
-    return viewZoom;
-  }
+      return viewHScrollBar;
+    }
+    // $L.getViewZoom = function() {
+    //   return viewZoom;
+    // }
   $L.getViewKeyboard = function() {
     return viewKeyboard;
   }
@@ -532,21 +561,25 @@ var app = (function(global) {
   /*
    * 执行JS语句
    * @param String script 需要执行的JS语句
-   * @param String windowName  需要执行JS语句的窗口名称，默认为当前窗口
-   * @param String windowName  需要执行JS语句的窗口名称，默认为当前窗口
+   * @param String windowName  需要执行JS语句的窗口名称
+   * @param String windowName  需要执行JS语句的窗口名称
    * @param String popoverName 需要执行JS语句的pop名称
    */
-  $L.evalScriptInComponent = function(componentName, windowName, popoverName, script) {
+  $L.evalScriptInComponent = function(componentName, windowName, script, popoverName) {
     if (typeof componentName === 'undefined') {
       throw new Error("请传入有效的componentName！");
     } else if (typeof windowName === 'undefined') {
       throw new Error("请传入有效的windowName！");
-    } else if (typeof popoverName === 'undefined') {
-      throw new Error("请传入有效的popoverName！");
     } else if (typeof script === 'undefined') {
       throw new Error("请传入有效的JS语句！");
     }
-    $L.executeNativeJS(['window', 'evaluateScript'], componentName, windowName, popoverName, script)
+
+    if (typeof popoverName === 'undefined') {
+      $L.executeNativeJS(['window', 'evaluateScript'], componentName, windowName, '', script)
+    } else {
+      $L.executeNativeJS(['window', 'evaluateScript'], componentName, windowName, popoverName, script)
+    }
+
   }
 
   /*
@@ -586,14 +619,14 @@ var app = (function(global) {
    * 锁定屏幕翻转
    */
   $L.lockRotate = function() {
-    $L.executeNativeJS(['window', 'lockRotate'], 0)
+    $L.executeNativeJS(['window', 'lockRotate'], true)
   }
 
   /*
    * 解锁屏幕翻转
    */
   $L.unLockRotate = function() {
-    $L.executeNativeJS(['window', 'lockRotate'], 1)
+    $L.executeNativeJS(['window', 'lockRotate'], false)
   }
 
   /*
@@ -696,9 +729,9 @@ var app = (function(global) {
         throw new Error("请传入有效消息内容！");
       } else {
         title = message['title'];
-        defaultValue = message['defaultValue'];
-        inputTpye = message['inputTpye'];
         btnCaptions = message['btnCaptions'];
+        inputValue = message['inputValue'];
+        inputTpye = message['inputTpye'];
         callback = message['callback'];
         message = msg;
       }
@@ -731,8 +764,8 @@ var app = (function(global) {
         buttons: btnCaptions || ['确认', '放弃', '取消']
       }
       // callback = callback || function(){}
-    $L.executeNativeJS(['window', 'prompt'], setting, function(Tips) {
-      $L.isFunction(callback) && callback.call(global, Tips.buttonIndex, Tips.buttonIndex.text);
+    $L.executeNativeJS(['window', 'prompt'], setting, function(Tips, err) {
+      $L.isFunction(callback) && callback.call(global, Tips.buttonIndex, Tips.text, err);
     });
   }
   return $L;
@@ -875,16 +908,28 @@ window.A === undefined && (window.A = app);
 	 * @param String animation  可选 type默认值为rd.window.ANIMATIONTYPEPUSH, direction默认值为rd.window.ANIMATIONSUBTYPEFROMRIGHT，time默认值为300ms，curve默认值为rd.window.ANIMATIONCURVE_EASEINEASEOUT
 	 */
 	$L.openComponent = function(componentName, animation) {
-		$L.executeNativeJS(['component', 'openComponent'], componentName, animation)
+		$L.executeNativeJS(['window', 'openComponent'], componentName, '', animation)
+
 	}
 
 	/*
 	 * 关闭当前component
-	 * @param String componentName 必选 如果传空(''),关闭当前component,否则，关闭指定名称的component
 	 * @param String animation  可选 type默认值为rd.window.ANIMATIONTYPEPUSH, direction默认值为rd.window.ANIMATIONSUBTYPEFROMRIGHT，time默认值为300ms，curve默认值为rd.window.ANIMATIONCURVE_EASEINEASEOUT
 	 */
-	$L.closeComponent = function(animation) {
-		$L.executeNativeJS(['component', 'closeComponent'], animation)
+	$L.closeCurrentComponent = function(animation) {
+		$L.executeNativeJS(['component', 'closeComponent'], '', animation)
+	}
+
+	/*
+	 * 关闭指定component
+	 * @param String componentName 必选 关闭指定名称的component
+	 * @param String animation  可选 type默认值为rd.window.ANIMATIONTYPEPUSH, direction默认值为rd.window.ANIMATIONSUBTYPEFROMRIGHT，time默认值为300ms，curve默认值为rd.window.ANIMATIONCURVE_EASEINEASEOUT
+	 */
+	$L.closeComponent = function(componentName, animation) {
+		if (typeof componentName === 'undefined') {
+			throw new Error("请传入有效的componentName！");
+		}
+		$L.executeNativeJS(['component', 'closeComponent'], componentName, animation)
 	}
 
 	/*
@@ -898,14 +943,14 @@ window.A === undefined && (window.A = app);
 	 * 通过名字获取模块信息
 	 */
 	$L.getComponentInfoByName = function(componentName) {
-		$L.executeNativeJS(['component', 'getComponentInfoByName'], componentName)
+		return $L.executeNativeJS(['component', 'getComponentInfoByName'], componentName)
 	}
 
 	/*
 	 * 获取当前模块信息
 	 */
 	$L.getCurrentComponentInfo = function() {
-		$L.executeNativeJS(['component', 'getCurrentComponentInfo'])
+		return $L.executeNativeJS(['component', 'getCurrentComponentInfo'])
 	}
 
 }(app, this));
@@ -926,11 +971,11 @@ window.A === undefined && (window.A = app);
      * @param String url 要打开窗口的地址
      * @param String windowname 窗口的标识 --  若不传，默认同URL相同
      */
-    this.open = function(url, windowname) { ///打开新窗口
+    this.open = function(url, name) { ///打开新窗口
       if (typeof url === 'undefined') {
         throw new Error("请传入有效的url路径！");
       }
-      windowname = windowname || url;
+      windowname = name || url;
       var options = {
         type: windowAnimationType,
         direction: windowAnimationDirection,
@@ -962,10 +1007,10 @@ window.A === undefined && (window.A = app);
     this.evalScript = function(script) {
       if (typeof script === 'undefined') {
         throw new Error("请传入有效的JS语句！");
-      } else if (typeof windowName === 'undefined') {
+      } else if (typeof windowname === 'undefined') {
         throw new Error("无法在未打开的window窗口中执行JS语句！");
       } else {
-        $L.executeNativeJS(['window', 'evaluateScript'], '',windowName, '', script)
+        $L.executeNativeJS(['window', 'evaluateScript'], '',windowname, '', script)
       }
     }
 
@@ -976,12 +1021,12 @@ window.A === undefined && (window.A = app);
     this.evalScriptInPop = function(script,popoverName) {
       if (typeof script === 'undefined') {
         throw new Error("请传入有效的JS语句！");
-      } else if (typeof windowName === 'undefined') {
+      } else if (typeof windowname === 'undefined') {
         throw new Error("无法在未打开的window窗口中执行JS语句！");
       }else if (typeof popoverName === 'undefined') {
         throw new Error("请传入有效的popoverName！");
       } else {
-        $L.executeNativeJS(['window', 'evaluateScript'], '',windowName, popoverName, script)
+        $L.executeNativeJS(['window', 'evaluateScript'], '',windowname, popoverName, script)
       }
     }
   }
@@ -994,7 +1039,8 @@ window.A === undefined && (window.A = app);
 /*===============================================================================
 ************   ui native view   ************
 ===============================================================================*/
-;(function($L, global) {
+;
+(function($L, global) {
   var view = function() {
     // var viewBounces = $L.getViewBounces(); // 页面是否弹动--  仅IOS有效果
     // var viewBgcolor = $L.getViewBgcolor(); // 页面背景色  -- 如果字段为空，颜色为白色
@@ -1046,23 +1092,23 @@ window.A === undefined && (window.A = app);
       })
     }
     this.disableHScrollBar = function() {
-      var viewHScrollBar = false;
-      $L.executeNativeJS(['window', 'setAttr'], {
-        hScrollBarEnabled: viewHScrollBar
-      })
-    }
-    this.enableZoom = function() {
-      var viewZoom = true;
-      $L.executeNativeJS(['window', 'setAttr'], {
-        scaleEnabled: viewZoom
-      })
-    }
-    this.disableZoom = function() {
-      var viewZoom = false;
-      $L.executeNativeJS(['window', 'setAttr'], {
-        scaleEnabled: viewZoom
-      })
-    }
+        var viewHScrollBar = false;
+        $L.executeNativeJS(['window', 'setAttr'], {
+          hScrollBarEnabled: viewHScrollBar
+        })
+      }
+      // this.enableZoom = function() {
+      //   var viewZoom = true;
+      //   $L.executeNativeJS(['window', 'setAttr'], {
+      //     scaleEnabled: viewZoom
+      //   })
+      // }
+      // this.disableZoom = function() {
+      //   var viewZoom = false;
+      //   $L.executeNativeJS(['window', 'setAttr'], {
+      //     scaleEnabled: viewZoom
+      //   })
+      // }
     this.enableKeyboard = function() {
       var viewKeyboard = true;
       $L.executeNativeJS(['window', 'setAttr'], {
@@ -1157,6 +1203,7 @@ window.A === undefined && (window.A = app);
       height = height || this.getHeight();
       if ($L.android()) {
         height = height * window.devicePixelRatio;
+        y = y || y * window.devicePixelRatio;
       }
       var IgnoreParams = {
         x: x || 0,
@@ -1330,11 +1377,15 @@ window.A === undefined && (window.A = app);
     }
 
     /*
-     * 设置当前页面显示的popover 的位置、长宽
+     * 设置当前页面的位置、长宽
      */
-    this.setCurrentPopoverRect = function(x, y, width, height) {
+    this.setFrameSize = function(x, y, width, height) {
       width = width || this.getWidth();
       height = height || this.getHeight();
+      if ($L.android()) {
+        y = y * window.devicePixelRatio;
+        height = height * window.devicePixelRatio;
+      }
       var rect = {
         x: x || 0,
         y: y || 0,
@@ -1360,7 +1411,8 @@ window.A === undefined && (window.A = app);
 /*===============================================================================
 ************   ui native accelerometer   ************
 ===============================================================================*/
-;(function($L, global) {
+;
+(function($L, global) {
 	$L.accelerometer = {
 		/*
 		 * 获取当前设备的加速度信息
@@ -1385,6 +1437,11 @@ window.A === undefined && (window.A = app);
 		 * @param options: 加速度信息参数 监听设备加速度信息的参数，更新数据的频率。
 		 */
 		watchAcceleration: function(success, error, options) {
+			if (typeof options === 'undefined') {
+				options = {
+					frequency: 500
+				}
+			}
 			$L.executeNativeJS(['accelerometer', 'watchAcceleration'], function(acceleration) {
 				if ($L.isFunction(success)) {
 					success.call(global, acceleration);
@@ -1434,7 +1491,8 @@ window.A === undefined && (window.A = app);
 /*===============================================================================
 ************   ui native audio   ************
 ===============================================================================*/
-;(function($L, global) {
+;
+(function($L, global) {
 
   var recorder;
   var player;
@@ -1482,7 +1540,7 @@ window.A === undefined && (window.A = app);
          *
          */
         getCurrentTime: function() {
-          if(!recorderIsRecord){
+          if (!recorderIsRecord) {
             throw new Error('先执行录音操作后，才可获取当前录音时间！');
           }
           var currentTime = $L.executeObjFunJS([recorder, 'getCurrentTime']);
@@ -1542,7 +1600,7 @@ window.A === undefined && (window.A = app);
          *
          */
         playJustRecord: function() {
-          if(!recorderIsOver){
+          if (!recorderIsOver) {
             throw new Error('先执行录音操作后，并录音完成后，才可执行播放录音操作！');
           }
           $L.executeObjFunJS([recorder, 'playJustRecord']);
@@ -1552,7 +1610,7 @@ window.A === undefined && (window.A = app);
          *
          */
         stop: function() {
-          if(!recorderIsRecord){
+          if (!recorderIsRecord) {
             throw new Error('先执行录音操作后，才可执行录音结束操作！');
           }
           $L.executeObjFunJS([recorder, 'stop'])
@@ -1604,18 +1662,25 @@ window.A === undefined && (window.A = app);
           return $L.executeObjFunJS([player, 'getPosition'])
         },
         setRoute: function(route) {
-          if (typeof path === undefined) {
+          if (typeof route === undefined) {
             throw new Error("请传入有效的音频输出线路！");
           }
           if (route == 1) {
-            route = $L.executeConstantJS(['auduo', 'ROUTE_EARPIECE'])
+            route = $L.executeConstantJS(['audio', 'ROUTE_EARPIECE'])
           } else {
-            route = $L.executeConstantJS(['auduo', 'ROUTE_SPEAKER'])
+            route = $L.executeConstantJS(['audio', 'ROUTE_SPEAKER'])
           }
           $L.executeObjFunJS([player, 'setRoute'], route)
         },
         isPlaying: function() {
           return $L.executeObjFunJS([player, 'isPlaying'])
+        },
+        addFinishCallback: function(callback) {
+          return $L.executeObjFunJS([player, 'addFinishCallback'], function() {
+            if ($L.isFunction(callback)) {
+              callback.call(global);
+            }
+          })
         }
       }
     }
@@ -1825,7 +1890,7 @@ window.A === undefined && (window.A = app);
 	}
 
 
-	$L.database = {
+	$L.dataBase = {
 		/*
 		 * 打开一个dataBase，获得一个dataBase对象，若存在此对象，则直接返回；若不存在，则创建一个新的dataBase。
 		 * @param databaseName : (String) : 必选 支持名字(在默认路径创建数据库)和协议路径(请参照以下的协议路径)
@@ -2137,13 +2202,22 @@ window.A === undefined && (window.A = app);
 		 * 添加网络状态变化事件监听
 		 * @param callback: 必选 事件回调
 		 */
-		addNetWorkChangeEvent: function(callback) {
+		addNetworkChangeEvent: function(callback) {
 			$L.executeNativeJS(['eventListener', 'addEventListener'], 'network_state_changed', function(evt) {
 				if ($L.isFunction(callback)) {
 					callback.call(global, evt.state);
 				}
 			});
 		},
+
+		/*
+		 * 删除网络状态变化事件监听
+		 * @param callback: 必选 事件回调
+		 */
+		removeNetworkChangeEvent: function(callback) {
+			$L.executeNativeJS(['eventListener', 'removeEventListener'], 'network_state_changed');
+		},
+
 		/*
 		 * 添加电池状态变化事件监听
 		 * @param callback: 必选 事件回调
@@ -2154,6 +2228,14 @@ window.A === undefined && (window.A = app);
 					callback.call(global, evt.state);
 				}
 			});
+		},
+
+		/*
+		 * 删除电池状态变化事件监听
+		 * @param callback: 必选 事件回调
+		 */
+		removeBatteryChangeEvent: function(callback) {
+			$L.executeNativeJS(['eventListener', 'addEventListener'], 'battery_state_changed');
 		}
 	}
 
@@ -2622,6 +2704,7 @@ window.A === undefined && (window.A = app);
       y = y || 0;
       if ($L.android()) {
         y = y * window.devicePixelRatio;
+        height = height * window.devicePixelRatio;
       }
       width = width || 0;
       height = height || 0;
@@ -2633,9 +2716,6 @@ window.A === undefined && (window.A = app);
       this.open = function(url, name) { ///打开新窗口
         if (typeof url === 'undefined') {
           throw new Error("请传入有效的url路径！");
-        } else if (this.popovername) {
-          this.front();
-          return;
         }
         popovername = this.popovername = name || url;
         var rect = {
@@ -2651,10 +2731,10 @@ window.A === undefined && (window.A = app);
       }
       this.setAnimationType = function(type) {}
       this.hide = function() {
-        if (popovername) $L.executeNativeJS(['window', 'setPopoverVisible'], 0, popovername)
+        if (popovername) $L.executeNativeJS(['window', 'setPopoverVisible'], false, popovername)
       }
       this.show = function() {
-        if (popovername) $L.executeNativeJS(['window', 'setPopoverVisible'], 1, popovername)
+        if (popovername) $L.executeNativeJS(['window', 'setPopoverVisible'], true, popovername)
       }
       this.front = function() {
         if (popovername) $L.executeNativeJS(['window', 'bringPopoverToFront'], popovername)
@@ -2670,7 +2750,7 @@ window.A === undefined && (window.A = app);
         if (typeof name === 'undefined') {
           throw new Error("无法操作未打开的popovr！");
         }
-        if (popovername) $L.executeNativeJS(['window', 'bringPopoverBelow'], popovername, popovr)
+        if (popovername) $L.executeNativeJS(['window', 'bringPopoverBelow'], popovername, name)
       }
       this.frontOf = function(popovr) {
         if (typeof popovr === 'undefined') {
@@ -2680,7 +2760,7 @@ window.A === undefined && (window.A = app);
         if (typeof name === 'undefined') {
           throw new Error("无法操作未打开的popovr！");
         }
-        if (popovername) $L.executeNativeJS(['window', 'bringPopoverAbove'], popovername, popovr)
+        if (popovername) $L.executeNativeJS(['window', 'bringPopoverAbove'], popovername, name)
       }
       this.close = function() {
           if (popovername) $L.executeNativeJS(['window', 'closePopover'], popovername)
@@ -2859,19 +2939,19 @@ window.A === undefined && (window.A = app);
 			 * 获取屏幕亮度值
 			 */
 			getBrightness: function() {
-				return $L.executeConstantJS(['screen', 'getBrightness']);
+				return $L.executeNativeJS(['screen', 'getBrightness']);
 			},
 			/*
 			 * 锁定屏幕方向,iOS不支持.
 			 */
 			lockOrientation: function() {
-				$L.executeConstantJS(['screen', 'lockOrientation']);
+				$L.executeNativeJS(['screen', 'lockOrientation']);
 			},
 			/*
 			 * 解除锁定屏幕方向,iOS不支持.
 			 */
 			unLockOrientation: function() {
-				$L.executeConstantJS(['screen', 'unlockOrientation']);
+				$L.executeNativeJS(['screen', 'unlockOrientation']);
 			}
 	}
 
@@ -3016,182 +3096,335 @@ window.A === undefined && (window.A = app);
 }(app, this));
 ;
 (function($L, global) {
-
 	$L.debug = function() {
-
-		var uuid = 0;
-		var xhr = {}
+		var div = document.createElement('div');
+		div.innerHTML = '<a href="./"></a>';
+		var pageDir = div.firstChild.href;
+		div = null;
+		$L.debug.uuid = 0;
+		$L.debug.xhr = {}
 		window.addEventListener('message', function(e) {
-			// alert(e.data);
 			var origin = e.origin;
 			// if (origin != 'http://localhost:3000') {
 			var res = JSON.parse(e.data)
 			var type = res.type;
-			if (type == 'ajax') {
+			if (type == 'init') {
+				$L.debug.isReady = true;
+			} else if (type == 'ajax') {
 				var token = res.token;
-				var success = xhr[token].success;
-				var error = xhr[token].error;
+				var success = $L.debug.xhr[token].success;
+				var error = $L.debug.xhr[token].error;
 				var data = res.data;
-				var dataType = xhr[token].dataType;
+				var dataType = $L.debug.xhr[token].dataType;
 				if (dataType == 'json') {
 					if ($L.isFunction(success)) {
-						data = JSON.parse(data)
-						success.call(null, {}, data)
+						if (data) {
+							data = JSON.parse(data)
+						} else {
+							data = {}
+						}
+						success.call(global, {}, data)
 					}
 				} else {
 					if ($L.isFunction(success)) {
-						success.call(null, {}, data)
+						success.call(global, {}, data)
 					}
 				}
+				delete $L.debug.xhr[token]
 			}
 			// }
 		}, false);
 
-		var GetQueryString = function(name) {
+		$L.debug.getQueryString = function(name) {
 			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
 			var r = window.location.search.substr(1).match(reg);
 			if (r != null) return (r[2]);
 			return null;
 		}
-		var getPageDir = function() {
-			var div = document.createElement('div');
-			div.innerHTML = '<a href="./"></a>';
-			var pageDir = div.firstChild.href;
-			div = null;
+		$L.debug.getPageDir = function() {
 			return pageDir;
 		}
-		var postMessage = function(js) {
+		$L.debug.postMessage = function(js) {
 			window.parent.postMessage(js, '*');
 			// window.parent.postMessage(js, 'http://localhost:3000');
 		}
 
 		$L.executeNativeJS = function() {
-			var args = Array.prototype.slice.call(arguments, 1);
-			if (arguments[0][0] == 'window' && arguments[0][1] == 'openWindow') {
-				var windowname = args[0]
-				var url = getPageDir() + args[2]
-				var js = "openWindow('" + windowname + "','" + url + "')"
-				postMessage(js);
-			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'closeSelf') {
-				var pageId = GetQueryString('pageId');
-				var js = "closeWindow('" + windowname + "','" + pageId + "')"
-				postMessage(js);
-			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'openPopover') {
-				var popname = args[0]
-				var url = getPageDir() + args[2]
-				var rect = JSON.stringify(args[3])
-				var windowname = GetQueryString('pageId');
-				var js = "openPopover('" + popname + "','" + url + "','" + rect + "','" + windowname + "')"
-				postMessage(js);
-			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'closePopover') {
-				var popname = args[0]
-				var pageId = GetQueryString('pageId');
-				var js = "closePopover('" + popname + "','" + pageId + "')"
-				postMessage(js);
-			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'bringPopoverToFront') {
-				var popname = args[0]
-				var js = "openPopover('" + popname + "')"
-				postMessage(js);
-			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'setSlideLayout') {
-				var url = getPageDir()
-				var params = args[0]
-				var type = params.type
-				if (type == 'left') {
-					params.leftPane.url = url + params.leftPane.url
-				} else {
-					params.rightPane.url = url + params.rightPane.url
-				}
-				var params = JSON.stringify(args[0])
-				var js = "setSlideLayout('" + params + "')"
-				postMessage(js);
-			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'openSlidePane') {
-				var params = JSON.stringify(args[0])
-				var js = "openSlidePane('" + params + "')"
-				postMessage(js);
-			} else if (arguments[0][0] == 'window' && arguments[0][1] == 'closeSlidePane') {
-				var js = "closeSlidePane()"
-				postMessage(js);
-			} else if (arguments[0][0] == 'httpManager' && arguments[0][1] == 'sendRequest') {
-				var settings = args[0];
-				var data = settings.body;
-				if (data) {
-					if (data.json && $L.isString(data.json)) data.json = JSON.parse(data.json)
-				}
-				settings = JSON.stringify(settings)
-				var pageId = GetQueryString('pageId');
-				var token = uuid++;
-				xhr[token] = {
-					success: args[1],
-					error: args[2],
-					dataType: args[0].dataType
-				}
-				var js = "sendRequest('" + settings + "','" + pageId + "','" + token + "')"
-				postMessage(js);
+			var res;
+			if (arguments[0][0] == 'window') {
+				var res = $L.debug.window.apply($L.debug, Array.prototype.slice.call(arguments))
+			} else if (arguments[0][0] == 'httpManager') {
+				var res = $L.debug.http.apply($L.debug, Array.prototype.slice.call(arguments))
+			} else if (arguments[0][0] == 'storage') {
+				var res = $L.debug.storage.apply($L.debug, Array.prototype.slice.call(arguments))
 			}
-		}
-		if (window.Dom) {
-			var on = $.fn.on;
-
-			$.fn.on = function(event, selector, data, callback, one) {
-				if (event == 'tap') {
-					event = 'click';
-				}
-				// else if (event == 'touchstart') {
-				// 	event = 'mousedown';
-				// } else if (event == 'touchmove') {
-				// 	event = 'mousemove';
-				// } else if (event == 'touchend') {
-				// 	event = 'mouseup';
-				// }
-				return on.call(this, event, selector, data, callback, one);
-			}
-
-			var off = $.fn.off;
-			$.fn.off = function(event, selector, callback) {
-				if (event == 'tap') {
-					event = 'click';
-				}
-				// else if (event == 'touchstart') {
-				// 	event = 'mousedown';
-				// } else if (event == 'touchmove') {
-				// 	event = 'mousemove';
-				// } else if (event == 'touchend') {
-				// 	event = 'mouseup';
-				// }
-				return off.call(this, event, selector, callback);
-			}
-
-			var trigger = $.fn.trigger;
-			$.fn.trigger = function(event, args) {
-				if (event == 'tap') {
-					event = 'click';
-				}
-				// else if (event == 'touchstart') {
-				// 	event = 'mousedown';
-				// } else if (event == 'touchmove') {
-				// 	event = 'mousemove';
-				// } else if (event == 'touchend') {
-				// 	event = 'mouseup';
-				// }
-				return trigger.call(this, event, args);
-			}
-
-			var one = $.fn.one;
-			$.fn.one = function(event, selector, data, callback) {
-				if (event == 'tap') {
-					event = 'click';
-				}
-				// else if (event == 'touchstart') {
-				// 	event = 'mousedown';
-				// } else if (event == 'touchmove') {
-				// 	event = 'mousemove';
-				// } else if (event == 'touchend') {
-				// 	event = 'mouseup';
-				// }
-				return one.call(this, event, selector, data, callback);
-			}
-
+			if (typeof res !== 'undefined') return res;
 		}
 
+		$L.executeConstantJS = function() {
+			if (arguments[0][0] == 'device') {
+				return $L.debug.device.apply($L.debug, Array.prototype.slice.call(arguments))
+			} else if (arguments[0][0] == 'os') {
+				return $L.debug.os.apply($L.debug, Array.prototype.slice.call(arguments))
+			} else if (arguments[0][0] == 'app') {
+				return $L.debug.app.apply($L.debug, Array.prototype.slice.call(arguments))
+			}
+		}
+		if (window.$) {
+			$L.debug.dom()
+		}
+
+	}
+}(app, this))
+;
+(function($L, global) {
+	$L.debug.device = function() {
+		var key = arguments[0][1];
+		if(key == "imei"){
+			return '865743028006921'
+		}else if(key == "imsi"){
+			return ' '
+		}else if(key == "model"){
+			return 'Che1-CL20'
+		}else if(key == "vendor"){
+			return 'HUAWEI'
+		}else if(key == "uuid"){
+			return '48a9511b-d23a-43c4-a868-0ed2ad80e75b'
+		}
+	}
+}(app, this))
+;
+(function($L, global) {
+	$L.debug.os = function() {
+		var key = arguments[0][1];
+		if(key == "language"){
+			return 'zh'
+		}else if(key == "version"){
+			return '4.4.4'
+		}else if(key == "name"){
+			return 'Android'
+		}else if(key == "vendor"){
+			return 'HUAWEI'
+		}
+	}
+}(app, this))
+;
+(function($L, global) {
+	$L.debug.app = function() {
+		var key = arguments[0][1];
+		if(key == "platformName"){
+			return 'Android'
+		}else if(key == "platformVersion"){
+			return '4.4.4'
+		}else if(key == "deviceModel"){
+			return 'Che1-CL20'
+		}else if(key == "deviceName"){
+			return 'Che1'
+		}
+	}
+}(app, this))
+;
+(function($L, global) {
+	$L.debug.dom = function() {
+		var on = $.fn.on;
+
+		$.fn.on = function(event, selector, data, callback, one) {
+			if (event == 'tap') {
+				event = 'click';
+			}
+			// else if (event == 'touchstart') {
+			// 	event = 'mousedown';
+			// } else if (event == 'touchmove') {
+			// 	event = 'mousemove';
+			// } else if (event == 'touchend') {
+			// 	event = 'mouseup';
+			// }
+			return on.call(this, event, selector, data, callback, one);
+		}
+
+		var off = $.fn.off;
+		$.fn.off = function(event, selector, callback) {
+			if (event == 'tap') {
+				event = 'click';
+			}
+			// else if (event == 'touchstart') {
+			// 	event = 'mousedown';
+			// } else if (event == 'touchmove') {
+			// 	event = 'mousemove';
+			// } else if (event == 'touchend') {
+			// 	event = 'mouseup';
+			// }
+			return off.call(this, event, selector, callback);
+		}
+
+		var trigger = $.fn.trigger;
+		$.fn.trigger = function(event, args) {
+			if (event == 'tap') {
+				event = 'click';
+			}
+			// else if (event == 'touchstart') {
+			// 	event = 'mousedown';
+			// } else if (event == 'touchmove') {
+			// 	event = 'mousemove';
+			// } else if (event == 'touchend') {
+			// 	event = 'mouseup';
+			// }
+			return trigger.call(this, event, args);
+		}
+
+		var one = $.fn.one;
+		$.fn.one = function(event, selector, data, callback) {
+			if (event == 'tap') {
+				event = 'click';
+			}
+			// else if (event == 'touchstart') {
+			// 	event = 'mousedown';
+			// } else if (event == 'touchmove') {
+			// 	event = 'mousemove';
+			// } else if (event == 'touchend') {
+			// 	event = 'mouseup';
+			// }
+			return one.call(this, event, selector, data, callback);
+		}
+	}
+}(app, this))
+;
+(function($L, global) {
+	$L.debug.window = function() {
+		var args = Array.prototype.slice.call(arguments, 1);
+		var key = arguments[0][1];
+		if (key == 'openWindow') {
+			var windowname = args[0]
+			var type = args[1]
+			var url = args[2]
+			if (type == 0) {
+				url = this.getPageDir() + args[2]
+			}
+			// var js = "openWindow('" + windowname + "','" + url + "','" + type + "')"
+			var js = "openWindow('" + windowname + "','" + url + "')"
+			this.postMessage(js);
+		} else if (key == 'closeSelf') {
+			var pageId = this.getQueryString('pageId');
+			var js = "closeWindow('" + windowname + "','" + pageId + "')"
+			this.postMessage(js);
+		} else if (key == 'openPopover') {
+			var popname = args[0]
+			var url = this.getPageDir() + args[2]
+			var rect = JSON.stringify(args[3])
+			var windowname = this.getQueryString('pageId');
+			var js = "openPopover('" + popname + "','" + url + "','" + rect + "','" + windowname + "')"
+			this.postMessage(js);
+		} else if (key == 'closePopover') {
+			var popname = args[0]
+			var pageId = this.getQueryString('pageId');
+			var js = "closePopover('" + popname + "','" + pageId + "')"
+			this.postMessage(js);
+		} else if (key == 'bringPopoverToFront') {
+			var popname = args[0]
+			var js = "openPopover('" + popname + "')"
+			this.postMessage(js);
+		} else if (key == 'setSlideLayout') {
+			var url = this.getPageDir()
+			var params = args[0]
+			var type = params.type
+			if (type == 'left') {
+				params.leftPane.url = url + params.leftPane.url
+			} else {
+				params.rightPane.url = url + params.rightPane.url
+			}
+			var params = JSON.stringify(args[0])
+			var js = "setSlideLayout('" + params + "')"
+			this.postMessage(js);
+		} else if (key == 'openSlidePane') {
+			var params = JSON.stringify(args[0])
+			var js = "openSlidePane('" + params + "')"
+			this.postMessage(js);
+		} else if (key == 'closeSlidePane') {
+			var js = "closeSlidePane()"
+			this.postMessage(js);
+		} else if (key == 'getWidth') {
+			var winWidth;
+			if (window.innerWidth)
+				winWidth = window.innerWidth;
+			else if ((document.body) && (document.body.clientWidth))
+				winWidth = document.body.clientWidth;
+			return winWidth
+		} else if (key == 'getHeight') {
+			var winHeight;
+			// 获取窗口高度
+			if (window.innerHeight)
+				winHeight = window.innerHeight;
+			else if ((document.body) && (document.body.clientHeight))
+				winHeight = document.body.clientHeight;
+			return winHeight
+		}
+	}
+}(app, this))
+;
+(function($L, global) {
+	$L.debug.http = function() {
+		var args = Array.prototype.slice.call(arguments, 1);
+		var key = arguments[0][1];
+		if (key == "sendRequest") {
+			var settings = args[0];
+			var data = settings.body;
+			if (data) {
+				if ($L.isString(data)) {
+					data = JSON.parse(data)
+				}
+				if (data.json && $L.isString(data.json)) data.json = JSON.parse(data.json)
+				settings.body = data
+			}
+			settings = JSON.stringify(settings)
+			var pageId = this.getQueryString('pageId');
+			var token = this.uuid++;
+			this.xhr[token] = {
+				success: args[1],
+				error: args[2],
+				dataType: args[0].dataType
+			}
+			var js = "sendRequest('" + settings + "','" + pageId + "','" + token + "')"
+			this.postMessage(js);
+		}
+	}
+}(app, this))
+;
+(function($L, global) {
+	$L.debug.storage = function() {
+		var args = Array.prototype.slice.call(arguments, 1);
+		var key = arguments[0][1];
+		if (key == "getLength") {
+			return window.localStorage.length;
+		} else if (key == "getItem") {
+			return window.localStorage.getItem(args[0]);
+		} else if (key == "setItem") {
+			window.localStorage.setItem(args[0], args[1]);
+		} else if (key == "removeItem") {
+			window.localStorage.removeItem(args[0]);
+		} else if (key == "clear") {
+			window.localStorage.clear();
+		} else if (key == "key") {
+			return window.localStorage.key(args[0]);
+		}
+	}
+}(app, this))
+;
+(function($L, global) {
+	$L.debug.screen = function() {
+		var args = Array.prototype.slice.call(arguments, 1);
+		var key = arguments[0][1];
+		if (key == "getResolutionWidth") {
+			return "720"
+		} else if (key == "getResolutionHeight") {
+			return "1280"
+		} else if (key == "getScale") {
+			return "2"
+		} else if (key == "getDpiX") {
+			return "268.941"
+		} else if (key == "getDpiY") {
+			return "68.694"
+		} else if (key == "getBrightness") {
+			return "1"
+		}
 	}
 }(app, this))

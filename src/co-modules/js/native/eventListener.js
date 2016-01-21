@@ -44,13 +44,22 @@
 		 * 添加网络状态变化事件监听
 		 * @param callback: 必选 事件回调
 		 */
-		addNetWorkChangeEvent: function(callback) {
+		addNetworkChangeEvent: function(callback) {
 			$L.executeNativeJS(['eventListener', 'addEventListener'], 'network_state_changed', function(evt) {
 				if ($L.isFunction(callback)) {
 					callback.call(global, evt.state);
 				}
 			});
 		},
+
+		/*
+		 * 删除网络状态变化事件监听
+		 * @param callback: 必选 事件回调
+		 */
+		removeNetworkChangeEvent: function(callback) {
+			$L.executeNativeJS(['eventListener', 'removeEventListener'], 'network_state_changed');
+		},
+
 		/*
 		 * 添加电池状态变化事件监听
 		 * @param callback: 必选 事件回调
@@ -61,6 +70,14 @@
 					callback.call(global, evt.state);
 				}
 			});
+		},
+
+		/*
+		 * 删除电池状态变化事件监听
+		 * @param callback: 必选 事件回调
+		 */
+		removeBatteryChangeEvent: function(callback) {
+			$L.executeNativeJS(['eventListener', 'addEventListener'], 'battery_state_changed');
 		}
 	}
 

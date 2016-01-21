@@ -1,7 +1,8 @@
 /*===============================================================================
 ************   ui native view   ************
 ===============================================================================*/
-;(function($L, global) {
+;
+(function($L, global) {
   var view = function() {
     // var viewBounces = $L.getViewBounces(); // 页面是否弹动--  仅IOS有效果
     // var viewBgcolor = $L.getViewBgcolor(); // 页面背景色  -- 如果字段为空，颜色为白色
@@ -53,23 +54,23 @@
       })
     }
     this.disableHScrollBar = function() {
-      var viewHScrollBar = false;
-      $L.executeNativeJS(['window', 'setAttr'], {
-        hScrollBarEnabled: viewHScrollBar
-      })
-    }
-    this.enableZoom = function() {
-      var viewZoom = true;
-      $L.executeNativeJS(['window', 'setAttr'], {
-        scaleEnabled: viewZoom
-      })
-    }
-    this.disableZoom = function() {
-      var viewZoom = false;
-      $L.executeNativeJS(['window', 'setAttr'], {
-        scaleEnabled: viewZoom
-      })
-    }
+        var viewHScrollBar = false;
+        $L.executeNativeJS(['window', 'setAttr'], {
+          hScrollBarEnabled: viewHScrollBar
+        })
+      }
+      // this.enableZoom = function() {
+      //   var viewZoom = true;
+      //   $L.executeNativeJS(['window', 'setAttr'], {
+      //     scaleEnabled: viewZoom
+      //   })
+      // }
+      // this.disableZoom = function() {
+      //   var viewZoom = false;
+      //   $L.executeNativeJS(['window', 'setAttr'], {
+      //     scaleEnabled: viewZoom
+      //   })
+      // }
     this.enableKeyboard = function() {
       var viewKeyboard = true;
       $L.executeNativeJS(['window', 'setAttr'], {
@@ -164,6 +165,7 @@
       height = height || this.getHeight();
       if ($L.android()) {
         height = height * window.devicePixelRatio;
+        y = y || y * window.devicePixelRatio;
       }
       var IgnoreParams = {
         x: x || 0,
@@ -337,11 +339,15 @@
     }
 
     /*
-     * 设置当前页面显示的popover 的位置、长宽
+     * 设置当前页面的位置、长宽
      */
-    this.setCurrentPopoverRect = function(x, y, width, height) {
+    this.setFrameSize = function(x, y, width, height) {
       width = width || this.getWidth();
       height = height || this.getHeight();
+      if ($L.android()) {
+        y = y * window.devicePixelRatio;
+        height = height * window.devicePixelRatio;
+      }
       var rect = {
         x: x || 0,
         y: y || 0,
