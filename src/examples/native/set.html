@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,initial-scale=1.0">
+		<title></title>
+	   <link rel="stylesheet" href="../dist/css/co.css">
+	</head>
+	<body>
+		<header class="ui-nav-bar" style="background-color: #393B47;">
+	        <div class="ui-nav-bar-inner">
+	            <h1 class="ui-nav-bar-title" style="color: #ffffff !important;">设置</h1>
+	        </div>
+	    </header>
+	    <div class = 'ui-content'>
+    	  <div class="ui-list-block">
+	            <ul>
+	              <li><div class="ui-list-item-content">
+	                  <div class="ui-list-item-inner"> 
+	                    <div class="ui-list-item-title">消息推送</div>
+	                    <div class="ui-list-item-after">
+	                      <div class="ui-switch ui-active">
+	                        <div class="ui-switch-handle"></div>
+	                      </div></div>
+	                  </div>
+	                  </div>
+	              </li>
+	            </ul>
+	      </div>
+	      <div class="ui-list-block">
+            <ul>
+              <li>
+              	  <div class="ui-list-item-content ui-list-item-link ">
+	                  <div class="ui-list-item-inner"> 
+	                    <div class="ui-list-item-title">关于我们</div>
+	                  </div>
+	              </div>
+              </li>
+              <li>
+              	  <div class="ui-list-item-content ui-list-item-link ">
+	                  <div class="ui-list-item-inner"> 
+	                    <div class="ui-list-item-title">意见反馈</div>
+	                  </div>
+	              </div>
+              </li>
+              <li>
+              	  <div class="ui-list-item-content ui-list-item-link ">
+	                  <div class="ui-list-item-inner"> 
+	                    <div class="ui-list-item-title">版本介绍</div>
+	                  </div>
+	              </div>
+              </li>
+            </ul>
+          </div>
+          <div class="ui-list-block">
+	            <ul>
+	              <li><div class="check ui-list-item-content ui-list-item-link">
+	                  <div class="ui-list-item-inner"> 
+	                    <div class="ui-list-item-title">检测更新</div>
+	                     <div class="ui-list-item-after"><span class="ui-badge ui-badge-red">new</span></div>
+	                  </div>
+	                  </div>
+	              </li>
+	            </ul>
+	      </div>
+	      <div class="ui-list-block">
+	            <ul>
+	              <li><div class="ui-list-item-content ui-list-item-link">
+	                  <div class="ui-list-item-inner"> 
+	                    <div class="ui-list-item-title">退出</div>
+	                  </div>
+	                  </div>
+	              </li>
+	            </ul>
+	      </div>
+        </div>
+	    
+	    
+	</body>
+	<script src="../dist/js/native.js"></script>
+    <script src="../dist/js/dom.js"></script>
+    <script src="../dist/js/co.js"></script>
+	<script>
+	    domReady(function(require){
+	 		$('.check').button(function(btn,evt){
+	 				var params = { 
+							title:{ 
+								name:'已是最新版本'
+							}
+						};
+					app.progress.showToast(2,params);
+	 		})
+	    	require("switch");
+	    	var sw = $('.ui-switch').switch({
+                callback:function(el,evt,isActive){
+                	var tar = $(evt.currentTarget);
+                	if(isActive){
+                		tar.addClass('ui-active');
+                		app.storage.setItem("push", "yes");
+                	}else{
+                		tar.removeClass('ui-active');
+                		app.storage.setItem("push", "no");
+                	}
+                }
+            });
+            
+            
+		});
+		
+	</script>
+</html>

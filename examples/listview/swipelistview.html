@@ -190,6 +190,7 @@
     sls[8].delete()
     $('.ui-swipeout').on('delete',function(e){
       console.log('delete');
+      return false;
     }).on('open',function(e){
       console.log('open');
     }).on('close',function(e){

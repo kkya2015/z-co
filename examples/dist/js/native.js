@@ -3119,7 +3119,11 @@ window.A === undefined && (window.A = app);
 				if (dataType == 'json') {
 					if ($L.isFunction(success)) {
 						if (data) {
-							data = JSON.parse(data)
+							try {
+								data = JSON.parse(data)
+							}catch(e) {
+								alert(data)
+							}
 						} else {
 							data = {}
 						}
@@ -3187,7 +3191,7 @@ window.A === undefined && (window.A = app);
 		}else if(key == "model"){
 			return 'Che1-CL20'
 		}else if(key == "vendor"){
-			return 'HUAWEI'
+			return 'IPHONE'
 		}else if(key == "uuid"){
 			return '48a9511b-d23a-43c4-a868-0ed2ad80e75b'
 		}
@@ -3197,14 +3201,32 @@ window.A === undefined && (window.A = app);
 (function($L, global) {
 	$L.debug.os = function() {
 		var key = arguments[0][1];
-		if(key == "language"){
+		if (key == "language") {
 			return 'zh'
-		}else if(key == "version"){
-			return '4.4.4'
-		}else if(key == "name"){
-			return 'Android'
-		}else if(key == "vendor"){
-			return 'HUAWEI'
+		} else if (key == "version") {
+			if ($.os.android || $.os.ios) {
+				return $.os.version
+			} else {
+				return '4.4.4'
+			}
+
+		} else if (key == "name") {
+			if ($.os.android) {
+				return 'Android'
+			} else if ($.os.ios) {
+				return 'iOS'
+			} else {
+				return 'iOS'
+			}
+		} else if (key == "vendor") {
+			if ($.os.android) {
+				return 'HUAWEI'
+			} else if ($.os.ios) {
+				return 'IPHONE'
+			} else {
+				return 'IPHONE'
+			}
+
 		}
 	}
 }(app, this))
@@ -3357,24 +3379,60 @@ window.A === undefined && (window.A = app);
 			else if ((document.body) && (document.body.clientHeight))
 				winHeight = document.body.clientHeight;
 			return winHeight
+		}else if (key == 'alert') {
+			alert(args[0].msg)
+		}else if (key == 'confirm') {
+			alert(args[0].msg)
 		}
 	}
 }(app, this))
 ;
 (function($L, global) {
+	var serialize = function(params, obj, scope) {
+		var type, array = $L.isArray(obj),
+			hash = $L.isPlainObject(obj)
+		$L.each(obj, function(key, value) {
+			type = $L.type(value)
+			if (scope) key = scope + '[' + (hash || type == 'object' || type == 'array' ? key : '') + ']'
+				// handle data in serializeArray() format
+			if (!scope && array) params.add(value.name, value.value)
+				// recurse into nested objects
+			else if (type == "array" || (type == "object"))
+				serialize(params, value, key)
+			else params.add(key, value)
+		})
+	}
+	var escape = encodeURIComponent
+	var appendQuery = function(url, query) {
+		if (query == '') return url
+		return (url + '&' + query).replace(/[&?]{1,2}/, '?')
+	}
+
+	var param = function(obj) {
+		var params = []
+		params.add = function(key, value) {
+			if ($L.isFunction(value)) value = value()
+			if (value == null) value = ""
+			this.push(escape(key) + '=' + escape(value))
+		}
+		serialize(params, obj)
+		return params.join('&').replace(/%20/g, '+')
+	}
+
+	var serializeData = function(settings) {
+		if (settings.body && $L.type(settings.body) != "string")
+			settings.body = param(settings.body)
+		if (settings.body && (!settings.method || settings.method.toUpperCase() == 'GET'))
+			settings.url = appendQuery(settings.url, settings.body), settings.body = undefined
+	}
+
+
 	$L.debug.http = function() {
 		var args = Array.prototype.slice.call(arguments, 1);
 		var key = arguments[0][1];
 		if (key == "sendRequest") {
 			var settings = args[0];
-			var data = settings.body;
-			if (data) {
-				if ($L.isString(data)) {
-					data = JSON.parse(data)
-				}
-				if (data.json && $L.isString(data.json)) data.json = JSON.parse(data.json)
-				settings.body = data
-			}
+			serializeData(settings)
 			settings = JSON.stringify(settings)
 			var pageId = this.getQueryString('pageId');
 			var token = this.uuid++;

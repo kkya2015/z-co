@@ -67,6 +67,10 @@
 			else if ((document.body) && (document.body.clientHeight))
 				winHeight = document.body.clientHeight;
 			return winHeight
+		}else if (key == 'alert') {
+			alert(args[0].msg)
+		}else if (key == 'confirm') {
+			alert(args[0].msg)
 		}
 	}
 }(app, this))

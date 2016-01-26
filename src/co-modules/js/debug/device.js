@@ -9,7 +9,7 @@
 		}else if(key == "model"){
 			return 'Che1-CL20'
 		}else if(key == "vendor"){
-			return 'HUAWEI'
+			return 'IPHONE'
 		}else if(key == "uuid"){
 			return '48a9511b-d23a-43c4-a868-0ed2ad80e75b'
 		}

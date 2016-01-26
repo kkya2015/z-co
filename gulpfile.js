@@ -425,7 +425,7 @@ gulp.task('examples', function(cb) {
 gulp.task('build-emu', function(cb) {
     gulp.src(emu.js)
         .pipe(concat(emu.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
-        // .pipe(uglify())
+        .pipe(uglify())
         .pipe(gulp.dest(paths.examples.root))
         .on('end', function() {
             cb();
@@ -474,9 +474,13 @@ gulp.task('watch', function(cb) {
     livereload.listen();
     var watcher = gulp.watch(paths.source.examples + '**/*.*');
     watcher.on('change', function(file) {
+        // console.log("file.path--"+file.path);
         var ex = file.path.indexOf('examples');
-        var next = file.path.substr(ex + 9).indexOf('\\');
+        // console.log("ex--"+ex);
+        var next = file.path.substr(ex + 9).lastIndexOf('\\');
+        // console.log("next--"+next);
         var destPaht = paths.examples.root;
+        // console.log("destPaht--"+destPaht);
         if (next != -1) {
             destPaht = destPaht + file.path.substring(ex + 9, ex + 9 + next) + '/';
         }

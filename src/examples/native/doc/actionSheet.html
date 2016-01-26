@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>accelerometer</title>
+  <meta charset="utf-8">
+  <title>accelerometer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="stylesheet" href="res/doc.css">
+<style type="text/css">
+</style>
+</head>
+<body>
+<h2>ActionSheet</h2>
+<p>页面底部弹出选择框。</p>
+<h3>索引</h3>
+<hr />
+<h3><a href="#方法">方法</a>：</h3>
+<ul>
+<li><a href="#show">show</a> ：显示弹出框</li>
+</ul>
+<hr />
+<h1><div id="方法">方法</div></h1>
+<hr />
+<h2><div id="show" style="color:red">show</div></h2>
+<ul>
+<li>
+<h4>app.actionSheet.show(options, success)   ⇒ void</h4>
+<pre><code>    显示弹出框
+</code></pre>
+
+<ul>
+<li>
+<strong>options</strong>：配置参数
+<ul>
+<li><strong>type</strong>：JSON</li>
+<li>
+<strong>keys</strong>
+<ul>
+<li>
+<strong>title</strong>：（<em>String</em>）标题
+<ul>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>cancelTitle</strong>：（<em>String</em>）取消按钮标题
+<ul>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>destrutiveTitle</strong>：（<em>String</em>）红色警示按钮标题，一般用于做一些删除之类操作
+<ul>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>buttons</strong>：（<em>Array</em>）按钮标题
+<ul>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>success</strong>：选择弹出框上按钮的回调
+<ul>
+<li><strong>type</strong>：function</li>
+<li><strong>默认值</strong>：无</li>
+<li>
+<strong>参数</strong>
+<ul>
+<li>
+<strong>index</strong>：按钮下标
+<ul>
+<li><strong>type</strong>：Number</li>
+<li>
+<strong>默认值</strong>：无
+<ul>
+<li>
+<strong>取值范围</strong>：
+<ul>
+<li>以cancelTitle为名字的按钮值为0</li>
+<li>buttons数组里的按钮依次递增（buttons 数组里的按钮从1开始）</li>
+<li>以destructiveTitle为名字的带有红色警示的按钮为最大值</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.actionSheet.show({
+        title: '底部弹出框测试',
+        cancelTitle: '这里是取消按钮',
+        destructiveTitle: '红色警告按钮',
+        buttons: ['相册', '视频', '手机', '哈哈哈'],
+    }, function(index) {
+        console.log(index)
+    })
+</code></pre>
+
+</li>
+</ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

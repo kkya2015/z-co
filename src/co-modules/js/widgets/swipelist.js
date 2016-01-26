@@ -430,7 +430,8 @@
             if (el.length === 0) return;
             if (el.length > 1) el = $(el[0]);
             _sl.swipeoutOpenedEl = undefined;
-            el.trigger('delete');
+            var del = el.triggerHandler('delete');
+            if($.type(del) != "undefined"&&!del)return;
             el.css({
                 height: el.outerHeight() + 'px'
             });

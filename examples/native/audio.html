@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>audio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../dist/css/co.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .button {
+            margin: 5px 15px;
+        }
+        .button-primary{
+            background-color:#CD6600;
+        }
+      
+        </style>
+
+</head>
+<body>
+    <header class="ui-nav-bar">
+        <div class="ui-nav-bar-inner">
+            <a class="ui-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
+            </a>
+            <h1 class="ui-nav-bar-title">Audio</h1>
+            <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
+            </a>
+        </div>
+    </header>
+    <a class="button button-block button-rounded button-inverse">显示弹出框</a>
+
+    <div id="log">
+        actionSheet模块可在页面底部弹出选择框
+    </div>
+    <script src="../dist/js/native.js"></script>
+    <script src="../dist/js/dom.js"></script>
+    <script src="../dist/js/co.js"></script>
+    <script src="js/common.js"></script>
+</body>
+<script>
+    var view = app.currentView();
+    domReady(function(require) {
+        $('.button').button(function(el, evt) {
+            var text = el.innerText;
+            switch (text) {
+                case '显示弹出框':
+                    show()
+                    break;
+                default:
+                    show()
+            }
+        })
+
+        $('.ui-nav-bar-right').button(function(){
+            setDocTarget('doc/actionSheet.html','ActionSheet Doc')
+            var win = app.createWindow();
+            win.open('doc.html')
+        })
+    });
+
+    function show() {
+            app.actionSheet.show({
+               title: '底部弹出框测试',
+               cancelTitle: '这里是取消按钮',
+               destructiveTitle: '红色警告按钮',
+               buttons: ['相册', '视频', '手机', '哈哈哈'],
+            }, function(index) {
+               printout('您选择了：第'+index+'个按钮')
+            })
+    }
+
+</script>
+</html>

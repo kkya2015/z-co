@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>APP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="stylesheet" href="res/doc.css">
+<style type="text/css">
+
+</style>
+</head>
+<body>
+<h2>App</h2>
+<p>app是引擎对外接口的调用对象，所有对引擎的操作均通过app对象来完成。</p>
+<h3>索引</h3>
+<hr />
+<h3><a href="#方法">方法</a>：</h3>
+<ul>
+<li><a href="#addSlideDrawer">addSlideDrawer</a> ：添加侧滑抽屉效果</li>
+<li><a href="#alert">alert</a> ：弹出单按钮对话框</li>
+<li><a href="#cleanCache">cleanCache</a> ：清空cache目录</li>
+<li><a href="#closeComponent">closeComponent</a> ：关闭指定component</li>
+<li><a href="#closeCurrentComponent">closeCurrentComponent</a> ：关闭当前component</li>
+<li><a href="#closeSlideDrawer">closeSlideDrawer</a> ：关闭抽屉</li>
+<li><a href="#config">config</a> ：配置app系统参数</li>
+<li><a href="#confirm">confirm</a> ：弹出带两个或三个按钮的confirm对话框</li>
+<li><a href="#createWindow">createWindow</a> ：新建一个窗口对象</li>
+<li><a href="#currentView">currentView</a> ：获取当前页面对象</li>
+<li><a href="#downloadFile">downloadFile</a> ：使用系统浏览器下载文件(android)</li>
+<li><a href="#evalScriptInComponent">evalScriptInComponent</a> ：在指定component、window、popover执行javascript</li>
+<li><a href="#evalScriptInPop">evalScriptInPop</a> ：指定pop执行JS语句</li>
+<li><a href="#evalScriptInWindow">evalScriptInWindow</a> ：在指定窗口执行JS语句</li>
+<li><a href="#exit">exit</a> ：退出app(android)</li>
+<li><a href="#getApplicationInfo">getApplicationInfo</a> ：获取app配置信息，此app配置信息来自application.xml。</li>
+<li><a href="#getComponentInfoByName">getComponentInfoByName</a> ：通过名字获取模块信息</li>
+<li><a href="#getCurrentComponentInfo">getCurrentComponentInfo</a> ：获取当前模块信息</li>
+<li><a href="#getDeviceModel">getDeviceModel</a> ：获取设备模型名称</li>
+<li><a href="#getDeviceName">getDeviceName</a> ：获取设备名称</li>
+<li><a href="#getEngineVersion">getEngineVersion</a> ：获取引擎版本号</li>
+<li><a href="#getMainComponentInfo">getMainComponentInfo</a> ：获取主component的componentInfo</li>
+<li><a href="#getPlatformName">getPlatformName</a> ：获取系统名称</li>
+<li><a href="#getPlatformVersion">getPlatformVersion</a> ：获取系统版本</li>
+<li><a href="#installApp">installApp</a> ：安装一个app</li>
+<li><a href="#isAppInstalled">isAppInstalled</a> ：判断设备上是否已安装指定app</li>
+<li><a href="#isFullScreen">isFullScreen</a> ：判断app是否全屏显示</li>
+<li><a href="#lockRotate">lockRotate</a> ：锁定屏幕翻转</li>
+<li><a href="#openApp">openApp</a> ：启动一个app</li>
+<li><a href="#openComponent">openComponent</a> ：打开指定component</li>
+<li><a href="#openLeftSlideDrawer">openLeftSlideDrawer</a> ：开启左侧抽屉</li>
+<li><a href="#openRightSlideDrawer">openRightSlideDrawer</a> ：开启右侧抽屉</li>
+<li><a href="#prompt">prompt</a> ：弹出带两个或三个按钮和输入框的对话框</li>
+<li><a href="#setStatusBarBackgroundColor">setStatusBarBackgroundColor</a> ：设置app状态栏背景颜色；Android要求版本4.4以上。默认黑色</li>
+<li><a href="#statusBarFontColor">statusBarFontColor</a> ：设置当前页面状态栏文字颜色 0 表示黑色。1 表示白色(仅iOS)</li>
+<li><a href="#unLockRotate">unLockRotate</a> ：解锁屏幕翻转</li>
+</ul>
+<hr />
+<h1><div id="方法">方法</div></h1>
+<hr />
+<h2><div id="addSlideDrawer" style="color:red">addSlideDrawer</div></h2>
+<ul>
+<li>
+<h4>app.addSlideDrawer(url, [type], [edge])   ⇒ void</h4>
+<pre><code>    给首页添加侧滑抽屉效果
+</code></pre>
+
+<ul>
+<li>
+<strong>url</strong>：要打开页面的地址
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>type</strong>：left（左侧）、right（右侧）
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：left</li>
+</ul>
+</li>
+<li>
+<strong>edge</strong>：侧滑时, 侧滑window停留时露出的宽度
+<ul>
+<li><strong>type</strong>：Number</li>
+<li><strong>默认值</strong>：50</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    EX - 1：
+    app.addSlideDrawer('native/view.html', 'left', 200);
+
+    EX - 2：
+    app.addSlideDrawer('native/view.html', 'left');
+
+    EX - 3：
+    app.addSlideDrawer('native/view.html');
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="alert" style="color:red">alert</div></h2>
+<ul>
+<li>
+<h4>app.alert(message, [title], [btnCaption], [callback])   ⇒ void</h4>
+<pre><code>    弹出单按钮对话框
+</code></pre>
+
+<ul>
+<li>
+<strong>message</strong>：消息内容
+<ul>
+<li><strong>type</strong>：String/Object</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>title</strong>：窗口的title
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：'消息提示'</li>
+</ul>
+</li>
+<li>
+<strong>btnCaption</strong>：窗口的按钮显示的内容
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：'确定'</li>
+</ul>
+</li>
+<li>
+<strong>callback</strong>：按下窗口的按钮时回调函数
+<ul>
+<li><strong>type</strong>：Function</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    EX - 1：
+    app.alert('弹出无回调函数单按钮对话框')
+
+    EX - 2：
+    app.alert('弹出默认单按钮对话框', function() {
+        console.log('您点击了确定'); //按下
+    });
+
+    EX - 3：
+    app.alert('弹出带title单按钮对话框', 'title', function() {
+        console.log('您点击了确定'); //按下
+    })
+
+    EX - 4：
+    app.alert('弹出带title,btnCaption单按钮对话框', 'title', 'btnCaption', function() {
+        console.log('您点击了确定'); //按下
+    })
+
+    EX - 5：
+    app.alert({
+        message: 'JSON参数弹出单按钮对话框',
+        title: 'JSON',
+        btnCaption: '确定',
+        callback: function() {
+            console.log('您点击了确定'); //按下
+        }
+    })
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="cleanCache" style="color:red">cleanCache</div></h2>
+<ul>
+<li>
+<h4>app.cleanCache()   ⇒ void</h4>
+<pre><code>    清空cache目录
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.cleanCache(); //清空缓存
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="closeComponent" style="color:red">closeComponent</div></h2>
+<ul>
+<li>
+<h4>app.closeComponent(componentName,[animation])   ⇒ void</h4>
+<pre><code>    关闭指定component
+</code></pre>
+
+<ul>
+<li>
+<strong>componentName</strong>：指定component的名称
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>animation</strong>：动画参数
+<ul>
+<li><strong>type</strong>：JSON</li>
+<li><strong>默认值</strong>：无</li>
+<li>
+<strong>keys</strong>
+<ul>
+<li>
+<strong>type</strong> : （<em>Number</em>）动画效果类型，仅IOS支持，Android只支持设置无动画（-1），其它动画无效。
+<ul>
+<li><strong>默认值</strong>：11</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>10</strong>：淡入淡出</li>
+<li><strong>11</strong>：推入</li>
+<li><strong>12</strong>：显露</li>
+<li><strong>13</strong>：切入</li>
+<li><strong>14</strong>：立方体翻转</li>
+<li><strong>15</strong>：上翻页</li>
+<li><strong>16</strong>：下翻页</li>
+<li><strong>17</strong>：收缩</li>
+<li><strong>18</strong>：水滴</li>
+<li><strong>19</strong>：翻转</li>
+<li><strong>20</strong>：旋转</li>
+<li><strong>21</strong>：照相机打开</li>
+<li><strong>22</strong>：照相机关闭</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>direction</strong> : （<em>Number</em>）动画方向
+<ul>
+<li><strong>默认值</strong>：41</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>40</strong>：从左往右</li>
+<li><strong>41</strong>：从右往左</li>
+<li><strong>42</strong>：从上往下</li>
+<li><strong>43</strong>：从下往上</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>time</strong> : （<em>Number</em>）动画时间
+<ul>
+<li><strong>默认值</strong>：1000（单位ms）</li>
+</ul>
+</li>
+<li>
+<strong>curve</strong> : （<em>Number</em>）动画曲线类型
+<ul>
+<li><strong>默认值</strong>：53</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>50</strong>：线性</li>
+<li><strong>51</strong>：从慢到快</li>
+<li><strong>52</strong>：从快到慢</li>
+<li><strong>53</strong>：从慢到快到慢</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.closeCurrentComponent({
+        type: 12,
+        direction: 40,
+        time: 2000,
+        curve: 51
+    });
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="closeCurrentComponent" style="color:red">closeCurrentComponent</div></h2>
+<ul>
+<li>
+<h4>app.closeCurrentComponent([animation])   ⇒ void</h4>
+<pre><code>    关闭当前component
+</code></pre>
+
+<ul>
+<li>
+<strong>animation</strong>：动画参数
+<ul>
+<li><strong>type</strong>：JSON</li>
+<li><strong>默认值</strong>：无</li>
+<li>
+<strong>keys</strong>
+<ul>
+<li>
+<strong>type</strong> : （<em>Number</em>）动画效果类型，仅IOS支持，Android只支持设置无动画（-1），其它动画无效。
+<ul>
+<li><strong>默认值</strong>：11</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>10</strong>：淡入淡出</li>
+<li><strong>11</strong>：推入</li>
+<li><strong>12</strong>：显露</li>
+<li><strong>13</strong>：切入</li>
+<li><strong>14</strong>：立方体翻转</li>
+<li><strong>15</strong>：上翻页</li>
+<li><strong>16</strong>：下翻页</li>
+<li><strong>17</strong>：收缩</li>
+<li><strong>18</strong>：水滴</li>
+<li><strong>19</strong>：翻转</li>
+<li><strong>20</strong>：旋转</li>
+<li><strong>21</strong>：照相机打开</li>
+<li><strong>22</strong>：照相机关闭</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>direction</strong> : （<em>Number</em>）动画方向
+<ul>
+<li><strong>默认值</strong>：41</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>40</strong>：从左往右</li>
+<li><strong>41</strong>：从右往左</li>
+<li><strong>42</strong>：从上往下</li>
+<li><strong>43</strong>：从下往上</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>time</strong> : （<em>Number</em>）动画时间
+<ul>
+<li><strong>默认值</strong>：1000（单位ms）</li>
+</ul>
+</li>
+<li>
+<strong>curve</strong> : （<em>Number</em>）动画曲线类型
+<ul>
+<li><strong>默认值</strong>：53</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>50</strong>：线性</li>
+<li><strong>51</strong>：从慢到快</li>
+<li><strong>52</strong>：从快到慢</li>
+<li><strong>53</strong>：从慢到快到慢</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.closeCurrentComponent({
+        type: 12,
+        direction: 40,
+        time: 2000,
+        curve: 51
+    });
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="closeSlideDrawer" style="color:red">closeSlideDrawer</div></h2>
+<ul>
+<li>
+<h4>app.closeSlideDrawer()   ⇒ void</h4>
+<pre><code>    关闭抽屉
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.closeSlideDrawer();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="config" style="color:red">config</div></h2>
+<ul>
+<li>
+<h4>app.config(options)   ⇒ void</h4>
+<pre><code>    通过JSON对象，对一些系统默认值进行配置,避免每次使用时都需要反复设置
+</code></pre>
+
+<ul>
+<li>
+<strong>options</strong> ：配置JSON对象
+<ul>
+<li><strong>type</strong>：JSON</li>
+<li><strong>默认值</strong>：无</li>
+<li>
+<strong>keys</strong>
+<ul>
+<li>
+<strong>windowType</strong> ：( <em>Number</em> )窗口类型
+<ul>
+<li><strong>默认值</strong>：0</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>0</strong>：本地地址</li>
+<li><strong>1</strong>：html字符串</li>
+<li><strong>2</strong>：网络地址</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>popoverType</strong>：( <em>Number</em> )pop窗口类型
+<ul>
+<li><strong>默认值</strong>：0</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>0</strong>：本地地址</li>
+<li><strong>1</strong>：html字符串</li>
+<li><strong>2</strong>：网络地址</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>windowAnimationType</strong>：( <em>Number</em> )打开窗口动画类型,仅IOS支持,Android只支持设置无动画（-1）,其它动画无效。
+<ul>
+<li><strong>默认值</strong>：11</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>10</strong>：淡入淡出</li>
+<li><strong>11</strong>：推入</li>
+<li><strong>12</strong>：显露</li>
+<li><strong>13</strong>：切入</li>
+<li><strong>14</strong>：立方体翻转</li>
+<li><strong>15</strong>：上翻页</li>
+<li><strong>16</strong>：下翻页</li>
+<li><strong>17</strong>：收缩</li>
+<li><strong>18</strong>：水滴</li>
+<li><strong>19</strong>：翻转</li>
+<li><strong>20</strong>：旋转</li>
+<li><strong>21</strong>：照相机打开</li>
+<li><strong>22</strong>：照相机关闭</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>windowAnimationDirection</strong>：( <em>Number</em> )打开窗口方向类型(仅IOS有效)
+<ul>
+<li><strong>默认值</strong>：41</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>40</strong>：从左往右</li>
+<li><strong>41</strong>：从右往左</li>
+<li><strong>42</strong>：从上往下</li>
+<li><strong>43</strong>：从下往上</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>windowAnimationDuration</strong>：( <em>Number</em> )打开窗口动画时间(仅IOS有效)
+<ul>
+<li><strong>默认值</strong>：300（单位：ms）</li>
+</ul>
+</li>
+<li>
+<strong>windowAnimationCurve</strong>：( <em>Number</em> )打开窗口动画曲线类型(仅IOS有效)
+<ul>
+<li><strong>默认值</strong>：53</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>50</strong>：线性</li>
+<li><strong>51</strong>：从慢到快</li>
+<li><strong>52</strong>：从快到慢</li>
+<li><strong>53</strong>：从慢到快到慢</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>viewBounces</strong>：( <em>Boolean</em> )是否允许页面弹动（仅对IOS有效）
+<ul>
+<li><strong>默认值</strong>：false</li>
+</ul>
+</li>
+<li>
+<strong>viewBgcolor</strong>：( <em>String</em> )背景颜色，如果字段为空，颜色为白色，颜色支持6位RGB(例如#FFFFFF)或者8位RGBA(例如#7FFFFFFF，前两位是透明度),Android设备支持
+<ul>
+<li><strong>默认值</strong>：白色</li>
+</ul>
+</li>
+<li>
+<strong>viewVScrollBar</strong>：( <em>Boolean</em> )是否显示水平滚动条,Android设备暂时不支持
+<ul>
+<li><strong>默认值</strong>：false</li>
+</ul>
+</li>
+<li>
+<strong>viewHScrollBar</strong>：( <em>Boolean</em> )是否显示垂直滚动条 ,Android设备暂时不支持
+<ul>
+<li><strong>默认值</strong>：true</li>
+</ul>
+</li>
+<li>
+<strong>viewKeyboard</strong>：( <em>Boolean</em> )键盘弹出后，输入框是否会自动定位，Android设备暂时不支持
+<ul>
+<li><strong>默认值</strong>：false</li>
+</ul>
+</li>
+<li>
+<strong>viewDragDismiss</strong>：( <em>Boolean</em> )是否支持滑动消失键盘,Android设备暂时不支持
+<ul>
+<li><strong>默认值</strong>：false</li>
+</ul>
+</li>
+<li>
+<strong>viewAnimationType</strong>：( <em>Number</em> )页面关闭动画效果类型,仅IOS支持,Android只支持设置无动画（-1）,其它动画无效。
+<ul>
+<li><strong>默认值</strong>：11</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>10</strong>：淡入淡出</li>
+<li><strong>11</strong>：推入</li>
+<li><strong>12</strong>：显露</li>
+<li><strong>13</strong>：切入</li>
+<li><strong>14</strong>：立方体翻转</li>
+<li><strong>15</strong>：上翻页</li>
+<li><strong>16</strong>：下翻页</li>
+<li><strong>17</strong>：收缩</li>
+<li><strong>18</strong>：水滴</li>
+<li><strong>19</strong>：翻转</li>
+<li><strong>20</strong>：旋转</li>
+<li><strong>21</strong>：照相机打开</li>
+<li><strong>22</strong>：照相机关闭</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>viewAnimationDirection</strong>：( <em>Number</em> )页面关闭动画方向(仅IOS有效)
+<ul>
+<li><strong>默认值</strong>：40</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>40</strong>：从左往右</li>
+<li><strong>41</strong>：从右往左</li>
+<li><strong>42</strong>：从上往下</li>
+<li><strong>43</strong>：从下往上</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>viewAnimationDuration</strong>：( <em>Number</em> )页面关闭动画时间(仅IOS有效)
+<ul>
+<li><strong>默认值</strong>：300（单位：ms）</li>
+</ul>
+</li>
+<li>
+<strong>viewAnimationCurve</strong>：( <em>Number</em> )页面关闭动画曲线(仅IOS有效)
+<ul>
+<li><strong>默认值</strong>：53</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>50</strong>：线性</li>
+<li><strong>51</strong>：从慢到快</li>
+<li><strong>52</strong>：从快到慢</li>
+<li><strong>53</strong>：从慢到快到慢</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>viewSlideBack</strong>：( <em>Boolean</em> )是否支持滑动返回，设置window全局，ture表示支持，false表示不支持(仅IOS有效)
+<ul>
+<li><strong>默认值</strong>：true</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    若设计中的窗口打开与关闭动画为淡入淡出，可做以下设置即可，可通过一次设定，其他地方使用时均使用该值（包含其他页面）
+
+    app.config({
+        viewAnimationType: 10,
+        windowAnimationType: 10
+    })
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="confirm" style="color:red">confirm</div></h2>
+<ul>
+<li>
+<h4>app.confirm(message, [title], [btnCaptions], [callback])   ⇒ void</h4>
+<pre><code>    弹出带两个或三个按钮的confirm对话框
+</code></pre>
+
+<ul>
+<li>
+<strong>message</strong>：消息内容
+<ul>
+<li><strong>type</strong>：String/Object</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>title</strong>：窗口的title
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：'消息提示'</li>
+</ul>
+</li>
+<li>
+<strong>btnCaptions</strong>：窗口的按钮显示的内容
+<ul>
+<li><strong>type</strong>：Array</li>
+<li><strong>默认值</strong>：['确认','放弃','取消']</li>
+</ul>
+</li>
+<li>
+<strong>callback</strong>(buttonIndex)：按下窗口的按钮时回调函数
+<ul>
+<li><strong>type</strong>：Function</li>
+<li><strong>默认值</strong>：无</li>
+<li>
+<strong>参数</strong>
+<ul>
+<li>buttonIndex：（<em>Number</em>）按下按钮的下标(从1开始取值)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    EX - 1：
+    app.confirm('弹出无回调函数多按钮对话框')
+
+    EX - 2：
+    app.confirm('弹出默认多按钮对话框', function(buttonIndex) {
+        console.log(buttonIndex); //按下按钮的下标
+    });
+
+    EX - 3：
+    app.confirm('弹出带title多按钮对话框', 'title', function(buttonIndex) {
+        console.log(buttonIndex); //按下按钮的下标
+    })
+
+    EX - 4：
+    app.confirm('弹出带title,btnCaptions多按钮对话框', 'title', ['按钮1', '按钮2', '按钮3'], function(buttonIndex) {
+        console.log(buttonIndex); //按下按钮的下标
+    })
+
+    EX - 5：
+    app.confirm({
+        message: 'JSON参数弹出默认多按钮对话框',
+        title: 'JSON',
+        btnCaptions: ['按钮1', '按钮2', '按钮3'],
+        callback: function(buttonIndex) {
+            console.log(buttonIndex); //按下按钮的下标
+        }
+    })
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="createWindow" style="color:red">createWindow</div></h2>
+<ul>
+<li>
+<h4>app.createWindow()   ⇒ <a href="./window.md">window</a></h4>
+<pre><code>    新建一个窗口对象
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var win = app.createWindow();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="currentView" style="color:red">currentView</div></h2>
+<ul>
+<li>
+<h4>app.currentView()   ⇒ <a href="./view.md">view</a></h4>
+<pre><code>    获取当前页面对象
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var view = app.currentView();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="downloadFile" style="color:red">downloadFile</div></h2>
+<ul>
+<li>
+<h4>app.downloadFile(url)   ⇒ void</h4>
+<pre><code>    使用系统浏览器下载文件(android)
+</code></pre>
+
+<ul>
+<li>
+<strong>url</strong>：下载文件地址
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.downloadFile('http://192.168.168.111/1.apk');
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="evalScriptInComponent" style="color:red">evalScriptInComponent</div></h2>
+<ul>
+<li>
+<h4>app.evalScriptInComponent(componentName, windowName, script, [popoverName])   ⇒ void</h4>
+<pre><code>    指定component执行JS语句
+</code></pre>
+
+<ul>
+<li>
+<strong>componentName</strong>：component名字
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：：无</li>
+</ul>
+</li>
+<li>
+<strong>windowName</strong>：需要执行JS语句的窗口名称
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：：无</li>
+</ul>
+</li>
+<li>
+<strong>script</strong>：需要执行的JS语句
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>popoverName</strong>：需要执行JS语句的pop名称
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    EX - 1：
+    app.evalScriptInComponent('componentName','windowName','console.log(&quot;这是从别的窗口执行的JS语句&quot;);');
+
+    EX - 2：
+    app.evalScriptInComponent('componentName','windowName','console.log(&quot;这是从别的窗口执行的JS语句&quot;);','popoverName');
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="evalScriptInPop" style="color:red">evalScriptInPop</div></h2>
+<ul>
+<li>
+<h4>app.evalScriptInPop(script, popoverName, [windowName])   ⇒ void</h4>
+<pre><code>    指定pop执行JS语句
+</code></pre>
+
+<ul>
+<li>
+<strong>script</strong>：需要执行的JS语句
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>popoverName</strong>：需要执行JS语句的pop名称
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>windowName</strong>：需要执行JS语句的窗口名称，默认为当前窗口
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：：当前窗口</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    EX - 1：
+    app.evalScriptInPop('console.log(&quot;这是从别的窗口执行的JS语句&quot;);', 'popoverName', 'windowName');
+
+    EX - 2：
+    app.evalScriptInPop('console.log(&quot;这是在当前窗口执行的JS语句&quot;);', 'popoverName');
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="evalScriptInWindow" style="color:red">evalScriptInWindow</div></h2>
+<ul>
+<li>
+<h4>app.evalScriptInWindow(script, [windowName])   ⇒ void</h4>
+<pre><code>    在指定窗口执行JS语句
+</code></pre>
+
+<ul>
+<li>
+<strong>script</strong>：需要执行的JS语句
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>windowName</strong>：需要执行JS语句的窗口名称，默认为当前窗口
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：当前窗口</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    EX - 1：
+    app.evalScriptInWindow('console.log(&quot;这是从别的窗口执行的JS语句&quot;);', 'windowName');
+
+    EX - 2：
+    app.evalScriptInWindow('console.log(&quot;这是在当前窗口执行的JS语句&quot;);');
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="exit" style="color:red">exit</div></h2>
+<ul>
+<li>
+<h4>app.exit()   ⇒ void</h4>
+<pre><code>    退出app(android)
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.exit() //退出app
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="getApplicationInfo" style="color:red">getApplicationInfo</div></h2>
+<ul>
+<li>
+<h4>app.getApplicationInfo()   ⇒ JSON</h4>
+<pre><code>    获取app配置信息，此app配置信息来自application.xml。
+</code></pre>
+
+<ul>
+<li>
+<strong>返回值</strong>：JSON
+<ul>
+<li>
+<strong>keys</strong>
+<ul>
+<li><strong>id</strong>：( <em>String</em> )系统分配的id号</li>
+<li><strong>name</strong>：( <em>String</em> )app名称</li>
+<li><strong>description</strong>：( <em>String</em> )描述信息</li>
+<li>
+<strong>author</strong>：( <em>String</em> )作者信息
+<ul>
+<li><strong>name</strong>：( <em>String</em> )作者名字 </li>
+<li><strong>email</strong>：( <em>String</em> )邮箱</li>
+<li><strong>tel</strong>：( <em>String</em> )电话</li>
+<li><strong>address</strong>：( <em>String</em> )地址</li>
+</ul>
+</li>
+<li><strong>version</strong>：( <em>String</em> )版本号</li>
+<li><strong>bgcolor</strong>：( <em>String</em> )全局背景颜色 </li>
+<li><strong>entry</strong>：( <em>String</em> )程序入口（默认开启的component）</li>
+<li><strong>appkey</strong>：( <em>String</em> )保留</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var appInfo = app.getApplicationInfo();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="getComponentInfoByName" style="color:red">getComponentInfoByName</div></h2>
+<ul>
+<li>
+<h4>app.getComponentInfoByName(componentName)   ⇒ JSON</h4>
+<pre><code>    通过名字获取模块信息
+</code></pre>
+
+<ul>
+<li>
+<strong>componentName</strong>：应用名字
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>返回值</strong>：JSON
+<ul>
+<li>
+<strong>keys</strong>
+<ul>
+<li><strong>name</strong> : ( <em>String</em> ) 模块名称</li>
+<li><strong>className</strong> : ( <em>String</em> ) 保留</li>
+<li><strong>description</strong> : ( <em>String</em> ) 模块描述</li>
+<li><strong>version</strong> : ( <em>String</em> ) 模块版本</li>
+<li><strong>bgcolor</strong> : ( <em>String</em> ) 背景色</li>
+<li><strong>url</strong> : ( <em>String</em> ) 模块默认打开页面</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var info = app.getComponentInfoByName(&quot;component_name&quot;);
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="getCurrentComponentInfo" style="color:red">getCurrentComponentInfo</div></h2>
+<ul>
+<li>
+<h4>app.getCurrentComponentInfo()   ⇒ JSON</h4>
+<pre><code>    获取当前模块信息
+</code></pre>
+
+<ul>
+<li>
+<strong>返回值</strong>：JSON
+<ul>
+<li>
+<strong>keys</strong>
+<ul>
+<li><strong>name</strong> : ( <em>String</em> ) 模块名称</li>
+<li><strong>className</strong> : ( <em>String</em> ) 保留</li>
+<li><strong>description</strong> : ( <em>String</em> ) 模块描述</li>
+<li><strong>version</strong> : ( <em>String</em> ) 模块版本</li>
+<li><strong>bgcolor</strong> : ( <em>String</em> ) 背景色</li>
+<li><strong>url</strong> : ( <em>String</em> ) 模块默认打开页面</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var info = app.getCurrentComponentInfo();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="getDeviceModel" style="color:red">getDeviceModel</div></h2>
+<ul>
+<li>
+<h4>app.getDeviceModel()   ⇒ String</h4>
+<pre><code>    获取设备模型名称
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var model = app.getDeviceModel();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="getDeviceName" style="color:red">getDeviceName</div></h2>
+<ul>
+<li>
+<h4>app.getDeviceName()   ⇒ String</h4>
+<pre><code>    获取设备名称
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var dName = app.getDeviceName();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="getEngineVersion" style="color:red">getEngineVersion</div></h2>
+<ul>
+<li>
+<h4>app.getEngineVersion()   ⇒ Number</h4>
+<pre><code>    获取引擎版本号
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var version = app.getEngineVersion() //获取引擎版本号
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="getMainComponentInfo" style="color:red">getMainComponentInfo</div></h2>
+<ul>
+<li>
+<h4>app.getMainComponentInfo()   ⇒ JSON</h4>
+<pre><code>    获取主component的componentInfo
+</code></pre>
+
+<ul>
+<li>
+<strong>返回值</strong>：JSON
+<ul>
+<li>
+<strong>keys</strong>
+<ul>
+<li><strong>name</strong> : ( <em>String</em> ) 模块名称</li>
+<li><strong>className</strong> : ( <em>String</em> ) 保留</li>
+<li><strong>description</strong> : ( <em>String</em> ) 模块描述</li>
+<li><strong>version</strong> : ( <em>String</em> ) 模块版本</li>
+<li><strong>bgcolor</strong> : ( <em>String</em> ) 背景色</li>
+<li><strong>url</strong> : ( <em>String</em> ) 模块默认打开页面</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var info = app.getMainComponentInfo();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="getPlatformName" style="color:red">getPlatformName</div></h2>
+<ul>
+<li>
+<h4>app.getPlatformName()   ⇒ String</h4>
+<pre><code>    获取系统名称
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var name = app.getPlatformName();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="getPlatformVersion" style="color:red">getPlatformVersion</div></h2>
+<ul>
+<li>
+<h4>app.getPlatformVersion()   ⇒ String</h4>
+<pre><code>    获取系统版本
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var version = app.getPlatformVersion();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="installApp" style="color:red">installApp</div></h2>
+<ul>
+<li>
+<h4>app.installApp(path)   ⇒ void</h4>
+<pre><code>    安装一个app
+</code></pre>
+
+<ul>
+<li>
+<strong>path</strong>：应用地址。Android上为apk包的本地路径，支持协议路径；iOS上为AppStore下载地址，或者企业发布地址
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+</li>
+</ul>
+<p><strong>Android：</strong></p>
+<pre><code>    app.installApp('/sdcard/1.apk');
+    app.installApp('res://1.apk');
+</code></pre>
+
+<p><strong>iOS:</strong></p>
+<pre><code>    app.installApp('http://appstore.com/pages');
+</code></pre>
+
+<h2><div id="isAppInstalled" style="color:red">isAppInstalled</div></h2>
+<ul>
+<li>
+<h4>app.isAppInstalled(appSource, callback)   ⇒ void</h4>
+<pre><code>    判断设备上是否已安装指定app
+</code></pre>
+
+</li>
+<li>
+<p>注：iOS需配置scheme，详见<a href="./iOS9shipei#第二章">配置方法</a></p>
+<ul>
+<li>
+<strong>appSource</strong>：应用程序标识。iOS中参数为：被打开app的Scheme 后面加 &quot;://&quot;；Android下为应用的包名
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>callback</strong>：判断完成后的回调
+<ul>
+<li><strong>type</strong>：Function</li>
+<li><strong>默认值</strong>：无</li>
+<li>
+<strong>参数</strong>
+<ul>
+<li><strong>isInstalled</strong>：（<em>Boolean</em>）true为已安装，否则未安装</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+</li>
+</ul>
+<p><strong>iOS：</strong></p>
+<pre><code>    app.isAppInstalled('weixin://', function(isInstalled) {
+        if (isInstalled) {
+            console.log('已经安装微信！')
+        }
+    });
+</code></pre>
+
+<p><strong>Android：</strong></p>
+<pre><code>    app.isAppInstalled('com.xhrd.mobile.hybrid', function(isInstalled) {
+        if (isInstalled) {
+            console.log('已经安装混合应用！')
+        }
+    });
+</code></pre>
+
+<h2><div id="isFullScreen" style="color:red">isFullScreen</div></h2>
+<ul>
+<li>
+<h4>app.isFullScreen()   ⇒ Boolean</h4>
+<pre><code>    判断app是否全屏显示
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var isFull = app.isFullScreen() //是否全屏模式
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="lockRotate" style="color:red">lockRotate</div></h2>
+<ul>
+<li>
+<h4>app.lockRotate()   ⇒ void</h4>
+<pre><code>    锁定屏幕翻转
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.lockRotate();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="openApp" style="color:red">openApp</div></h2>
+<ul>
+<li>
+<h4>app.openApp(params, success, [error])   ⇒ void</h4>
+<pre><code>    启动一个app
+</code></pre>
+
+<ul>
+<li>
+<strong>params</strong>：打开参数
+<ul>
+<li><strong>type</strong>：JSON</li>
+<li><strong>默认值</strong>：无</li>
+<li>
+<strong>keys</strong>
+<ul>
+<li><strong>params</strong> : ( <em>JsonArray</em> ) （可选项）传递到要打开的app的参数数组，结构为[{key:&quot;key1&quot;, value:&quot;value1&quot;},{key:&quot;key2&quot;, value:&quot;value2&quot;},......]</li>
+<li><strong>iosUrl</strong> : ( <em>String</em> ) （可选项）传递到打开app的url，<a href="https://developer.apple.com/library/ios/featuredarticles/iPhoneURLScheme_Reference/Introduction/Introduction.html">Scheme</a> 后面加 &quot;://&quot;，后面可以根据“被打开app”自行拼接参数。若iosUrl内有参数，params会拼接在iosUrl后面，并用&quot;?&quot;分割，若iosUrl内无参数直接将params拼接在iosUrl后面，若params无参数，则不做拼接。（iOS平台使用，iOS下必传）</li>
+<li><strong>action</strong> : ( <em>String</em> )（可选项）打开app的包名或action（Android平台使用，Android下必传）</li>
+<li><strong>mime</strong> : ( <em>String</em> ) （可选项）指定打开app的响应数据类型，如：&quot;image/png&quot;（Android平台使用）</li>
+<li><strong>uri</strong> : ( <em>String</em> ) （可选项）指定打开app响应的uri（Android平台使用）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>success</strong>：打开成功回调函数
+<ul>
+<li><strong>type</strong>：Function</li>
+<li><strong>默认值</strong>：无</li>
+<li>
+<strong>参数</strong>
+<ul>
+<li><strong>result</strong>：（<em>String</em>）第三方app返回的数据，现只支持String类型数据。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>error</strong>：打开失败回调函数
+<ul>
+<li><strong>type</strong>：Function</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    EX-1：
+    app.openApp({
+        'action': 'android.intent.action.CALL',
+        'uri': 'tel:18866665555'
+    }, function(result) {
+        console.log(result)
+    });
+
+    EX-2：
+    app.openApp({
+        'action': 'android.intent.action.CALL',
+        'uri': 'tel:18866665555'
+    }, function(result) {
+        console.log(result)
+    },function(){
+        console.log('打开APP失败')
+    });
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="openComponent" style="color:red">openComponent</div></h2>
+<ul>
+<li>
+<h4>app.openComponent(componentName, [animation])   ⇒ void</h4>
+<pre><code>    打开指定component
+</code></pre>
+
+<ul>
+<li>
+<strong>componentName</strong>：应用名字
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>animation</strong>：动画参数
+<ul>
+<li><strong>type</strong>：JSON</li>
+<li><strong>默认值</strong>：无</li>
+<li>
+<strong>keys</strong>
+<ul>
+<li>
+<strong>type</strong> : （<em>Number</em>）动画效果类型,仅IOS支持,Android只支持设置无动画（-1）,其它动画无效。
+<ul>
+<li><strong>默认值</strong>：11</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>10</strong>：淡入淡出</li>
+<li><strong>11</strong>：推入</li>
+<li><strong>12</strong>：显露</li>
+<li><strong>13</strong>：切入</li>
+<li><strong>14</strong>：立方体翻转</li>
+<li><strong>15</strong>：上翻页</li>
+<li><strong>16</strong>：下翻页</li>
+<li><strong>17</strong>：收缩</li>
+<li><strong>18</strong>：水滴</li>
+<li><strong>19</strong>：翻转</li>
+<li><strong>20</strong>：旋转</li>
+<li><strong>21</strong>：照相机打开</li>
+<li><strong>22</strong>：照相机关闭</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>direction</strong> : （<em>Number</em>）动画方向
+<ul>
+<li><strong>默认值</strong>：41</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>40</strong>：从左往右</li>
+<li><strong>41</strong>：从右往左</li>
+<li><strong>42</strong>：从上往下</li>
+<li><strong>43</strong>：从下往上</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>time</strong> : （<em>Number</em>）动画时间
+<ul>
+<li>默认值<strong>：</strong>1000（单位ms）</li>
+</ul>
+</li>
+<li>
+<strong>curve</strong> : （<em>Number</em>）动画曲线类型
+<ul>
+<li><strong>默认值</strong>：53</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li><strong>50</strong>：线性</li>
+<li><strong>51</strong>：从慢到快</li>
+<li><strong>52</strong>：从快到慢</li>
+<li><strong>53</strong>：从慢到快到慢</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.openComponent('cpt', {
+        type: 12,
+        direction: 40,
+        time: 2000,
+        curve: 51
+    });
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="openLeftSlideDrawer" style="color:red">openLeftSlideDrawer</div></h2>
+<ul>
+<li>
+<h4>app.openLeftSlideDrawer()   ⇒ void</h4>
+<pre><code>    开启左侧抽屉
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.openLeftSlideDrawer();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="openRightSlideDrawer" style="color:red">openRightSlideDrawer</div></h2>
+<ul>
+<li>
+<h4>app.openRightSlideDrawer()   ⇒ void</h4>
+<pre><code>    开启右侧抽屉
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.openRightSlideDrawer();
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="prompt" style="color:red">prompt</div></h2>
+<ul>
+<li>
+<h4>app.prompt(message, [title], [btnCaptions], [inputValue], [inputTpye], [callback])   ⇒ void</h4>
+<pre><code>    弹出带两个或三个按钮和输入框的对话框
+</code></pre>
+
+<ul>
+<li>
+<strong>message</strong>：消息内容
+<ul>
+<li><strong>type</strong>：String/Object</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+<li>
+<strong>title</strong>：窗口的title
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：'消息提示'</li>
+</ul>
+</li>
+<li>
+<strong>btnCaptions</strong>：窗口的按钮显示的内容
+<ul>
+<li><strong>type</strong>：Array</li>
+<li><strong>默认值</strong>：['确认','放弃','取消']</li>
+</ul>
+</li>
+<li>
+<strong>inputValue</strong>：输入框的默认值
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：' '</li>
+</ul>
+</li>
+<li>
+<strong>inputTpye</strong>：输入框的类型
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：'text'</li>
+<li>
+<strong>取值范围</strong>
+<ul>
+<li>'text'</li>
+<li>'password'</li>
+<li>'number'</li>
+<li>'email'</li>
+<li>'url'	</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<strong>callback</strong>：按下窗口的按钮时回调函数
+<ul>
+<li><strong>type</strong>：Function</li>
+<li><strong>默认值</strong>：无</li>
+<li>
+<strong>参数</strong>
+<ul>
+<li><strong>buttonIndex</strong>：（<em>Number</em>）按下按钮的下标</li>
+<li><strong>text</strong>：（<em>String</em>）文本框输入的文字</li>
+<li><strong>err</strong>：( <em>String</em> ) 错误信息</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    EX-1：
+    app.prompt('弹出无回调函数多按钮prompt对话框')
+
+    EX-2：
+    app.prompt('弹出默认多按钮prompt对话框', function(buttonIndex,text,err) {
+        console.log(buttonIndex); //按下按钮的下标
+        console.log(text); //文本框输入的文字
+    })
+
+    EX-3：
+    app.prompt('弹出带title多按钮prompt对话框', 'title', function(buttonIndex,text,err) {
+        console.log(buttonIndex); //按下按钮的下标
+        console.log(text); //文本框输入的文字
+    })
+
+    EX-4：
+    app.prompt('弹出带title,btnCaptions多按钮prompt对话框', 'title', ['按钮1', '按钮2', '按钮3'], function(buttonIndex,text,err) {
+        console.log(buttonIndex); //按下按钮的下标
+        console.log(text); //文本框输入的文字
+    })
+
+    EX-5：
+    app.prompt('弹出带title,btnCaptions,inputValue多按钮prompt对话框', 'title', ['按钮1', '按钮2', '按钮3'], 'inputValue', function(buttonIndex,text,err) {
+        console.log(buttonIndex); //按下按钮的下标
+        console.log(text); //文本框输入的文字
+    })
+
+    EX-6：
+    app.prompt('弹出带title,btnCaptions,inputValue,inputTpye多按钮prompt对话框', 'title', ['按钮1', '按钮2', '按钮3'], 'inputValue', 'text', function(buttonIndex,text,err) {
+        console.log(buttonIndex); //按下按钮的下标
+        console.log(text); //文本框输入的文字
+    })
+
+    EX-7：
+    app.prompt({
+        message: 'JSON参数弹出默认多按钮prompt对话框',
+        title: 'JSON',
+        btnCaptions: ['按钮1', '按钮2', '按钮3'],
+        inputValue: 'inputValue',
+        inputTpye: 'text',
+        callback: function(buttonIndex,text,err) {
+            console.log(buttonIndex); //按下按钮的下标
+            console.log(text); //文本框输入的文字
+        }
+    })
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="setStatusBarBackgroundColor" style="color:red">setStatusBarBackgroundColor</div></h2>
+<ul>
+<li>
+<h4>app.setStatusBarBackgroundColor(color)   ⇒ void</h4>
+<pre><code>    设置app状态栏背景颜色；Android要求版本4.4以上。默认黑色
+</code></pre>
+
+<ul>
+<li>
+<strong>color</strong>：状态栏背景颜色
+<ul>
+<li><strong>type</strong>：String</li>
+<li><strong>默认值</strong>：无</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.setStatusBarBackgroundColor('#FFFFFF');
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="statusBarFontColor" style="color:red">statusBarFontColor</div></h2>
+<ul>
+<li>
+<h4>app.statusBarFontColor(color)   ⇒ void</h4>
+<pre><code>    设置当前页面状态栏文字颜色 0 表示黑色。1 表示白色(iOS)
+</code></pre>
+
+<ul>
+<li>
+<strong>color</strong>：状态栏文字颜色
+<ul>
+<li><strong>type</strong>：Number</li>
+<li><strong>默认值</strong>：0</li>
+<li>
+<strong>取值范文</strong>
+<ul>
+<li><strong>0</strong>：黑色</li>
+<li><strong>1</strong>：白色</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.statusBarFontColor(1)//设置当前页面状态栏文字为白色(iOS)
+</code></pre>
+
+</li>
+</ul>
+<h2><div id="unLockRotate" style="color:red">unLockRotate</div></h2>
+<ul>
+<li>
+<h4>app.unLockRotate()   ⇒ void</h4>
+<pre><code>    解锁屏幕翻转
+</code></pre>
+
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    app.unLockRotate();
+</code></pre>
+
+</li>
+</ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

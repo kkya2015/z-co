@@ -23,7 +23,11 @@
 				if (dataType == 'json') {
 					if ($L.isFunction(success)) {
 						if (data) {
-							data = JSON.parse(data)
+							try {
+								data = JSON.parse(data)
+							}catch(e) {
+								alert(data)
+							}
 						} else {
 							data = {}
 						}

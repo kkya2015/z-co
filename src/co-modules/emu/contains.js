@@ -124,8 +124,10 @@
     window.addEventListener('message', function(e) {
         eval(e.data);
     }, false);
-    var rootName = GetQueryString('pageId') || 'native/native.html';
-    var rootUrl = GetQueryString('pageId') || 'native/native.html';
+    var rootName = GetQueryString('pageId') || 'native.html';
+    var rootUrl = GetQueryString('pageId') || 'native.html';
+    // var rootName = GetQueryString('pageId') || 'request/request.html';
+    // var rootUrl = GetQueryString('pageId') || 'request/request.html';
     openWindow(rootName, rootUrl, true);
 
     function strEncode(str) {
@@ -463,51 +465,6 @@
     }
 
     function sendRequest(settings, pageId, token) {
-        var serialize = function(params, obj, scope) {
-            var type, array = emu.isArray(obj),
-                hash = emu.isPlainObject(obj)
-            emu.each(obj, function(key, value) {
-                type = emu.type(value)
-                if (scope) key = scope + '[' + (hash || type == 'object' || type == 'array' ? key : '') + ']'
-                    // handle data in serializeArray() format
-                if (!scope && array) params.add(value.name, value.value)
-                    // recurse into nested objects
-                else if (type == "array" || (type == "object"))
-                    serialize(params, value, key)
-                else params.add(key, value)
-            })
-        }
-        var escape = encodeURIComponent
-        var appendQuery = function(url, query) {
-            if (query == '') return url
-            return (url + '&' + query).replace(/[&?]{1,2}/, '?')
-        }
-
-        var param = function(obj) {
-            var params = []
-            params.add = function(key, value) {
-                if (emu.isFunction(value)) value = value()
-                if (value == null) value = ""
-                this.push(escape(key) + '=' + escape(value))
-            }
-            serialize(params, obj)
-            return params.join('&').replace(/%20/g, '+')
-        }
-
-        var serializeData = function(settings) {
-            if (settings.body && emu.type(settings.body) != "string")
-                settings.body = param(settings.body)
-            if (settings.body && (!settings.method || settings.method.toUpperCase() == 'GET'))
-                settings.url = appendQuery(settings.url, settings.body), settings.body = undefined
-        }
-
-        settings = JSON.parse(settings);
-        var data = settings.body;
-        if (data) {
-            if (data.json && emu.isPlainObject(data.json)) data.json = JSON.stringify(data.json)
-            settings.body = data
-        }
-        serializeData(settings)
         var xhr = new XMLHttpRequest
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
@@ -523,7 +480,6 @@
         //创建请求
         xhr.open('POST', 'http://127.0.0.1:30007', true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8;");
-        settings = JSON.stringify(settings)
         xhr.send(settings);
     }
 
