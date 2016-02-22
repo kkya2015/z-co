@@ -15,7 +15,210 @@
         .button-primary{
             background-color:#CD6600;
         }
+
+        .base_bar {
+            height: 10px;
+            border-top: 1px solid rgb(18,18,18);
+            border-bottom: none;
+            border-radius: 5px;
+            display: inline-block;
+            box-shadow: 0 1px 0 rgb(60,61,64);
+            position: relative;
+            background: -webkit-linear-gradient(top,rgb(50,50,50),rgb(40,40,40));
+            background: -moz-linear-gradient(top,rgb(50,50,50),rgb(40,40,40));
+            background: -ms-linear-gradient(top,rgb(50,50,50),rgb(40,40,40));
+            background: linear-gradient(top,rgb(50,50,50),rgb(40,40,40));
+        }
+
+        .progress_bar {
+            display: block;
+            height: 100%;
+            border-radius: 5px;
+            background: 
+            -webkit-linear-gradient(top,rgb(101,215,251),rgb(23,137,232));
+            background: 
+            
+            -moz-linear-gradient(top,rgb(101,215,251),rgb(23,137,232));
+            background: 
+            
+            -ms-linear-gradient(top,rgb(101,215,251),rgb(23,137,232));
+            background: linear-gradient(top,rgb(101,215,251),rgb(23,137,232));
+        }
       
+        .controls {
+            height: 42px;
+            -moz-box-sizing:border-box;
+            box-sizing:border-box;
+            border: 1px solid #000;
+            border-radius: 0 0 4px 4px;
+            background-color: rgb(34,34,34);
+        }
+
+        .controls > div {float: left;}
+        .controls .play_controls {
+            border-right: 1px solid #000;
+            box-shadow: 1px 0 0 rgb(45,45,45);
+            height: 100%;
+            width: 65px;
+            padding: 6px 0;
+            -moz-box-sizing:border-box;
+            box-sizing:border-box;
+        }
+        .play_controls a {
+            color: rgb(220,220,220);
+            cursor: pointer;
+            margin-left: 15px;
+            float: left;
+        }
+        .play_controls a:first-child {margin-left: 20px;}
+        .time_line {
+            padding: 8px 8px;
+            height: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            -moz-box-sizing:border-box;
+            box-sizing:border-box;
+        }
+        .passed_time, .total_time {
+            color: #fff;
+            font-size: 10px;
+            font-family: Helvetica,Sans-serif;
+            -webkit-text-size-adjust:none; 
+        }
+        .time_line .base_bar {
+            width: 140px;
+            background: -webkit-linear-gradient(top,rgb(87,87,87),rgb(87,87,87)) left top/0px 100% no-repeat;
+            background: -moz-linear-gradient(top,rgb(87,87,87),rgb(87,87,87)) left top/0px 100% no-repeat;
+            background: -ms-linear-gradient(top,rgb(87,87,87),rgb(87,87,87)) left top/0px 100% no-repeat;
+            background: linear-gradient(top,rgb(87,87,87),rgb(87,87,87)) left top/0px 100% no-repeat;
+        }
+        .time_line .progress_bar {width: 0;}
+
+        .rp {
+            width: 100%;
+            height: 100%;
+            display: none;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .rprogress {
+            background: url(img/arecord.png) no-repeat center center;
+            background-size: 32px 32px;
+        }
+
+        .rtime {
+            font-size: 22px;
+            color: #FF0000;
+        }
+
+        .current {
+            font-size: 24px;
+            color: white;
+        }
+
+        .rschedule {
+            background-color: rgba(0,0,0,0);
+            border: 5px solid rgba(0,183,229,0.9);
+            opacity: .9;
+            border-left: 5px solid rgba(0,0,0,0);
+            border-right: 5px solid rgba(0,0,0,0);
+            border-radius: 50px;
+            box-shadow: 0 0 15px #2187e7;
+            width: 36px;
+            height: 36px;
+            margin: 0 auto;
+            -webkit-animation: spin 1s infinite linear;
+            animation: spin 1s infinite linear;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .dlist {
+            padding: 0px;
+            margin: 1em;
+            background: #fff;
+            border: 1px solid #ddd;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+        }
+        .ditem {
+            overflow: hidden;
+            list-style-type: none;
+            font-size: 1em;
+            padding: 1em;
+            border-bottom: inset 1px #ebebeb;
+            vertical-align: middle;
+        }
+        .ditem:active {
+            background: #f4f4f4;
+        }
+        .ditem:last-child {
+            border-bottom: inset 0px #ebebeb;
+        }
+        .ditem-empty {
+            overflow: hidden;
+            list-style-type: none;
+            font-size: 1em;
+            padding: 1em;
+            vertical-align: middle;
+        }
+
+        .aname {
+            font-size: 16px;
+        }
+
+        .iplay {
+            display: block;
+            background: no-repeat right center url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABYCAYAAAADWlKCAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAKwwAACsMBNCkkqwAAABZ0RVh0Q3JlYXRpb24gVGltZQAwOS8xMi8xM5w+I3MAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzVxteM2AAAD9UlEQVR4nO2b3XETMRRGDwzvoYOkg5hRAVkqiKmAdIA7wHSQVECoALsC1gXciV0BTge4gvCwgnHk9d/+WF8m97ztxrlXs8fS1Urym6enJxwd3uZugPMcFyKGCxHDhYjhQsRwIWK4EDFciBguRAwXIoYLEcOFiOFCxHAhYrgQMVyIGC5EDBcihgsRw4WI4ULEcCFiuBAx3uVuwDGY2XtgCBTAALjc8tEFMAdKYBJC+HOK9nXBm5dwUM7MCmAEXDcMMQVuQwhlV23qC2khZjYAboGrjkLOgFEIYd5RvM6RrSFmdgs80J0MYqyHGFsSuR4S60TJ9vrwCEziZ+YhhGXy/xdU9aWgqjfnW+IsgEKtvkgJiUPUPfUyZsD42DoQ68+Y+p62AG6UhjAZITt6xopq3L9vGf+Gqh6dJX+S6ilKNaRkU8YCGLSVARBjDGLMdS5jbgkkhMQiWyejSGtEG2KsghopKoU++5AV68ZDcrvXYWTH8Pghdz1R6CHpN3MFDPsc02PsYcy1qy0nJ6uQOANKZz+jfcOUmd3H6W1jYo5RcvsqtikbuXtI+kBmBxbwz8DczMZtksdcsz1tOinZhMRxPF2bGh8R4gz4amZLMxu2aEqa8zq2LQs5e0j6EB8bLv6dAz/NrGwyjMWcj3vadjJyCimS60nLeFfAbzO7bfANT3MXLdvSmJxCBsl12VHcL8AyvpkfSpo7bdvJyCkkfQfocv5/Bnw3s/mBs6Y097aFzd7JPcv6T5dv5GtcAr/2TZN7yt0IGSE908k0+RS8FiEvhhd1yKEFUw5YAVBApoe0XQrZwgL4GEIY7pLRU+5G5OwhC57PZgbAsqPYK6rdxUMXC9Npbro8fzJy9pB0qll0FPcOuDhCRl3ubEvwOYWUyXXb5YoZ1X7GqMHSfZq7bNmWxuQUki5XnDdc+n4EPoUQiiabSzFnejKl7TJOY7IJid/iaXJ7fESIFfCNas+9zQNMc05zHnjIPctKx/mrA9egflCJGLd5eDFXukGWdddQYU+95PlDWVE97GXPeS+oivf6saBZCKHoM+8+cvcQ2NyhOwMmfW4SxdgTNs9oZd0tBAEhsRDfJbcvgbIPKTtOnNzlPnECAkPWP8xsTv3ZrJ1v2UfmuKDqGRt5QgjZ9kDWyd5D1iioP1U4P3KzqZYYY5v0om38rpDpIeCHrUFMCPjPEeSE/COetf3SU/i7EEL2GVUdSjXkGfGBfWDzIFsb/q93dRizU2R7yDr+o09R/GfRzsmRrSGvFRcihgsRw4WI4ULEcCFiuBAxXIgYLkQMFyKGCxHDhYjhQsRwIWK4EDFciBguRAwXIoYLEcOFiOFCxHAhYrgQMf4CVuqCm+17t3sAAAAASUVORK5CYII=);
+            background-size: 50px 44px;
+            -ms-touch-action: auto;
+        }
+
+        .ui-list-block {
+            margin: 0;
+        }
+
+        .ui-list-block .ui-media-inset {
+            max-width: 25px;
+            height: 20px;
+            line-height: 40px;
+        }
+
+        .ui-list-block.ui-media-list .ui-list-item-inner, .ui-list-block li.media-item .ui-list-item-inner{
+            display: flex;
+        }
+
+        .listTitle{
+            margin: 0;
+            background-color: white;
+            color: black;
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+            line-height: 40px;
+            height: 40px;
+        }
+
         </style>
 
 </head>
@@ -29,10 +232,49 @@
             </a>
         </div>
     </header>
-    <a class="button button-block button-rounded button-inverse">录音</a>
-    <a class="button button-block button-rounded button-inverse">播放本地音乐</a>
+    <a class="button button-block button-rounded button-inverse">开始录音</a>
+    <a class="listTitle" >播放列表</a>
+
+    <div class="ui-list-block ui-media-list">
+        <ul>
+            <li>
+                <div class="ui-list-item-content ui-list-item-link" data-src="kgyl.mp3">
+                    <div class="ui-item-media">
+                        <img class="ui-media-inset" src="img/m.png"></div>
+                    <div class="ui-list-item-inner">
+                        <div class="ui-list-item-title">许巍 - 空谷幽兰</div>
+                        <div class="ui-list-item-after ui-icon fa-play-circle-o"></div>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <div class="ui-list-item-content ui-list-item-link" data-src="ql.mp3">
+                    <div class="ui-item-media">
+                        <img class="ui-media-inset" src="img/m.png"></div>
+                    <div class="ui-list-item-inner">
+                        <div class="ui-list-item-title">许巍 - 晴朗</div>
+                        <div class="ui-list-item-after ui-icon fa-play-circle-o"></div>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <div class="ui-list-item-content ui-list-item-link" data-src="nfm.mp3">
+                    <div class="ui-item-media">
+                        <img class="ui-media-inset" src="img/m.png"></div>
+                    <div class="ui-list-item-inner">
+                        <div class="ui-list-item-title">李玲玉 - 女驸马</div>
+                        <div class="ui-list-item-after ui-icon fa-play-circle-o"></div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
     
-    <div class="controls">                  <div class="play_controls">                     <a class="btn_previous">e</a>                       <a class="btn_play">c</a>                       <a class="btn_next">d</a>                   </div>                  <div class="time_line">                     <span class="passed_time">2:25</span>                       <span class="base_bar" style="background-size: 100% 100%;">                         <span class="progress_bar" style="width: 64.1477%;"></span>                     </span>                     <span class="total_time">3:46</span>                    </div>              </div>
+
+    
 
     <div id="log">audio模块用于提供音频的录制和播放功能，可调用系统的麦克风设备进行录音操作，也可调用系统的扬声器设备播放音频文件。</div>
     <script src="../dist/js/native.js"></script>
@@ -40,34 +282,5 @@
     <script src="../dist/js/co.js"></script>
     <script src="js/common.js"></script>
 </body>
-    <script>
-    var view = app.currentView();
-    domReady(function(require) {
-        $('.button').button(function(el, evt) {
-            var text = el.innerText;
-            switch (text) {
-                case '播放本地音乐':
-                    playL()
-                    break;
-                default:
-                    show()
-            }
-        })
-
-        $('.ui-nav-bar-right').button(function(){
-            setDocTarget('doc/actionSheet.html','ActionSheet Doc')
-            var win = app.createWindow();
-            win.open('doc.html')
-        })
-    });
-
-    function playL() {
-        var player = app.audio.createPlayer("cpt://res/nfm.mp3");
-
-        player.play(function() {
-           console.log('播放成功！');
-        })
-    }
-
-</script>
+    <script></script>
 </html>

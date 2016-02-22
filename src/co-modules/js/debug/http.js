@@ -44,6 +44,10 @@
 		var key = arguments[0][1];
 		if (key == "sendRequest") {
 			var settings = args[0];
+			var body = settings.body;
+			if (body && $L.type(body) == "string") {
+				settings.body = JSON.parse(body)
+			}
 			serializeData(settings)
 			settings = JSON.stringify(settings)
 			var pageId = this.getQueryString('pageId');

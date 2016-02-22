@@ -3,6 +3,21 @@
 ===============================================================================*/
 ;
 (function($L, global) {
+
+
+    $L.enableSlideBack = function() {
+      var viewSlideBack = true;
+      $L.executeNativeJS(['window', 'setAttr'], {
+        slideBack: viewSlideBack
+      })
+    }
+    
+    $L.disableSlideBack = function() {
+      var viewSlideBack = false;
+      $L.executeNativeJS(['window', 'setAttr'], {
+        slideBack: viewSlideBack
+      })
+    }
 	/*
 	 * 获取系统名称
 	 */

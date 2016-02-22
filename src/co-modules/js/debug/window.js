@@ -17,6 +17,14 @@
 			var pageId = this.getQueryString('pageId');
 			var js = "closeWindow('" + windowname + "','" + pageId + "')"
 			this.postMessage(js);
+		} else if (key == 'closeWindow') {
+			var windowname = args[0]
+			var js = "closeWindow('" + windowname + "','" + pageId + "')"
+			this.postMessage(js);
+		} else if (key == 'backToWindow') {
+			var windowname = args[0]
+			var js = "backToWindow('" + windowname + "')"
+			this.postMessage(js);
 		} else if (key == 'openPopover') {
 			var popname = args[0]
 			var url = this.getPageDir() + args[2]
@@ -67,10 +75,17 @@
 			else if ((document.body) && (document.body.clientHeight))
 				winHeight = document.body.clientHeight;
 			return winHeight
-		}else if (key == 'alert') {
+		} else if (key == 'alert') {
 			alert(args[0].msg)
-		}else if (key == 'confirm') {
+		} else if (key == 'confirm') {
 			alert(args[0].msg)
+		} else if (key == 'evaluateScript') {
+			var windowname = args[1]
+			var popoverName = args[2]
+			var script = args[3]
+			var pageId = this.getQueryString('pageId');
+			var js = "evaluateScript('" + windowname + "','" + popoverName + "','" + script + "','" + pageId + "')"
+			this.postMessage(js);
 		}
 	}
 }(app, this))

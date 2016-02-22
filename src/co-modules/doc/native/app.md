@@ -19,6 +19,8 @@ app是引擎对外接口的调用对象，所有对引擎的操作均通过app�
 *	[createWindow](#createWindow) ：新建一个窗口对象
 *	[currentView](#currentView) ：获取当前页面对象
 *	[downloadFile](#downloadFile) ：使用系统浏览器下载文件(android)
+*	[disableSlideBack](#disableSlideBack) ：设置页面支持滑动返回(Android设备暂时不支持)
+*	[enableSlideBack](#enableSlideBack) ：设置页面不支持滑动返回(Android设备暂时不支持)
 *	[evalScriptInComponent](#evalScriptInComponent) ：在指定component、window、popover执行javascript
 *	[evalScriptInPop](#evalScriptInPop) ：指定pop执行JS语句
 *	[evalScriptInWindow](#evalScriptInWindow) ：在指定窗口执行JS语句
@@ -334,8 +336,6 @@ app是引擎对外接口的调用对象，所有对引擎的操作均通过app�
 					-	**51**：从慢到快
 					-	**52**：从快到慢
 					-	**53**：从慢到快到慢
-			-	**viewSlideBack**：( *Boolean* )是否支持滑动返回，设置window全局，ture表示支持，false表示不支持(仅IOS有效)
-				-	**默认值**：true
 
 -	#####	示例：
 	
@@ -420,6 +420,23 @@ app是引擎对外接口的调用对象，所有对引擎的操作均通过app�
 -	#####	示例：
 
 			app.downloadFile('http://192.168.168.111/1.apk');
+
+## <div id="disableSlideBack" style="color:red">disableSlideBack</div>
+-	####	disableSlideBack()   ⇒ void 
+			设置应用不支持滑动返回(Android设备暂时不支持)
+
+-	#####	示例：
+-	
+			app.disableSlideBack();
+
+## <div id="enableSlideBack" style="color:red">enableSlideBack</div>
+-	####	enableSlideBack()   ⇒ void 
+			设置应用支持滑动返回(Android设备暂时不支持)
+
+-	#####	示例：
+
+			app.enableSlideBack();
+
 
 ##	<div id="evalScriptInComponent" style="color:red">evalScriptInComponent</div>
 -	#### app.evalScriptInComponent(componentName, windowName, script, [popoverName])   ⇒ void 

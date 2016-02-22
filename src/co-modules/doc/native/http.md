@@ -301,7 +301,7 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 -	#### <div id="send" style="color:red">send([body], [dataType])   ⇒ void </div>   
 			此方法触发HTTP请求发送，如果之前没有调用open()，send()抛出一个异常。否则，将发送HTTP请求，该请求包含通过其他设置方法对该请求对象设置的一些属性（例如：setHeader）
 	-	**body**：请求HTTP提交的数据内容
-		-	**type**：String
+		-	**type**：JSON
 		-	**默认值**：无
 	-	**dataType**：预期服务器返回的数据类型
 		-	**type**：String

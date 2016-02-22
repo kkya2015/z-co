@@ -425,7 +425,7 @@ gulp.task('examples', function(cb) {
 gulp.task('build-emu', function(cb) {
     gulp.src(emu.js)
         .pipe(concat(emu.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(gulp.dest(paths.examples.root))
         .on('end', function() {
             cb();

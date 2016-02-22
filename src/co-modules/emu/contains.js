@@ -124,7 +124,7 @@
     window.addEventListener('message', function(e) {
         eval(e.data);
     }, false);
-    var rootName = GetQueryString('pageId') || 'native.html';
+    var rootName = 'root';
     var rootUrl = GetQueryString('pageId') || 'native.html';
     // var rootName = GetQueryString('pageId') || 'request/request.html';
     // var rootUrl = GetQueryString('pageId') || 'request/request.html';
@@ -209,7 +209,32 @@
         }
         return out;
     }
-    var closeWin = strEncode(uuid(32));
+
+    function deleteWin(index) {
+        var len = windows.length;
+        var arr = windows.splice(index, len - index);
+        for (var i = 0; i < arr.length; i++) {
+            var pageId = arr[i];
+            var win = document.getElementById(pageId);
+            if (win) {
+                win.className = 'page-from-center-to-right';
+                win.addEventListener("webkitAnimationEnd", function() {
+                    pageId = this.id;
+                    var pops = winMap[pageId]['pops'];
+                    if (pops) {
+                        for (var i = 0; i < pops.length; i++) {
+                            var popId = pops[i];
+                            var pop = document.getElementById(popId);
+                            pop && pop.parentNode.removeChild(pop)
+                        }
+                    }
+                    delete winMap[pageId];
+                    this.parentNode.removeChild(this);
+                }, false);
+            }
+
+        }
+    }
 
     function openWindow(windowname, url, noTransition) {
         var pageId = strEncode(windowname);
@@ -240,6 +265,7 @@
         iframe.style.padding = "0px";
         iframe.style.width = "100%";
         iframe.style.height = "100%";
+        iframe.id = pageId + 'iframe';
         view.appendChild(iframe);
         iframe.onload = iframe.onreadystatechange = function() {
             iframeload.call(iframe, pageId);
@@ -255,20 +281,27 @@
     }
 
     function closeWindow(windowname, pageId) {
+        if (typeof windowname !== 'undefined' && windowname != 'undefined') pageId = strEncode(windowname);
+        var index = windows.indexOf(pageId);
+        if (index >= 0) {
+            deleteWin(index)
+        } else {
+            var pop = document.getElementById(pageId);
+            pop && (pop.className = 'page-from-center-to-right')
+        }
+    }
 
-        var win = document.getElementById(pageId);
-        win.className = 'page-from-center-to-right';
-        win.addEventListener("webkitAnimationEnd", function() {
-            var pops = winMap[pageId]['pops'];
-            for (var i = 0; i < pops.length; i++) {
-                var popId = pops[i];
-                var pop = document.getElementById(popId);
-                pop && pop.parentNode.removeChild(pop)
-            }
-            // winMap[pageId]['pops']
-            delete winMap[pageId];
-            win.parentNode.removeChild(win);
-        }, false);
+    function backToWindow(windowname) {
+        if (rootUrl.indexOf(windowname) != -1 || windowname == rootName) {
+            var pageId = strEncode(rootName);
+        } else {
+            pageId = strEncode(windowname)
+        }
+        var index = windows.indexOf(pageId);
+        if (index >= 0) {
+            index = index + 1;
+            deleteWin(index)
+        }
     }
 
     function openPopover(popname, url, rect, windowname) {
@@ -293,38 +326,53 @@
         } else if (rect.height == 0 && rect.y) {
             height = (document.body.scrollHeight - rect.y) + "px";
         }
-        winMap[windowname]['pops'].push(pageId);
-        var view = document.createElement("DIV");
-        view.style.borderWidth = "0px";
-        view.style.position = "absolute";
-        view.style.left = x;
-        view.style.top = y;
-        view.style.width = width;
-        view.style.height = height;
-        view.style.zIndex = ++Zindex;
-        view.id = pageId;
-        // view.style.transform: translate3d(100%, 0, 0);
-        var iframe = document.createElement("iframe");
-        iframe.style.position = "absolute";
-        iframe.style.borderWidth = "0px";
-        iframe.style.left = "0px";
-        iframe.style.top = "0px";
-        iframe.style.border = "0px";
-        iframe.style.padding = "0px";
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        view.appendChild(iframe);
-        iframe.onload = iframe.onreadystatechange = function() {
-            iframeload.call(iframe, pageId);
+
+        var createView = function(windowname) {
+            var view = document.createElement("DIV");
+            view.style.borderWidth = "0px";
+            view.style.position = "absolute";
+            view.style.left = x;
+            view.style.top = y;
+            view.style.width = width;
+            view.style.height = height;
+            view.style.zIndex = ++Zindex;
+            view.id = pageId;
+            view.parentName = windowname;
+            // view.style.transform: translate3d(100%, 0, 0);
+            var iframe = document.createElement("iframe");
+            iframe.style.position = "absolute";
+            iframe.style.borderWidth = "0px";
+            iframe.style.left = "0px";
+            iframe.style.top = "0px";
+            iframe.style.border = "0px";
+            iframe.style.padding = "0px";
+            iframe.style.width = "100%";
+            iframe.style.height = "100%";
+            iframe.id = pageId + 'iframe';
+            view.appendChild(iframe);
+            iframe.onload = iframe.onreadystatechange = function() {
+                iframeload.call(iframe, pageId);
+            }
+            iframe.src = url + "?pageId=" + pageId;
+            return view;
         }
-        iframe.src = url + "?pageId=" + pageId;
-        document.getElementById(windowname).appendChild(view);
+
+        if (winMap[windowname]) {
+            winMap[windowname]['pops'].push(pageId);
+            document.getElementById(windowname).appendChild(createView(windowname));
+        } else {
+            var pop = document.getElementById(windowname);
+            var parentName = pop.parentName;
+            winMap[parentName]['pops'].push(pageId);
+            document.getElementById(parentName).appendChild(createView(parentName));
+        }
+
     }
 
     function closePopover(windowname, pageId) {
         // windows.splice(index,index);
         var pop = document.getElementById(pageId);
-        pop.parentNode.removeChild(pop);
+        if (pop) pop.parentNode.removeChild(pop);
     }
 
     function setSlideLayout(params) {
@@ -481,6 +529,30 @@
         xhr.open('POST', 'http://127.0.0.1:30007', true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8;");
         xhr.send(settings);
+    }
+
+    function evaluateScript(windowname, popoverName, script, pageId) {
+        if (windowname != '') {
+            pageId = strEncode(windowname);
+        }
+
+        var win = document.getElementById(pageId);
+        if (win) {
+            var msg = {
+                type: 'evaluateScript',
+                data: script
+            }
+            msg = JSON.stringify(msg);
+            if (popoverName != '') {
+                var popId = strEncode(popoverName);
+                var pop = win.querySelector("#" + popId);
+                if (pop) {
+                    pop.querySelector("#" + popId + "iframe").contentWindow.postMessage(msg, '*');
+                }
+            } else {
+                win.querySelector("#" + pageId + "iframe").contentWindow.postMessage(msg, '*');
+            }
+        }
     }
 
 }(this));

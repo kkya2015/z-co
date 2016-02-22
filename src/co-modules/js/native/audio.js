@@ -4,8 +4,7 @@
 ;
 (function($L, global) {
 
-  var recorder;
-  var player;
+
   var recorderIsRecord = false;
   var recorderIsOver = false;
 
@@ -16,7 +15,7 @@
      *
      */
     getRecorder: function(opts) {
-      !recorder && (recorder = $L.executeNativeJS(['audio', 'getRecorder']))
+      var recorder = $L.executeNativeJS(['audio', 'getRecorder'])
       opts = opts || {}
       var options = {
         filename: opts.filename || '',
@@ -137,7 +136,8 @@
     createPlayer: function(path) {
       if (typeof path === undefined) {
         throw new Error("请传入有效的音频路径！");
-      }!player && (player = $L.executeNativeJS(['audio', 'createPlayer'], path))
+      }
+      var player = $L.executeNativeJS(['audio', 'createPlayer'], path)
       return {
         play: function(success, error) {
           $L.executeObjFunJS([player, 'play'], function() {

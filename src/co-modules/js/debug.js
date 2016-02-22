@@ -14,6 +14,9 @@
 			var type = res.type;
 			if (type == 'init') {
 				$L.debug.isReady = true;
+			} else if (type == 'evaluateScript') {
+				var data = res.data;
+				eval(data);
 			} else if (type == 'ajax') {
 				var token = res.token;
 				var success = $L.debug.xhr[token].success;
@@ -25,7 +28,7 @@
 						if (data) {
 							try {
 								data = JSON.parse(data)
-							}catch(e) {
+							} catch (e) {
 								alert(data)
 							}
 						} else {

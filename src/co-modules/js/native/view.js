@@ -95,18 +95,6 @@
         dragDismiss: viewDragDismiss
       })
     }
-    this.enableSlideBack = function() {
-      var viewSlideBack = true;
-      $L.executeNativeJS(['window', 'setAttr'], {
-        slideBack: viewSlideBack
-      })
-    }
-    this.disableSlideBack = function() {
-      var viewSlideBack = false;
-      $L.executeNativeJS(['window', 'setAttr'], {
-        slideBack: viewSlideBack
-      })
-    }
     this.setAnimationType = function(animationType) {
       viewAnimationType = animationType;
     }

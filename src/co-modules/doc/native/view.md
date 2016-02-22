@@ -19,15 +19,13 @@
 *	[disableDragDismiss](#disableDragDismiss) ：设置页面不支持滑动消失键盘（Android暂时不支持）
 *	[disableHScrollBar](#disableHScrollBar) ：设置页面不显示垂直滚动条（Android暂时不支持）
 *	[disableKeyboard](#disableKeyboard) ：设置键盘弹出后，输入框不自动定位（Android暂时不支持）
-*	[disableSlideBack](#disableSlideBack) ：设置页面支持滑动返回(Android设备暂时不支持)
 *	[disableVScrollBar](#disableVScrollBar) ：设置页面不显示水平滚动条（Android暂时不支持）
 *	[enableBounces](#enableBounces) ：设置页面可弹动（Android暂时不支持）
 *	[enableDragDismiss](#enableDragDismiss) ：设置页面支持滑动消失键盘（Android暂时不支持）
 *	[enableHScrollBar](#enableHScrollBar) ：设置页面显示垂直滚动条（Android暂时不支持）
 *	[enableKeyboard](#enableKeyboard) ：设置键盘弹出后，输入框自动定位（Android暂时不支持）
-*	[enableSlideBack](#enableSlideBack) ：设置页面不支持滑动返回(Android设备暂时不支持)
 *	[enableVScrollBar](#enableVScrollBar) ：设置页面显示水平滚动条（Android暂时不支持）
-*	[getHeight](#getHeight) ：获取当前窗口的高度
+*	[getHeight](#getHeight) ：获取当前窗口的高度(注：该方法获取的是乘以像素比（devicePixelRatio）的值)
 *	[getWidth](#getWidth) ：获取当前窗口的宽度
 *	[setAnimationCurve](#setAnimationCurve) ：设置页面关闭时的动画曲线（Android暂时不支持）
 *	[setAnimationDirection](#setAnimationDirection) ：设置页面关闭时的动画方向（Android暂时不支持）
@@ -267,14 +265,6 @@
 			var view = app.currentView();
 			view.disableKeyboard();
 
-## <div id="disableSlideBack" style="color:red">disableSlideBack</div>
--	####	disableSlideBack()   ⇒ void 
-			设置页面支持滑动返回(Android设备暂时不支持)
-
--	#####	示例：
-
-			var view = app.currentView();
-			view.disableSlideBack();
 
 ## <div id="disableVScrollBar" style="color:red">disableVScrollBar</div>
 -	####	disableVScrollBar()   ⇒ void 
@@ -322,14 +312,6 @@
 			var view = app.currentView();
 			view.enableKeyboard();
 
-## <div id="enableSlideBack" style="color:red">enableSlideBack</div>
--	####	enableSlideBack()   ⇒ void 
-			设置页面不支持滑动返回(Android设备暂时不支持)
-
--	#####	示例：
-
-			var view = app.currentView();
-			view.enableSlideBack();
 
 ## <div id="enableVScrollBar" style="color:red">enableVScrollBar</div>
 -	####	enableVScrollBar()   ⇒ void 
@@ -343,7 +325,7 @@
 
 ##	<div id="getHeight" style="color:red">getHeight</div>
 -	#### getHeight()   ⇒ void 
-			获取当前窗口的高度
+			获取当前窗口的高度(注：该方法获取的是乘以像素比（devicePixelRatio）的值)
 
 -	#####	示例：
 

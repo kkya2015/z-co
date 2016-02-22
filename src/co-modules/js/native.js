@@ -111,8 +111,7 @@ var app = (function(global) {
     viewAnimationType = 11, // 页面关闭动画效果 --推入 
     viewAnimationDirection = 40, // 页面关闭动画方向 -- 左侧
     viewAnimationDuration = 300, // 页面关闭动画时间
-    viewAnimationCurve = 53, // 页面关闭动画曲线--从慢到快到慢
-    viewSlideBack = true; //是否支持滑动返回，设置window全局，ture表示支持，false表示不支持,Android设备暂时不支持
+    viewAnimationCurve = 53; // 页面关闭动画曲线--从慢到快到慢
 
 
 
@@ -135,23 +134,14 @@ var app = (function(global) {
     }
   }
   var setViewHScrollBar = function(hScrollBar) {
-      viewHScrollBar = !!hScrollBar;
-      var currentView = $L.currentView();
-      if (viewHScrollBar) {
-        currentView.enableHScrollBar();
-      } else {
-        currentView.disableHScrollBar();
-      }
+    viewHScrollBar = !!hScrollBar;
+    var currentView = $L.currentView();
+    if (viewHScrollBar) {
+      currentView.enableHScrollBar();
+    } else {
+      currentView.disableHScrollBar();
     }
-    // var setViewZoom = function(zoom) {
-    //   viewZoom = !!zoom;
-    //   var currentView = $L.currentView();
-    //   if (viewZoom) {
-    //     currentView.enableZoom();
-    //   } else {
-    //     currentView.disableZoom();
-    //   }
-    // }
+  }
   var setViewKeyboard = function(keyboard) {
     viewKeyboard = !!keyboard;
     var currentView = $L.currentView();
@@ -195,16 +185,6 @@ var app = (function(global) {
     viewAnimationCurve = animationCurve;
     var currentView = $L.currentView();
     currentView.setAnimationCurve(viewAnimationCurve);
-  }
-
-  var setSlideBack = function(slideBack) {
-    viewSlideBack = !!slideBack;
-    var currentView = $L.currentView();
-    if (viewSlideBack) {
-      currentView.enableSlideBack();
-    } else {
-      currentView.disableSlideBack();
-    }
   }
 
 
@@ -354,7 +334,6 @@ var app = (function(global) {
       prop.viewAnimationDirection = viewAnimationDirection;
       prop.viewAnimationDuration = viewAnimationDuration;
       prop.viewAnimationCurve = viewAnimationCurve;
-      prop.viewSlideBack = viewSlideBack;
       this.config(prop);
     }
 
@@ -414,16 +393,21 @@ var app = (function(global) {
       setViewDragDismiss(prop.viewDragDismiss)
     }
 
-    if (typeof prop.viewSlideBack === 'undefined') {
-      setSlideBack(viewSlideBack)
-    } else {
-      setSlideBack(prop.viewSlideBack)
-    }
-
     var app_property = app.properties.open('app_property_setting', 'app_property');
     prop = JSON.stringify(prop);
     app_property.put('propertys', prop);
     app_property.save()
+  }
+  $L.closeWindow = function(windowname, animation) {
+    animation || (animation = {})
+    var at = {
+      type: animation.animationType || viewAnimationType,
+      direction: animation.animationDirection || viewAnimationDirection,
+      time: animation.animationDuration || viewAnimationDuration,
+      curve: animation.animationCurve || viewAnimationCurve
+    }
+
+    $L.executeNativeJS(['window', 'closeWindow'], windowname, at)
   }
   $L.getWindowType = function() {
     return windowType;

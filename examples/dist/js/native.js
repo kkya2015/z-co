@@ -111,8 +111,7 @@ var app = (function(global) {
     viewAnimationType = 11, // 页面关闭动画效果 --推入 
     viewAnimationDirection = 40, // 页面关闭动画方向 -- 左侧
     viewAnimationDuration = 300, // 页面关闭动画时间
-    viewAnimationCurve = 53, // 页面关闭动画曲线--从慢到快到慢
-    viewSlideBack = true; //是否支持滑动返回，设置window全局，ture表示支持，false表示不支持,Android设备暂时不支持
+    viewAnimationCurve = 53; // 页面关闭动画曲线--从慢到快到慢
 
 
 
@@ -135,23 +134,14 @@ var app = (function(global) {
     }
   }
   var setViewHScrollBar = function(hScrollBar) {
-      viewHScrollBar = !!hScrollBar;
-      var currentView = $L.currentView();
-      if (viewHScrollBar) {
-        currentView.enableHScrollBar();
-      } else {
-        currentView.disableHScrollBar();
-      }
+    viewHScrollBar = !!hScrollBar;
+    var currentView = $L.currentView();
+    if (viewHScrollBar) {
+      currentView.enableHScrollBar();
+    } else {
+      currentView.disableHScrollBar();
     }
-    // var setViewZoom = function(zoom) {
-    //   viewZoom = !!zoom;
-    //   var currentView = $L.currentView();
-    //   if (viewZoom) {
-    //     currentView.enableZoom();
-    //   } else {
-    //     currentView.disableZoom();
-    //   }
-    // }
+  }
   var setViewKeyboard = function(keyboard) {
     viewKeyboard = !!keyboard;
     var currentView = $L.currentView();
@@ -195,16 +185,6 @@ var app = (function(global) {
     viewAnimationCurve = animationCurve;
     var currentView = $L.currentView();
     currentView.setAnimationCurve(viewAnimationCurve);
-  }
-
-  var setSlideBack = function(slideBack) {
-    viewSlideBack = !!slideBack;
-    var currentView = $L.currentView();
-    if (viewSlideBack) {
-      currentView.enableSlideBack();
-    } else {
-      currentView.disableSlideBack();
-    }
   }
 
 
@@ -354,7 +334,6 @@ var app = (function(global) {
       prop.viewAnimationDirection = viewAnimationDirection;
       prop.viewAnimationDuration = viewAnimationDuration;
       prop.viewAnimationCurve = viewAnimationCurve;
-      prop.viewSlideBack = viewSlideBack;
       this.config(prop);
     }
 
@@ -414,16 +393,21 @@ var app = (function(global) {
       setViewDragDismiss(prop.viewDragDismiss)
     }
 
-    if (typeof prop.viewSlideBack === 'undefined') {
-      setSlideBack(viewSlideBack)
-    } else {
-      setSlideBack(prop.viewSlideBack)
-    }
-
     var app_property = app.properties.open('app_property_setting', 'app_property');
     prop = JSON.stringify(prop);
     app_property.put('propertys', prop);
     app_property.save()
+  }
+  $L.closeWindow = function(windowname, animation) {
+    animation || (animation = {})
+    var at = {
+      type: animation.animationType || viewAnimationType,
+      direction: animation.animationDirection || viewAnimationDirection,
+      time: animation.animationDuration || viewAnimationDuration,
+      curve: animation.animationCurve || viewAnimationCurve
+    }
+
+    $L.executeNativeJS(['window', 'closeWindow'], windowname, at)
   }
   $L.getWindowType = function() {
     return windowType;
@@ -777,6 +761,21 @@ window.A === undefined && (window.A = app);
 ===============================================================================*/
 ;
 (function($L, global) {
+
+
+    $L.enableSlideBack = function() {
+      var viewSlideBack = true;
+      $L.executeNativeJS(['window', 'setAttr'], {
+        slideBack: viewSlideBack
+      })
+    }
+    
+    $L.disableSlideBack = function() {
+      var viewSlideBack = false;
+      $L.executeNativeJS(['window', 'setAttr'], {
+        slideBack: viewSlideBack
+      })
+    }
 	/*
 	 * 获取系统名称
 	 */
@@ -1133,18 +1132,6 @@ window.A === undefined && (window.A = app);
         dragDismiss: viewDragDismiss
       })
     }
-    this.enableSlideBack = function() {
-      var viewSlideBack = true;
-      $L.executeNativeJS(['window', 'setAttr'], {
-        slideBack: viewSlideBack
-      })
-    }
-    this.disableSlideBack = function() {
-      var viewSlideBack = false;
-      $L.executeNativeJS(['window', 'setAttr'], {
-        slideBack: viewSlideBack
-      })
-    }
     this.setAnimationType = function(animationType) {
       viewAnimationType = animationType;
     }
@@ -1494,8 +1481,7 @@ window.A === undefined && (window.A = app);
 ;
 (function($L, global) {
 
-  var recorder;
-  var player;
+
   var recorderIsRecord = false;
   var recorderIsOver = false;
 
@@ -1506,7 +1492,7 @@ window.A === undefined && (window.A = app);
      *
      */
     getRecorder: function(opts) {
-      !recorder && (recorder = $L.executeNativeJS(['audio', 'getRecorder']))
+      var recorder = $L.executeNativeJS(['audio', 'getRecorder'])
       opts = opts || {}
       var options = {
         filename: opts.filename || '',
@@ -1627,7 +1613,8 @@ window.A === undefined && (window.A = app);
     createPlayer: function(path) {
       if (typeof path === undefined) {
         throw new Error("请传入有效的音频路径！");
-      }!player && (player = $L.executeNativeJS(['audio', 'createPlayer'], path))
+      }
+      var player = $L.executeNativeJS(['audio', 'createPlayer'], path)
       return {
         play: function(success, error) {
           $L.executeObjFunJS([player, 'play'], function() {
@@ -2365,7 +2352,8 @@ window.A === undefined && (window.A = app);
 				throw new Error("执行send方法失败，请确保请求对象为OPENDE状态！");
 			}
 			if (body && $L.isPlainObject(body)) {
-				if (body.json && $L.isPlainObject(body.json)) body.json = JSON.stringify(body.json)
+				settings.body = JSON.stringify(body)
+			}else{
 				settings.body = body
 			}
 
@@ -3110,6 +3098,9 @@ window.A === undefined && (window.A = app);
 			var type = res.type;
 			if (type == 'init') {
 				$L.debug.isReady = true;
+			} else if (type == 'evaluateScript') {
+				var data = res.data;
+				eval(data);
 			} else if (type == 'ajax') {
 				var token = res.token;
 				var success = $L.debug.xhr[token].success;
@@ -3121,7 +3112,7 @@ window.A === undefined && (window.A = app);
 						if (data) {
 							try {
 								data = JSON.parse(data)
-							}catch(e) {
+							} catch (e) {
 								alert(data)
 							}
 						} else {
@@ -3329,6 +3320,14 @@ window.A === undefined && (window.A = app);
 			var pageId = this.getQueryString('pageId');
 			var js = "closeWindow('" + windowname + "','" + pageId + "')"
 			this.postMessage(js);
+		} else if (key == 'closeWindow') {
+			var windowname = args[0]
+			var js = "closeWindow('" + windowname + "','" + pageId + "')"
+			this.postMessage(js);
+		} else if (key == 'backToWindow') {
+			var windowname = args[0]
+			var js = "backToWindow('" + windowname + "')"
+			this.postMessage(js);
 		} else if (key == 'openPopover') {
 			var popname = args[0]
 			var url = this.getPageDir() + args[2]
@@ -3379,10 +3378,17 @@ window.A === undefined && (window.A = app);
 			else if ((document.body) && (document.body.clientHeight))
 				winHeight = document.body.clientHeight;
 			return winHeight
-		}else if (key == 'alert') {
+		} else if (key == 'alert') {
 			alert(args[0].msg)
-		}else if (key == 'confirm') {
+		} else if (key == 'confirm') {
 			alert(args[0].msg)
+		} else if (key == 'evaluateScript') {
+			var windowname = args[1]
+			var popoverName = args[2]
+			var script = args[3]
+			var pageId = this.getQueryString('pageId');
+			var js = "evaluateScript('" + windowname + "','" + popoverName + "','" + script + "','" + pageId + "')"
+			this.postMessage(js);
 		}
 	}
 }(app, this))
@@ -3432,6 +3438,10 @@ window.A === undefined && (window.A = app);
 		var key = arguments[0][1];
 		if (key == "sendRequest") {
 			var settings = args[0];
+			var body = settings.body;
+			if (body && $L.type(body) == "string") {
+				settings.body = JSON.parse(body)
+			}
 			serializeData(settings)
 			settings = JSON.stringify(settings)
 			var pageId = this.getQueryString('pageId');

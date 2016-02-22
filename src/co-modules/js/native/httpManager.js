@@ -25,7 +25,8 @@
 				throw new Error("执行send方法失败，请确保请求对象为OPENDE状态！");
 			}
 			if (body && $L.isPlainObject(body)) {
-				if (body.json && $L.isPlainObject(body.json)) body.json = JSON.stringify(body.json)
+				settings.body = JSON.stringify(body)
+			}else{
 				settings.body = body
 			}
 

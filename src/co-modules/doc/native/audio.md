@@ -21,7 +21,7 @@ audio模块用于提供音频的录制和播放功能，可调用系统的麦克
 		-	[addCountDownCallback ](#addCountDownCallback ) ：添加倒计时回调
 		-	[addAveragePowerCallback](#addAveragePowerCallback) ：添加音量监控回调,录音时,当音量分贝有变化时,返回当前音量分贝值
 		-	[playJustRecord](#playJustRecord) ：播放刚刚录制完成的录音文件
-		-	[stop](#stop) ：结束录音操作
+		-	[stop](#stopp) ：结束录音操作
 
 *	[AudioPlayer](#AudioPlayer) ：音频播放对象
 	-	方法
@@ -30,7 +30,7 @@ audio模块用于提供音频的录制和播放功能，可调用系统的麦克
 		-	[resume](#resume) ：恢复播放音频
 		-	[stop](#stop) ：停止播放音频
 		-	[seekTo](#seekTo) ：跳到指定位置播放音频
-		-	[getDuration](#getDuration) ：获取音频流的总长度
+		-	[getDuration](#getDurationp) ：获取音频流的总长度
 		-	[getPosition](#getPosition) ：获取音频流当前播放的位置
 		-	[setRoute](#setRoute) ：设置音频输出线路
 		-	[isPlaying](#isPlaying) ：是否正在播放
@@ -239,7 +239,7 @@ audio模块用于提供音频的录制和播放功能，可调用系统的麦克
 			recorder.stop();
 			recorder.playJustRecord();
 			
--	#### <div id="stop" style="color:red">stop()   ⇒ void </div>  
+-	#### <div id="stopp" style="color:red">stop()   ⇒ void </div>  
  
 			结束录音操作，通知设备完成录音操作。
 
@@ -327,14 +327,14 @@ audio模块用于提供音频的录制和播放功能，可调用系统的麦克
 			var player = app.audio.createPlayer();
 			player.seekTo(33)；//跳到33秒播放
 
--	#### <div id="getDuration" style="color:red">getDuration()   ⇒ Number </div>
+-	#### <div id="getDurationp" style="color:red">getDuration()   ⇒ Number </div>
    
 			获取音频流的总长度，单位为秒，若长度未知则返回-1。如果还未获取到音频流信息则返回NaN，此时需要延迟获取此信息。
 
 -	#####	示例：
 
 			var player = app.audio.createPlayer();
-			var duration = player.getDuration()；
+			var duration = player.getDuration();
 
 -	#### <div id="getPosition" style="color:red">getPosition()   ⇒ Number </div> 
   
