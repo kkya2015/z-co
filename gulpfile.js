@@ -13,7 +13,7 @@ var gulp = require('gulp'), //基础库
     livereload = require('gulp-livereload'), //livereload
     paths = {
         root: './',
-        bak: 'bak/',
+        bak: 'src/bak/',
         dist: {
             root: 'examples/dist/',
             styles: 'examples/dist/css/',
