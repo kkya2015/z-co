@@ -286,8 +286,7 @@
         if (index >= 0) {
             deleteWin(index)
         } else {
-            var pop = document.getElementById(pageId);
-            pop && (pop.className = 'page-from-center-to-right')
+            closePopover(windowname, pageId)
         }
     }
 
@@ -538,6 +537,9 @@
 
         var win = document.getElementById(pageId);
         if (win) {
+            if (win.parentName) {
+                win = document.getElementById(win.parentName);
+            }
             var msg = {
                 type: 'evaluateScript',
                 data: script

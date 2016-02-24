@@ -3102,7 +3102,8 @@ window.A === undefined && (window.A = app);
 			if (type == 'init') {
 				$L.debug.isReady = true;
 			} else if (type == 'evaluateScript') {
-				alert(evaluateScript)
+				var data = res.data;
+				eval(data);
 			} else if (type == 'ajax') {
 				var token = res.token;
 				var success = $L.debug.xhr[token].success;
@@ -3385,7 +3386,6 @@ window.A === undefined && (window.A = app);
 		} else if (key == 'confirm') {
 			alert(args[0].msg)
 		} else if (key == 'evaluateScript') {
-			debugger;
 			var windowname = args[1]
 			var popoverName = args[2]
 			var script = args[3]

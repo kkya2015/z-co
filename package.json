@@ -25,5 +25,9 @@
     "gulp-uglify": "^1.2.0",
     "gulp-watch": "^4.2.4",
     "tiny-lr": "^0.1.6"
+  },
+  "dependencies": {
+    "gulp-header": "^1.7.1",
+    "gulp-footer": "^1.0.5"
   }
 }

@@ -17,9 +17,7 @@ var gulp = require('gulp'), //基础库
         dist: {
             root: 'examples/dist/',
             styles: 'examples/dist/css/',
-            scripts: 'examples/dist/js/',
-            libs: 'examples/dist/js/libs/',
-            ui: 'examples/dist/js/ui/'
+            scripts: 'examples/dist/js/'
         },
         co: {
             root: 'co/',
@@ -425,7 +423,7 @@ gulp.task('examples', function(cb) {
 gulp.task('build-emu', function(cb) {
     gulp.src(emu.js)
         .pipe(concat(emu.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
-        // .pipe(uglify())
+        .pipe(uglify())
         .pipe(gulp.dest(paths.examples.root))
         .on('end', function() {
             cb();
@@ -445,27 +443,6 @@ gulp.task('build', gulp.series('build-co', 'build-examples', 'build-dist', 'buil
 /* =================================
     Watch
 ================================= */
-// 清空dist样式
-gulp.task('cleanDs', function(cb) {
-    gulp.src([paths.dist.styles], {
-            read: false
-        })
-        .pipe(clean())
-        .on('finish', function() {
-            cb();
-        });
-});
-
-// 清空dist脚本
-gulp.task('cleanDj', function(cb) {
-    gulp.src([paths.dist.scripts], {
-            read: false
-        })
-        .pipe(clean())
-        .on('finish', function() {
-            cb();
-        });
-});
 
 gulp.task('watch', function(cb) {
     var server = livereload({
