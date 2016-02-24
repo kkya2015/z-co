@@ -3152,6 +3152,8 @@ window.A === undefined && (window.A = app);
 				var res = $L.debug.http.apply($L.debug, Array.prototype.slice.call(arguments))
 			} else if (arguments[0][0] == 'storage') {
 				var res = $L.debug.storage.apply($L.debug, Array.prototype.slice.call(arguments))
+			}else if (arguments[0][0] == 'audio') {
+				var res = $L.debug.audio.apply($L.debug, Array.prototype.slice.call(arguments))
 			}
 			if (typeof res !== 'undefined') return res;
 		}

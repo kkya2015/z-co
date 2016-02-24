@@ -1,7 +1,8 @@
 /**
  * @file 滑动列表组件
  */
-;(function() {
+;
+(function() {
 
 
     var CLASS_SWIPEOUT = 'ui-swipeout',
@@ -74,7 +75,7 @@
         _sl.ref.on('touchend', $.proxy(handleEvent, _sl));
 
         _sl.ref.find(SELECTOR_SWIPEOUT_DELETE).on('tap', function(evt) {
-            _sl.delete();
+            _sl.deleteBefore();
         });
     };
 
@@ -238,7 +239,7 @@
         if (!_sl.isTouched || !_sl.isMoved) {
             _sl.isTouched = false;
             _sl.isMoved = false;
-            if(!_sl.opened)_sl.swipeOutEl.trigger('tapped');
+            if (!_sl.opened) _sl.swipeOutEl.trigger('tapped', _sl);
             return;
         }
 
@@ -266,8 +267,8 @@
 
         if (action === 'open') {
             _sl.swipeoutOpenedEl = _sl.swipeOutEl;
-            _sl.swipeOutEl.trigger('open');
-            _sl.swipeOutEl.addClass(CLASS_SWIPEOUT_OPENED+' '+CLASS_SWIPEOUT_TRANSITIONING);
+            _sl.swipeOutEl.trigger('open', _sl);
+            _sl.swipeOutEl.addClass(CLASS_SWIPEOUT_OPENED + ' ' + CLASS_SWIPEOUT_TRANSITIONING);
             var newTranslate = _sl.direction === 'to-left' ? -actionsWidth : actionsWidth;
             _sl.swipeOutContent.transform('translate3d(' + newTranslate + 'px,0,0)');
             actions.addClass(CLASS_SWIPEOUT_ACTIONS_OPENED);
@@ -278,19 +279,19 @@
                 }
             }
             if (_sl.overswipeRight) {
-                _sl.actionsRight.find(SELECTOR_SWIPEOUT_OVERSWIPE).trigger('tap');
+                _sl.actionsRight.find(SELECTOR_SWIPEOUT_OVERSWIPE).trigger('tap', _sl);
             }
             if (_sl.overswipeLeft) {
-                _sl.actionsLeft.find(SELECTOR_SWIPEOUT_OVERSWIPE).trigger('tap');
+                _sl.actionsLeft.find(SELECTOR_SWIPEOUT_OVERSWIPE).trigger('tap', _sl);
             }
         } else if (action === 'close') {
-            _sl.swipeOutEl.trigger('close');
+            _sl.swipeOutEl.trigger('close', _sl);
             _sl.swipeoutOpenedEl = undefined;
             _sl.swipeOutEl.addClass(CLASS_SWIPEOUT_TRANSITIONING).removeClass(CLASS_SWIPEOUT_OPENED);
             _sl.swipeOutContent.transform('');
             actions.removeClass(CLASS_SWIPEOUT_ACTIONS_OPENED);
-        }else{
-            _sl.swipeOutEl.trigger('tapped');
+        } else {
+            _sl.swipeOutEl.trigger('tapped', _sl);
             return;
         }
 
@@ -315,7 +316,7 @@
         }
         _sl.swipeOutContent.transitionEnd(function(e) {
             if (_sl.opened && action === 'open' || _sl.closed && action === 'close') return;
-            _sl.swipeOutEl.trigger(action === 'open' ? 'opened' : 'closed');
+            _sl.swipeOutEl.trigger(action === 'open' ? 'opened' : 'closed', _sl);
             action === 'open' ? _sl.opened = true : _sl.opened = false
             if (_sl.opened && action === 'close') {
                 if (_sl.actionsRight.length > 0) {
@@ -357,7 +358,7 @@
             var swipeOutActions = el.find('.ui-swipeout-actions-' + dir);
             if (swipeOutActions.length === 0) return;
             var noFold = swipeOutActions.hasClass(CLASS_SWIPEOUT_ACTIONS_NO_FOLD) || false;
-            el.trigger('open').addClass(CLASS_SWIPEOUT_OPENED).removeClass(CLASS_SWIPEOUT_TRANSITIONING);
+            el.trigger('open', _sl).addClass(CLASS_SWIPEOUT_OPENED).removeClass(CLASS_SWIPEOUT_TRANSITIONING);
             swipeOutActions.addClass(CLASS_SWIPEOUT_ACTIONS_OPENED);
             var buttons = swipeOutActions.children('span');
             var swipeOutActionsWidth = swipeOutActions.outerWidth();
@@ -378,7 +379,7 @@
                 $(buttons[i]).transform('translate3d(' + (translate) + 'px,0,0)');
             }
             el.find(SELECTOR_SWIPEOUT_CONTENT).transform('translate3d(' + translate + 'px,0,0)').transitionEnd(function() {
-                el.trigger('opened');
+                el.trigger('opened', _sl);
                 if (callback) callback.call(el[0]);
             });
             _sl.swipeoutOpenedEl = el;
@@ -395,7 +396,7 @@
             var buttons = swipeOutActions.children('span');
             var swipeOutActionsWidth = swipeOutActions.outerWidth();
             _sl.allowSwipeout = false;
-            el.trigger('close');
+            el.trigger('close', _sl);
             el.removeClass(CLASS_SWIPEOUT_OPENED).addClass(CLASS_SWIPEOUT_TRANSITIONING);
 
             var closeTO;
@@ -403,7 +404,7 @@
             function onSwipeoutClose() {
                 _sl.allowSwipeout = true;
                 // buttons.transform('');
-                el.trigger('closed');
+                el.trigger('closed', _sl);
                 _sl.opened = false
                 if (callback) callback.call(el[0]);
                 if (closeTO) clearTimeout(closeTO);
@@ -424,22 +425,28 @@
             if (_sl.swipeoutOpenedEl && _sl.swipeoutOpenedEl[0] === el[0]) _sl.swipeoutOpenedEl = undefined;
         };
 
-        $swipelist.prototype.delete = function(callback) {
+        $swipelist.prototype.deleteBefore = function(callback) {
             var _sl = this;
             var el = _sl.ref;
             if (el.length === 0) return;
             if (el.length > 1) el = $(el[0]);
             _sl.swipeoutOpenedEl = undefined;
-            var del = el.triggerHandler('delete');
-            if($.type(del) != "undefined"&&!del)return;
+            var del = el.triggerHandler('delete', _sl);
+            if ($.type(del) != "undefined" && !del) return;
+            _sl.delete();
+        };
+
+        $swipelist.prototype.delete = function(callback) {
+            var _sl = this;
+            var el = _sl.ref;
             el.css({
                 height: el.outerHeight() + 'px'
             });
             var clientLeft = el[0].clientLeft;
             el.css({
                 height: 0 + 'px'
-            }).addClass(CLASS_SWIPEOUT_DELETING+ '  ' +CLASS_SWIPEOUT_TRANSITIONING).transitionEnd(function() {
-                el.trigger('deleted');
+            }).addClass(CLASS_SWIPEOUT_DELETING + '  ' + CLASS_SWIPEOUT_TRANSITIONING).transitionEnd(function() {
+                el.trigger('deleted', _sl);
                 if (callback) callback.call(el[0]);
                 if (el.parents('.virtual-list').length > 0) {
                     var virtualList = el.parents('.virtual-list')[0].f7VirtualList;

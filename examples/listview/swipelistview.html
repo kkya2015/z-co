@@ -186,22 +186,26 @@
 
 	domReady(function(require){
 		require("swipelist");
-    var sls = $('.ui-swipeout').swipelist();
-    sls[8].delete()
-    $('.ui-swipeout').on('delete',function(e){
-      console.log('delete');
+    $('.ui-swipeout').swipelist();
+    $('.ui-swipeout').on('delete',function(e,sp){
+      var self = sp;
+      setTimeout(function(){
+        sp.delete()
+        debugger;
+      },1000)
+
       return false;
-    }).on('open',function(e){
+    }).on('open',function(e,sp){
       console.log('open');
-    }).on('close',function(e){
+    }).on('close',function(e,sp){
       console.log('close');
-    }).on('opened',function(e){
+    }).on('opened',function(e,sp){
       console.log('opened');
-    }).on('closed',function(e){
+    }).on('closed',function(e,sp){
       console.log('closed');
-    }).on('deleted',function(e){
+    }).on('deleted',function(e,sp){
       console.log('deleted');
-    }).on('tapped',function(e){
+    }).on('tapped',function(e,sp){
       console.log('singleTap');
     })
 	});
