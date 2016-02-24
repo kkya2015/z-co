@@ -170,6 +170,10 @@ gulp.task('cleanCo', function(cb) {
     gulp.src([paths.co.root], {
             read: false
         })
+        .on('error', function(err) {
+            console.log(err);
+            this.end();
+        })
         .pipe(clean())
         .on('finish', function() {
             cb();
@@ -288,7 +292,7 @@ gulp.task('co-font', function(cb) {
 });
 
 //co处理
-gulp.task('build-co', gulp.series( 'co-native', 'co-scripts', 'co-zepto', 'co-css', 'co-font'));
+gulp.task('build-co', gulp.series('cleanCo', 'co-native', 'co-scripts', 'co-zepto', 'co-css', 'co-font'));
 
 // 清空dist样式
 gulp.task('cleanDist', function(cb) {
@@ -305,14 +309,6 @@ gulp.task('cleanDist', function(cb) {
 gulp.task('dist-css', function(cb) {
     gulp.src('src/co-modules/less/co.less')
         .pipe(less())
-        .pipe(gulp.dest(paths.dist.styles))
-        // .pipe(rename({
-        //     suffix: '.min'
-        // }))
-        // .pipe(minifycss({
-        //     advanced: false,
-        //     aggressiveMerging: false,
-        // }))
         .pipe(gulp.dest(paths.dist.styles))
         .pipe(livereload())
         .on('end', function() {
@@ -339,11 +335,6 @@ gulp.task('dist-co', function(cb) {
     gulp.src(co.jsFiles) //要合并的文件
         .pipe(concat(co.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
         .pipe(gulp.dest(paths.dist.scripts))
-        // .pipe(rename({
-        //     suffix: '.min'
-        // }))
-        // .pipe(uglify())
-        .pipe(gulp.dest(paths.dist.scripts))
         .pipe(livereload())
         .on('end', function() {
             cb();
@@ -354,11 +345,6 @@ gulp.task('dist-co', function(cb) {
 gulp.task('dist-dom', function(cb) {
     gulp.src(dom.jsFiles) //要合并的文件
         .pipe(concat(dom.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
-        .pipe(gulp.dest(paths.dist.scripts))
-        // .pipe(rename({
-        //     suffix: '.min'
-        // }))
-        // .pipe(uglify())
         .pipe(gulp.dest(paths.dist.scripts))
         .pipe(livereload())
         .on('end', function() {
@@ -371,11 +357,6 @@ gulp.task('dist-zepto', function(cb) {
     gulp.src(zepto.jsFiles) //要合并的文件
         .pipe(concat(zepto.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
         .pipe(gulp.dest(paths.dist.scripts))
-        // .pipe(rename({
-        //     suffix: '.min'
-        // }))
-        // .pipe(uglify())
-        .pipe(gulp.dest(paths.dist.scripts))
         .pipe(livereload())
         .on('end', function() {
             cb();
@@ -386,11 +367,6 @@ gulp.task('dist-zepto', function(cb) {
 gulp.task('dist-native', function(cb) {
     gulp.src(native.jsFiles) //要合并的文件
         .pipe(concat(native.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
-        .pipe(gulp.dest(paths.dist.scripts))
-        // .pipe(rename({
-        //     suffix: '.min'
-        // }))
-        // .pipe(uglify())
         .pipe(gulp.dest(paths.dist.scripts))
         .pipe(livereload())
         .on('end', function() {
@@ -403,6 +379,10 @@ gulp.task('dist-native', function(cb) {
 gulp.task('cleanExamples', function(cb) {
     gulp.src([paths.examples.root], {
             read: false
+        })
+        .on('error', function(err) {
+            console.log(err);
+            this.end();
         })
         .pipe(clean())
         .on('finish', function() {
@@ -430,7 +410,7 @@ gulp.task('build-emu', function(cb) {
         });
 });
 
-gulp.task('build-examples', gulp.series('examples'));
+gulp.task('build-examples', gulp.series('cleanExamples', 'examples'));
 
 gulp.task('dist-js', gulp.series('dist-co', 'dist-dom', 'dist-zepto', 'dist-native'));
 
