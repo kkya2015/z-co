@@ -2956,8 +2956,8 @@ input[type="submit"].ui-active:enabled,
   border: 1px solid #e3e3e3;
   display: inline-block;
   padding: 9px;
-  background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#ffffff));
-  background: linear-gradient(#f2f2f2, #ffffff);
+  background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#FFF));
+  background: linear-gradient(#f2f2f2, #FFF);
   border-radius: 200px;
   -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
@@ -3257,7 +3257,7 @@ input[type="submit"].ui-active:enabled,
 }
 .fa-border {
   padding: .2em .25em .15em;
-  border: solid 0.08em #eeeeee;
+  border: solid 0.08em #eee;
   border-radius: .1em;
 }
 .pull-right {
@@ -3359,7 +3359,7 @@ input[type="submit"].ui-active:enabled,
   font-size: 2em;
 }
 .fa-inverse {
-  color: #ffffff;
+  color: #fff;
 }
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */

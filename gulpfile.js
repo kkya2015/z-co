@@ -288,7 +288,7 @@ gulp.task('co-font', function(cb) {
 });
 
 //co处理
-gulp.task('build-co', gulp.series('cleanCo', 'co-native', 'co-scripts', 'co-zepto', 'co-css', 'co-font'));
+gulp.task('build-co', gulp.series( 'co-native', 'co-scripts', 'co-zepto', 'co-css', 'co-font'));
 
 // 清空dist样式
 gulp.task('cleanDist', function(cb) {
@@ -331,7 +331,7 @@ gulp.task('dist-font', function(cb) {
 });
 
 // 样式处理
-gulp.task('dist-styles', gulp.series('cleanDist', 'dist-css', 'dist-font'));
+gulp.task('dist-styles', gulp.series('dist-css', 'dist-font'));
 
 
 // js处理
@@ -430,7 +430,7 @@ gulp.task('build-emu', function(cb) {
         });
 });
 
-gulp.task('build-examples', gulp.series('cleanExamples', 'examples'));
+gulp.task('build-examples', gulp.series('examples'));
 
 gulp.task('dist-js', gulp.series('dist-co', 'dist-dom', 'dist-zepto', 'dist-native'));
 
