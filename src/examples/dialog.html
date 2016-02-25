@@ -30,27 +30,14 @@
     <a class="button button-block button-rounded button-highlight button-large">提示框</a>
     <a id='customBtn' class="button button-block button-rounded button-royal button-large">个性化提示框</a>
     <a id='toastBtn' class="button button-block button-rounded button-inverse button-large">加载中Toast</a>
-    <a id='mesToastBtn' class="button button-block button-rounded button-caution button-large">带有消息的Toast</a>
-    <div class="ui-dialog" style="width: 300px; height: auto; display: block; position: fixed; left: 50%; margin-left: -150px; top: 314px; margin-top: -94px;">
-        <div class="ui-dialog-title">
-            <h3>登陆提示</h3></div>
-        <div class="ui-dialog-content" style="overflow-y: hidden;">
-            <div style="display:block">
-                <p>登录后, 获得更多个性化特色功能</p>
-            </div>
-        </div>
-        <div class="ui-dialog-btns"><a class="ui-btn" data-btn="1" data-key="取消" style="-webkit-tap-highlight-color: rgba(255, 255, 255, 0);">取消</a><a class="ui-btn" data-btn="2" data-key="确定" style="-webkit-tap-highlight-color: rgba(255, 255, 255, 0);">确定</a></div>
-    </div>
+    <a id='mesToastBtn' class="button button-block button-rounded button-caution button-large">带有消息的Toast</a
+    
     <script src="dist/js/native.js"></script>
     <script src="dist/js/dom.js"></script>
     <script src="dist/js/co.js"></script>
 </body>
 <script>
-var win = app.createWindow();
 domReady(function(require) {
-    $('.ui-nav-bar-right').button(function() {
-        win.open('cards.html');
-    })
     var Dialog = require("dialog");
     $('#alertBtn').button(function(btn, evt) {
         Dialog.init({

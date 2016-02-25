@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Contacts</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>camera</h1>
+  <hr />
+  <p>Camera模块管理设备的摄像头，可用于拍照、摄像操作。</p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#getCamera">getCamera</a>
+      ：获取摄像头对象
+    </li>
+  </ul>
+  <h3>
+    <a href="#对象">对象</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#Camera">Camera</a>
+      ：摄像头对象
+      <ul>
+        <li>
+          方法
+          <ul>
+            <li>
+              <a href="#captureImage">captureImage</a>
+              ：进行拍照操作
+            </li>
+            <li>
+              <a href="#captureVideo">captureVideo</a>
+              ：用摄像头进行摄像操作
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="getCamera" style="color:red">getCamera</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>
+        app.camera.getCamera(filepath,[resolution],[cameraType])   ⇒
+        <a href="#Camera">Camera</a>
+      </h4>
+      <pre><code>获取当前设备的摄像对象</code></pre>
+
+      <ul>
+        <li> <strong>filepath</strong>
+          ：拍照或摄像文件保存的路径。对摄像操作而言，在iOS平台中，由程序自动生成保存路径。
+          <ul>
+            <li> <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>resolution</strong>
+          ：拍照或摄像的文件分辨率。该属性支持iOS平台，不支持Android平台。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>取值范围</strong>
+              <ul>
+                <li>0：高质量</li>
+                <li>1：中等质量</li>
+                <li>2：低质量</li>
+                <li>3：VGA质量</li>
+                <li>4：1280*720</li>
+                <li>5：960*540</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>cameraType</strong>
+          ：拍照或摄像默认使用的摄像头。该属性支持iOS平台，不支持Android平台。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>取值范围</strong>
+              <ul>
+                <li>0：后摄像头</li>
+                <li>1：前摄像头</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var camera = app.camera.getCamera('data://')</code></pre>
+
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="对象">对象</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="Camera" style="color:red">Camera</div>
+  </h4>
+  <pre><code>var camera = app.camera.getCamera('data://')</code></pre>
+
+  <ul>
+    <li>
+      <h4>
+        <div id="captureImage" style="color:red">captureImage(success, [error])   ⇒ void</div>
+      </h4>
+      <pre><code>进行拍照操作</code></pre>
+
+      <ul>
+        <li>
+          <strong>success</strong>
+          ：拍照操作成功的回调函数。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>capturedFile</strong>
+                  ：拍照操作保存的文件路径
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>error</strong>
+          ：拍照操作取消的回调函数。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>err</strong>
+                  ：摄像头操作取消信息
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var camera = app.camera.getCamera('data://')
+
+    EX - 1：
+    camera.captureImage(function(capturedFile) {
+        console.log(capturedFile);
+    });
+
+    EX - 2：
+    camera.captureImage(function(recordFile) {
+        console.log(recordFile);
+    }, function(err) {
+        console.log(err);
+    });
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="captureVideo" style="color:red">captureVideo(success, [error])   ⇒ void</div>
+      </h4>
+      <pre><code>用摄像头进行摄像操作</code></pre>
+
+      <ul>
+        <li>
+          <strong>success</strong>
+          ：摄像操作成功的回调函数。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>capturedFile</strong>
+                  ：摄像操作保存的文件路径
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>error</strong>
+          ：摄像操作取消的回调函数。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>err</strong>
+                  ：摄像头操作取消信息
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var camera = app.camera.getCamera('data://')
+
+    EX - 1：
+    camera.captureVideo(function(capturedFile) {
+        console.log(capturedFile);
+    });
+
+    EX - 2：
+    camera.captureVideo(function(recordFile) {
+        console.log(recordFile);
+    }, function(err) {
+        console.log(err);
+    });
+</code></pre>
+
+    </li>
+  </ul>
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

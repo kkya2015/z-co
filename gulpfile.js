@@ -75,7 +75,8 @@ var gulp = require('gulp'), //基础库
             'src/co-modules/js/debug/window.js',
             'src/co-modules/js/debug/http.js',
             'src/co-modules/js/debug/storage.js',
-            'src/co-modules/js/debug/screen.js'
+            'src/co-modules/js/debug/screen.js',
+            'src/co-modules/js/debug/audio.js'
         ]
     },
     co = {
@@ -431,18 +432,18 @@ gulp.task('watch', function(cb) {
     livereload.listen();
     var watcher = gulp.watch(paths.source.examples + '**/*.*');
     watcher.on('change', function(file) {
-        // console.log("file.path--"+file.path);
-        var ex = file.path.indexOf('examples');
+        console.log("file.path--"+file);
+        var ex = file.indexOf('examples');
         // console.log("ex--"+ex);
-        var next = file.path.substr(ex + 9).lastIndexOf('\\');
+        var next = file.substr(ex + 9).lastIndexOf('\\');
         // console.log("next--"+next);
         var destPaht = paths.examples.root;
         // console.log("destPaht--"+destPaht);
         if (next != -1) {
-            destPaht = destPaht + file.path.substring(ex + 9, ex + 9 + next) + '/';
+            destPaht = destPaht + file.substring(ex + 9, ex + 9 + next) + '/';
         }
         console.log(destPaht);
-        gulp.src(file.path)
+        gulp.src(file)
             .pipe(gulp.dest(destPaht))
             .pipe(livereload());
     })

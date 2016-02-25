@@ -16,19 +16,16 @@
             background-color:#CD6600;
         }
 
-
-
-        .ui-list-block .ui-media-inset {
-            max-width: 25px;
-            height: 20px;
-            line-height: 40px;
-        }
-
         .ui-list-block.ui-media-list .ui-list-item-inner, .ui-list-block li.media-item .ui-list-item-inner{
             display: flex;
         }
 
-
+        .ui-nav-bar ~ .ui-content {
+            position: fixed;
+            overflow-y: scroll;
+            top: 120px;
+            bottom: 65px;
+        }
         </style>
 
 </head>
@@ -45,25 +42,9 @@
     <a id='image' class="button button-block button-rounded button-inverse">拍照</a>
     <a id='video' class="button button-block button-rounded button-inverse">摄影</a>
 
-
-    <div class="ui-list-block ui-media-list">
-        <ul>
-            <li id = "testR">
-                <div class="ui-list-item-content ui-list-item-link" data-src="test.aac">
-                    <div class="ui-item-media">
-                        <img class="ui-media-inset" src="img/m.png"></div>
-                    <div class="ui-list-item-inner">
-                        <div class="ui-list-item-title">无历史记录</div>
-                        <div class="ui-list-item-after ui-icon fa-play-circle-o"></div>
-                    </div>
-                </div>
-            </li>
-        </ul>
+    <div class="ui-content ui-list-block ui-media-list" display = 'none'>
+        <ul></ul>
     </div>
-
-    
-
-    
 
     <div id="log">Camera模块管理设备的摄像头，可用于拍照、摄像操作。</div>
     <script src="../dist/js/native.js"></script>
@@ -71,9 +52,57 @@
     <script src="../dist/js/co.js"></script>
     <script src="js/common.js"></script>
 </body>
-<script>
+    <script>
+    var view = app.currentView(),
+    path = 'data://';
+domReady(function(require) {
+
+    var camera = app.camera.getCamera(path)
+    $('#image').button(function(el, evt) {
+        image(camera)
+    })
+
+    $('#video').button(function(el, evt) {
+        video(camera)
+    })
+
+    $('.ui-nav-bar-right').button(function() {
+        setDocTarget('doc/camera.html', 'Camera Doc')
+        var win = app.createWindow();
+        win.open('doc.html')
+    })
 
 
+});
+
+function image(camera) {
+    camera.captureImage(function(capturedFile) {
+        printout('照像成功：' + capturedFile)
+        var img = $('.ui-list-block ul').find('img');
+        if (img.length > 0) {
+            img.attr('src', capturedFile)
+        } else {
+            var htmlStr = '<li>' +
+                '<div class="ui-list-item-content ui-list-item-link">' +
+                '<div class="ui-item-media">' +
+                '<img></div>' +
+                '</div>' +
+                '</li>';
+            var bWidth = $(document.body).width();
+            $(htmlStr).appendTo($('.ui-list-block ul')).find('img').attr('src', capturedFile).css('width', bWidth - 30)
+            $('.ui-list-block').css('display', 'block')
+        }
+
+    });
+}
+
+function video(camera) {
+
+    camera.captureVideo(function(capturedFile) {
+        printout('摄像成功：' + capturedFile)
+
+    });
+}
 
 </script>
 </html>

@@ -1,13 +1,14 @@
 /*===============================================================================
 ************   ui native audio   ************
 ===============================================================================*/
-;(function($L, global) {
-
-  var filename;
-  var resolution;
-  var index;
-  var camera = {
-    captureImage: function(success, error) {
+;
+(function($L, global) {
+  var photoNum = 1;
+  var videoNum = 1;
+  var camera = function(filePath, resolution, index) {
+    this.captureImage = function(success, error) {
+      var num = photoNum++;
+      var filename = filePath + 'photo_' + num + '.jpg';
       var options = {
         filename: filename,
         resolution: resolution,
@@ -15,16 +16,22 @@
       }
       $L.executeNativeJS(['camera', 'captureImage'], function(capturedFile) {
         if ($L.isFunction(success)) {
-          success.call(global, capturedFile);
+          setTimeout(function() {
+            success.call(global, capturedFile);
+          }, 1000)
         }
       }, function(err) {
         if ($L.isFunction(error)) {
-          error.call(global, err);
+          setTimeout(function() {
+            error.call(global, err);
+          }, 1000)
         }
       }, options)
 
-    },
-    captureVideo: function(success, error) {
+    };
+    this.captureVideo = function(success, error) {
+      var num = videoNum++;
+      var filename = filePath + 'video_' + num + '.mov';
       var options = {
         filename: filename,
         resolution: resolution,
@@ -32,11 +39,15 @@
       }
       $L.executeNativeJS(['camera', 'captureVideo'], function(capturedFile) {
         if ($L.isFunction(success)) {
-          success.call(global, capturedFile);
+          setTimeout(function() {
+            success.call(global, capturedFile);
+          }, 1000)
         }
       }, function(err) {
         if ($L.isFunction(error)) {
-          error.call(global, err);
+          setTimeout(function() {
+            error.call(global, err);
+          }, 1000)
         }
       }, options)
 
@@ -45,11 +56,14 @@
   }
 
   $L.camera = {
-    getCamera: function(fname, rlution, cameraType) {
-      if (typeof fname === 'undefined') {
-        throw new Error("请传入有效的文件保存的路径！");
+    getCamera: function(filePath, rlution, cameraType) {
+      if ($L.android()) {
+        if (typeof filePath === 'undefined') {
+          throw new Error("请传入有效的文件保存的路径！");
+        }
       }
-      filename = fname
+
+      var resolution;
       if (rlution == 0) {
         resolution = $L.executeConstantJS(['camera', 'ResolutionTypeHigh'])
       } else if (rlution == 1) {
@@ -63,12 +77,7 @@
       } else if (rlution == 5) {
         resolution = $L.executeConstantJS(['camera', 'ResolutionTypeIFrame960x540'])
       }
-      if (cameraType = 1) {
-        index = cameraType
-      } else {
-        index = 0
-      }
-      return camera;
+      return new camera(filePath, resolution, cameraType)
     }
   }
 
