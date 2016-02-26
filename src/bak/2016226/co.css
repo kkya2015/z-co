@@ -99,6 +99,7 @@ input {
 * {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
+  -webkit-overflow-scrolling: touch;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;

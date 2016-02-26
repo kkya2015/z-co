@@ -1,5 +1,5 @@
 /**
- * Released on: 2016-2-25
+ * Released on: 2016-2-26
  * =====================================================
  * Native v1.0.1 (https://github.com/dcloudio/mui)
  * =====================================================
@@ -252,6 +252,10 @@ var app = (function(global) {
     return elements
   }
 
+  $L.throwError = function(errorInfo) {
+    throw new Error(errorInfo);
+  };
+
   var resolveFun = function(arr) {
     var fun = baseObj;
     var callObj = baseObj;
@@ -277,6 +281,19 @@ var app = (function(global) {
     var callFun = resolveFun(arguments[0]);
     if ($L.isFunction(callFun.fun)) {
       return callFun.fun.apply(callFun.callObj, args);
+    }
+  }
+
+  /*
+   * 执行require方法统一入口
+   */
+  $L.executeRequireJS = function() {
+    var args = Array.prototype.slice.call(arguments);
+    if (baseObj) {
+      var fun = baseObj['require'];
+      if ($L.isFunction(fun)) {
+        return fun.apply(baseObj, args);
+      }
     }
   }
 
@@ -481,11 +498,11 @@ var app = (function(global) {
   $L.addSlideDrawer = function(url, type, edge) {
     var patrn = /^[0-9]{1,20}$/;
     if (typeof url === 'undefined') {
-      throw new Error("请传入有效的抽屉页面路径！");
+      $L.throwError("请传入有效的抽屉页面路径！");
     } else if ($L.isPlainObject(url)) {
       var uri = url['url'];
       if (typeof uri === 'undefined') {
-        throw new Error("请传入有效的抽屉页面路径！");
+        $L.throwError("请传入有效的抽屉页面路径！");
       } else {
         type = url['type'];
         edge = url['edge'];
@@ -558,11 +575,11 @@ var app = (function(global) {
    */
   $L.evalScriptInComponent = function(componentName, windowName, script, popoverName) {
     if (typeof componentName === 'undefined') {
-      throw new Error("请传入有效的componentName！");
+      $L.throwError("请传入有效的componentName！");
     } else if (typeof windowName === 'undefined') {
-      throw new Error("请传入有效的windowName！");
+      $L.throwError("请传入有效的windowName！");
     } else if (typeof script === 'undefined') {
-      throw new Error("请传入有效的JS语句！");
+      $L.throwError("请传入有效的JS语句！");
     }
 
     if (typeof popoverName === 'undefined') {
@@ -580,7 +597,7 @@ var app = (function(global) {
    */
   $L.evalScriptInWindow = function(script, windowName) {
     if (typeof script === 'undefined') {
-      throw new Error("请传入有效的JS语句！");
+      $L.throwError("请传入有效的JS语句！");
     } else if (typeof windowName === 'undefined') {
       $L.executeNativeJS(['window', 'evaluateScript'], '', '', '', script)
     } else {
@@ -596,9 +613,9 @@ var app = (function(global) {
    */
   $L.evalScriptInPop = function(script, popoverName, windowName) {
     if (typeof script === 'undefined') {
-      throw new Error("请传入有效的JS语句！");
+      $L.throwError("请传入有效的JS语句！");
     } else if (typeof popoverName === 'undefined') {
-      throw new Error("请传入有效的popoverName！");
+      $L.throwError("请传入有效的popoverName！");
     } else if (typeof windowName === 'undefined') {
       $L.executeNativeJS(['window', 'evaluateScript'], '', '', popoverName, script)
     } else {
@@ -629,11 +646,11 @@ var app = (function(global) {
    */
   $L.alert = function(message, title, btnCaption, callback) {
     if (typeof message === 'undefined') {
-      throw new Error("请传入有效消息内容！");
+      $L.throwError("请传入有效消息内容！");
     } else if ($L.isPlainObject(message)) {
       var msg = message['message'];
       if (typeof msg === 'undefined') {
-        throw new Error("请传入有效消息内容！");
+        $L.throwError("请传入有效消息内容！");
       } else {
         title = message['title'];
         btnCaption = message['btnCaption'];
@@ -670,11 +687,11 @@ var app = (function(global) {
    */
   $L.confirm = function(message, title, btnCaptions, callback) {
     if (typeof message === 'undefined') {
-      throw new Error("请传入有效消息内容！");
+      $L.throwError("请传入有效消息内容！");
     } else if ($L.isPlainObject(message)) {
       var msg = message['message'];
       if (typeof msg === 'undefined') {
-        throw new Error("请传入有效消息内容！");
+        $L.throwError("请传入有效消息内容！");
       } else {
         title = message['title'];
         btnCaptions = message['btnCaptions'];
@@ -713,11 +730,11 @@ var app = (function(global) {
    */
   $L.prompt = function(message, title, btnCaptions, inputValue, inputTpye, callback) {
     if (typeof message === 'undefined') {
-      throw new Error("请传入有效消息内容！");
+      $L.throwError("请传入有效消息内容！");
     } else if ($L.isPlainObject(message)) {
       var msg = message['message'];
       if (typeof msg === 'undefined') {
-        throw new Error("请传入有效消息内容！");
+        $L.throwError("请传入有效消息内容！");
       } else {
         title = message['title'];
         btnCaptions = message['btnCaptions'];
@@ -933,7 +950,7 @@ window.A === undefined && (window.A = app);
 	 */
 	$L.closeComponent = function(componentName, animation) {
 		if (typeof componentName === 'undefined') {
-			throw new Error("请传入有效的componentName！");
+			$L.throwError("请传入有效的componentName！");
 		}
 		$L.executeNativeJS(['component', 'closeComponent'], componentName, animation)
 	}
@@ -979,7 +996,7 @@ window.A === undefined && (window.A = app);
      */
     this.open = function(url, name) { ///打开新窗口
       if (typeof url === 'undefined') {
-        throw new Error("请传入有效的url路径！");
+        $L.throwError("请传入有效的url路径！");
       }
       windowname = name || url;
       var options = {
@@ -1012,9 +1029,9 @@ window.A === undefined && (window.A = app);
      */
     this.evalScript = function(script) {
       if (typeof script === 'undefined') {
-        throw new Error("请传入有效的JS语句！");
+        $L.throwError("请传入有效的JS语句！");
       } else if (typeof windowname === 'undefined') {
-        throw new Error("无法在未打开的window窗口中执行JS语句！");
+        $L.throwError("无法在未打开的window窗口中执行JS语句！");
       } else {
         $L.executeNativeJS(['window', 'evaluateScript'], '',windowname, '', script)
       }
@@ -1026,11 +1043,11 @@ window.A === undefined && (window.A = app);
      */
     this.evalScriptInPop = function(script,popoverName) {
       if (typeof script === 'undefined') {
-        throw new Error("请传入有效的JS语句！");
+        $L.throwError("请传入有效的JS语句！");
       } else if (typeof windowname === 'undefined') {
-        throw new Error("无法在未打开的window窗口中执行JS语句！");
+        $L.throwError("无法在未打开的window窗口中执行JS语句！");
       }else if (typeof popoverName === 'undefined') {
-        throw new Error("请传入有效的popoverName！");
+        $L.throwError("请传入有效的popoverName！");
       } else {
         $L.executeNativeJS(['window', 'evaluateScript'], '',windowname, popoverName, script)
       }
@@ -1195,10 +1212,16 @@ window.A === undefined && (window.A = app);
      */
     this.addSlideIgnore = function(x, y, width, height) {
       width = width || this.getWidth();
-      height = height || this.getHeight();
-      if ($L.android()) {
+      y = y || 0;
+      if (!height) {
+        height = this.getHeight();
+        if ($L.android()) {
+          y = y * window.devicePixelRatio;
+          height = height - y;
+        }
+      } else {
         height = height * window.devicePixelRatio;
-        y = y || y * window.devicePixelRatio;
+        y = y * window.devicePixelRatio;
       }
       var IgnoreParams = {
         x: x || 0,
@@ -1515,7 +1538,7 @@ window.A === undefined && (window.A = app);
          */
         record: function(success, error) {
           if (recorderIsRecord) {
-            throw new Error('当前正在录音，请等待录音完成后再进行新的录音操作！');
+            $L.throwError('当前正在录音，请等待录音完成后再进行新的录音操作！');
           }
           $L.executeObjFunJS([recorder, 'record'], options, function(recordFile) {
             if ($L.isFunction(success)) {
@@ -1535,7 +1558,7 @@ window.A === undefined && (window.A = app);
          */
         getCurrentTime: function() {
           if (!recorderIsRecord) {
-            throw new Error('先执行录音操作后，才可获取当前录音时间！');
+            $L.throwError('先执行录音操作后，才可获取当前录音时间！');
           }
           var currentTime = $L.executeObjFunJS([recorder, 'getCurrentTime']);
           if (currentTime) {
@@ -1595,7 +1618,7 @@ window.A === undefined && (window.A = app);
          */
         playJustRecord: function() {
           if (!recorderIsOver) {
-            throw new Error('先执行录音操作后，并录音完成后，才可执行播放录音操作！');
+            $L.throwError('先执行录音操作后，并录音完成后，才可执行播放录音操作！');
           }
           $L.executeObjFunJS([recorder, 'playJustRecord']);
         },
@@ -1605,7 +1628,7 @@ window.A === undefined && (window.A = app);
          */
         stop: function() {
           if (!recorderIsRecord) {
-            throw new Error('先执行录音操作后，才可执行录音结束操作！');
+            $L.throwError('先执行录音操作后，才可执行录音结束操作！');
           }
           $L.executeObjFunJS([recorder, 'stop'])
           recorderIsRecord = false;
@@ -1620,7 +1643,7 @@ window.A === undefined && (window.A = app);
      */
     createPlayer: function(path) {
       if (typeof path === undefined) {
-        throw new Error("请传入有效的音频路径！");
+        $L.throwError("请传入有效的音频路径！");
       }
       var player = $L.executeNativeJS(['audio', 'createPlayer'], path)
       return {
@@ -1646,7 +1669,7 @@ window.A === undefined && (window.A = app);
         },
         seekTo: function(position) {
           if (typeof path === undefined) {
-            throw new Error("请传入有效的播放时间戳！");
+            $L.throwError("请传入有效的播放时间戳！");
           }
           $L.executeObjFunJS([player, 'seekTo'], position)
         },
@@ -1658,7 +1681,7 @@ window.A === undefined && (window.A = app);
         },
         setRoute: function(route) {
           if (typeof route === undefined) {
-            throw new Error("请传入有效的音频输出线路！");
+            $L.throwError("请传入有效的音频输出线路！");
           }
           if (route == 1) {
             route = $L.executeConstantJS(['audio', 'ROUTE_EARPIECE'])
@@ -1743,7 +1766,7 @@ window.A === undefined && (window.A = app);
     getCamera: function(filePath, rlution, cameraType) {
       if ($L.android()) {
         if (typeof filePath === 'undefined') {
-          throw new Error("请传入有效的文件保存的路径！");
+          $L.throwError("请传入有效的文件保存的路径！");
         }
       }
 
@@ -1841,7 +1864,7 @@ window.A === undefined && (window.A = app);
 		 */
 		this.executeSql = function(sql) {
 			if (typeof sql === undefined) {
-				throw new Error("请传入有效的sql语句！");
+				$L.throwError("请传入有效的sql语句！");
 			}
 			return $L.executeObjFunJS([dataBase, 'executeSql'], sql);
 		}
@@ -1866,7 +1889,7 @@ window.A === undefined && (window.A = app);
 		 */
 		this.selectAll = function(sql) {
 			if (typeof sql === undefined) {
-				throw new Error("请传入有效的sql语句！");
+				$L.throwError("请传入有效的sql语句！");
 			}
 			return $L.executeObjFunJS([dataBase, 'selectAll'], sql);
 		}
@@ -1954,7 +1977,7 @@ window.A === undefined && (window.A = app);
 		 */
 		dial: function(number, confirm) {
 			if (typeof number === undefined) {
-				throw new Error("请传入有效的手机号码！");
+				$L.throwError("请传入有效的手机号码！");
 			}
 			if (!confirm) {
 				confirm = false;
@@ -2122,7 +2145,7 @@ window.A === undefined && (window.A = app);
 		 * @return download
 		 */
 		getDownLoaderById: function(id) {
-			if(!id) throw new Error("请传入有效的下载任务ID！");
+			if(!id) $L.throwError("请传入有效的下载任务ID！");
 			var download = $L.executeNativeJS(['downloader', 'enumerateById'], id);
 			return  download;
 		},
@@ -2356,7 +2379,7 @@ window.A === undefined && (window.A = app);
 		settings.bodyType = 'text';
 		this.open = function(url, method, timeout) {
 			if (typeof url === 'undefined') {
-				throw new Error("请传入有效的请求地址！");
+				$L.throwError("请传入有效的请求地址！");
 			}
 			settings.method = method || 'GET';
 			settings.url = url;
@@ -2366,7 +2389,7 @@ window.A === undefined && (window.A = app);
 		this.send = function(body, dataType) {
 			isAbort = false;
 			if (!isOpened) {
-				throw new Error("执行send方法失败，请确保请求对象为OPENDE状态！");
+				$L.throwError("执行send方法失败，请确保请求对象为OPENDE状态！");
 			}
 			if (body && $L.isPlainObject(body)) {
 				settings.body = JSON.stringify(body)
@@ -2390,7 +2413,7 @@ window.A === undefined && (window.A = app);
 		this.postForm = function(data, dataType, files) {
 			isAbort = false;
 			if (!isOpened) {
-				throw new Error("执行postForm方法失败，请确保请求对象为OPENDE状态！");
+				$L.throwError("执行postForm方法失败，请确保请求对象为OPENDE状态！");
 			}
 			var form = {};
 			if (data) {
@@ -2417,7 +2440,7 @@ window.A === undefined && (window.A = app);
 		};
 		this.setHeader = function(headerName, headerValue) {
 			if (!isOpened) {
-				throw new Error("执行setHeader方法失败，请确保请求对象为OPENDE状态！");
+				$L.throwError("执行setHeader方法失败，请确保请求对象为OPENDE状态！");
 			}
 			if (settings.HTTPHeader) {
 				if (headerName && headerValue) settings.HTTPHeader[headerName.toLowerCase()] = headerValue;
@@ -2428,7 +2451,7 @@ window.A === undefined && (window.A = app);
 		};
 		this.setOffline = function(type) {
 			if (!isOpened) {
-				throw new Error("执行setOffline方法失败，请确保请求对象为OPENDE状态！");
+				$L.throwError("执行setOffline方法失败，请确保请求对象为OPENDE状态！");
 			}
 			if (type == 'true') {
 				settings.offline = 'true';
@@ -2441,13 +2464,13 @@ window.A === undefined && (window.A = app);
 		this.setExpires = function(ms) {
 
 			if (!isOpened) {
-				throw new Error("执行setExpires方法失败，请确保请求对象为OPENDE状态！");
+				$L.throwError("执行setExpires方法失败，请确保请求对象为OPENDE状态！");
 			}
 			if (ms) settings.expires = ms;
 		};
 		this.setCertificate = function(path, password) {
 			if (!isOpened) {
-				throw new Error("执行setCertificate方法失败，请确保请求对象为OPENDE状态！");
+				$L.throwError("执行setCertificate方法失败，请确保请求对象为OPENDE状态！");
 			}
 			if (settings.certificate) {
 				if (path) settings.certificate['path'] = path;
@@ -2607,11 +2630,11 @@ window.A === undefined && (window.A = app);
 		}
 		this.send = function(msg, success, error) {
 			if (typeof msg === 'undefined') {
-				throw new Error("请传入有效消息内容！");
+				$L.throwError("请传入有效消息内容！");
 			} else if (typeof recipients === 'undefined') {
-				throw new Error("请設置有效的收件人信息！");
+				$L.throwError("请設置有效的收件人信息！");
 			} else if (!$L.isArray(recipients)) {
-				throw new Error("收件人信息必須是數組對象！");
+				$L.throwError("收件人信息必須是數組對象！");
 			}
 			var mo = $L.executeNativeJS(['message', 'createMessage'], type);
 			if (mo) {
@@ -2700,19 +2723,20 @@ window.A === undefined && (window.A = app);
 /*===============================================================================
 ************   ui native popover   ************
 ===============================================================================*/
-;(function($L, global) {
+;
+(function($L, global) {
   var currentView = $L.currentView();
   var popover = function(x, y, width, height) {
       var popoverType = $L.getPopoverType(); //打开窗口类型
       var popovername;
       x = x || 0;
       y = y || 0;
+      height = height || 0;
+      width = width || 0;
       if ($L.android()) {
         y = y * window.devicePixelRatio;
         height = height * window.devicePixelRatio;
       }
-      width = width || 0;
-      height = height || 0;
       /*
        * 打开一个指定地址的popover(重复调用的效果同front方法)
        * @param String url 要打开窗口的地址
@@ -2720,7 +2744,7 @@ window.A === undefined && (window.A = app);
        */
       this.open = function(url, name) { ///打开新窗口
         if (typeof url === 'undefined') {
-          throw new Error("请传入有效的url路径！");
+          $L.throwError("请传入有效的url路径！");
         }
         popovername = this.popovername = name || url;
         var rect = {
@@ -2749,21 +2773,21 @@ window.A === undefined && (window.A = app);
       }
       this.behindOf = function(popovr) {
         if (typeof popovr === 'undefined') {
-          throw new Error("请传入有效的popovr对象！");
+          $L.throwError("请传入有效的popovr对象！");
         }
         var name = popovr.popovername;
         if (typeof name === 'undefined') {
-          throw new Error("无法操作未打开的popovr！");
+          $L.throwError("无法操作未打开的popovr！");
         }
         if (popovername) $L.executeNativeJS(['window', 'bringPopoverBelow'], popovername, name)
       }
       this.frontOf = function(popovr) {
         if (typeof popovr === 'undefined') {
-          throw new Error("请传入有效的popovr对象！");
+          $L.throwError("请传入有效的popovr对象！");
         }
         var name = popovr.popovername;
         if (typeof name === 'undefined') {
-          throw new Error("无法操作未打开的popovr！");
+          $L.throwError("无法操作未打开的popovr！");
         }
         if (popovername) $L.executeNativeJS(['window', 'bringPopoverAbove'], popovername, name)
       }
@@ -2776,9 +2800,9 @@ window.A === undefined && (window.A = app);
          */
       this.evalScript = function(script) {
         if (typeof script === 'undefined') {
-          throw new Error("请传入有效的JS语句！");
+          $L.throwError("请传入有效的JS语句！");
         } else if (typeof popovername === 'undefined') {
-          throw new Error("无法在未打开的popover中执行JS语句！");
+          $L.throwError("无法在未打开的popover中执行JS语句！");
         } else {
           $L.executeNativeJS(['window', 'evaluateScript'], '', popovername, script)
         }
@@ -3099,6 +3123,94 @@ window.A === undefined && (window.A = app);
 	}
 
 }(app, this));
+/*===============================================================================
+************   ui native app   ************
+===============================================================================*/
+;
+(function($L, global) {
+	var tabMark = function() {
+		var dataS;
+		var frameRect;
+		var tabM = $L.executeRequireJS('tabMark')
+		this.setDataSource = function(dataSources) {
+			if (typeof dataSources === 'undefined') {
+				$L.throwError("请传入有效的dataSources！");
+			}
+			dataS = dataSources;
+			if ($.os.android && dataSources.btnHeight) {
+				dataSources.btnHeight = dataSources.btnHeight * window.devicePixelRatio;
+			}
+			$L.executeObjFunJS([tabM, 'setDataSource'], dataSources)
+			return this;
+		};
+
+		this.setFrame = function(x, y, width, height) {
+			x = x || 0;
+			y = y || 0;
+			height = height || 0;
+			width = width || 0;
+			if ($L.android()) {
+				y = y * window.devicePixelRatio;
+				height = height * window.devicePixelRatio;
+			}
+			var rect = {
+				x: x,
+				y: y,
+				width: width,
+				height: height
+			};
+			frameRect = rect;
+			$L.executeObjFunJS([tabM, 'setFrame'], rect)
+			return this;
+		};
+
+		this.show = function() {
+			if (typeof dataS === 'undefined') {
+				$L.throwError("请先调用setDataSource方法设置数据源！");
+			}
+			if (typeof frameRect === 'undefined') {
+				$L.throwError("请先调用setFrame方法设置尺寸及位置！");
+			}
+			if (tabM) {
+				$L.executeObjFunJS([tabM, 'show'])
+			} else {
+				tabM = 'tabMark';
+				$L.executeObjFunJS([tabM, 'show'], dataS, frameRect)
+			}
+			return this;
+		};
+
+		this.hide = function() {
+
+		};
+
+		this.remove = function() {
+
+		};
+
+		this.addEditCallback = function(editCallback) {
+
+		};
+
+		this.addScrollCallback = function(scrollCallback) {
+
+		};
+
+		this.showContentAtIndex = function(index) {
+
+		};
+
+	}
+
+
+
+	$L.require = function(widget) {
+		if (widget == 'tabMark') {
+			return new tabMark();
+		}
+	}
+
+}(app, this));
 ;
 (function($L, global) {
 	$L.debug = function() {
@@ -3169,8 +3281,16 @@ window.A === undefined && (window.A = app);
 				var res = $L.debug.http.apply($L.debug, Array.prototype.slice.call(arguments))
 			} else if (arguments[0][0] == 'storage') {
 				var res = $L.debug.storage.apply($L.debug, Array.prototype.slice.call(arguments))
-			}else if (arguments[0][0] == 'audio') {
+			} else if (arguments[0][0] == 'audio') {
 				var res = $L.debug.audio.apply($L.debug, Array.prototype.slice.call(arguments))
+			}
+			if (typeof res !== 'undefined') return res;
+		}
+
+		$L.executeObjFunJS = function() {
+			var res;
+			if (arguments[0][0] == 'tabMark') {
+				var res = $L.debug.tabMark.apply($L.debug, Array.prototype.slice.call(arguments))
 			}
 			if (typeof res !== 'undefined') return res;
 		}
@@ -3531,5 +3651,20 @@ window.A === undefined && (window.A = app);
 		// }else if(key == "uuid"){
 		// 	return '48a9511b-d23a-43c4-a868-0ed2ad80e75b'
 		// }
+	}
+}(app, this))
+;
+(function($L, global) {
+	$L.debug.tabMark = function() {
+		debugger;
+		var key = arguments[0][1];
+		if (key == "show") {
+			var dataS = arguments[1];
+			var frameRect = arguments[2];
+			dataS = JSON.stringify(dataS);
+			frameRect = JSON.stringify(frameRect);
+			var js = "tabMarkShow('" + dataS + "','" + frameRect + "')"
+			this.postMessage(js);
+		}
 	}
 }(app, this))

@@ -14,7 +14,7 @@
 		 */
 		this.executeSql = function(sql) {
 			if (typeof sql === undefined) {
-				throw new Error("请传入有效的sql语句！");
+				$L.throwError("请传入有效的sql语句！");
 			}
 			return $L.executeObjFunJS([dataBase, 'executeSql'], sql);
 		}
@@ -39,7 +39,7 @@
 		 */
 		this.selectAll = function(sql) {
 			if (typeof sql === undefined) {
-				throw new Error("请传入有效的sql语句！");
+				$L.throwError("请传入有效的sql语句！");
 			}
 			return $L.executeObjFunJS([dataBase, 'selectAll'], sql);
 		}

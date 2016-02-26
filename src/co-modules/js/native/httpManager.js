@@ -12,7 +12,7 @@
 		settings.bodyType = 'text';
 		this.open = function(url, method, timeout) {
 			if (typeof url === 'undefined') {
-				throw new Error("请传入有效的请求地址！");
+				$L.throwError("请传入有效的请求地址！");
 			}
 			settings.method = method || 'GET';
 			settings.url = url;
@@ -22,7 +22,7 @@
 		this.send = function(body, dataType) {
 			isAbort = false;
 			if (!isOpened) {
-				throw new Error("执行send方法失败，请确保请求对象为OPENDE状态！");
+				$L.throwError("执行send方法失败，请确保请求对象为OPENDE状态！");
 			}
 			if (body && $L.isPlainObject(body)) {
 				settings.body = JSON.stringify(body)
@@ -46,7 +46,7 @@
 		this.postForm = function(data, dataType, files) {
 			isAbort = false;
 			if (!isOpened) {
-				throw new Error("执行postForm方法失败，请确保请求对象为OPENDE状态！");
+				$L.throwError("执行postForm方法失败，请确保请求对象为OPENDE状态！");
 			}
 			var form = {};
 			if (data) {
@@ -73,7 +73,7 @@
 		};
 		this.setHeader = function(headerName, headerValue) {
 			if (!isOpened) {
-				throw new Error("执行setHeader方法失败，请确保请求对象为OPENDE状态！");
+				$L.throwError("执行setHeader方法失败，请确保请求对象为OPENDE状态！");
 			}
 			if (settings.HTTPHeader) {
 				if (headerName && headerValue) settings.HTTPHeader[headerName.toLowerCase()] = headerValue;
@@ -84,7 +84,7 @@
 		};
 		this.setOffline = function(type) {
 			if (!isOpened) {
-				throw new Error("执行setOffline方法失败，请确保请求对象为OPENDE状态！");
+				$L.throwError("执行setOffline方法失败，请确保请求对象为OPENDE状态！");
 			}
 			if (type == 'true') {
 				settings.offline = 'true';
@@ -97,13 +97,13 @@
 		this.setExpires = function(ms) {
 
 			if (!isOpened) {
-				throw new Error("执行setExpires方法失败，请确保请求对象为OPENDE状态！");
+				$L.throwError("执行setExpires方法失败，请确保请求对象为OPENDE状态！");
 			}
 			if (ms) settings.expires = ms;
 		};
 		this.setCertificate = function(path, password) {
 			if (!isOpened) {
-				throw new Error("执行setCertificate方法失败，请确保请求对象为OPENDE状态！");
+				$L.throwError("执行setCertificate方法失败，请确保请求对象为OPENDE状态！");
 			}
 			if (settings.certificate) {
 				if (path) settings.certificate['path'] = path;

@@ -59,7 +59,7 @@
     getCamera: function(filePath, rlution, cameraType) {
       if ($L.android()) {
         if (typeof filePath === 'undefined') {
-          throw new Error("请传入有效的文件保存的路径！");
+          $L.throwError("请传入有效的文件保存的路径！");
         }
       }
 

@@ -109,7 +109,7 @@
 		 * @return download
 		 */
 		getDownLoaderById: function(id) {
-			if(!id) throw new Error("请传入有效的下载任务ID！");
+			if(!id) $L.throwError("请传入有效的下载任务ID！");
 			var download = $L.executeNativeJS(['downloader', 'enumerateById'], id);
 			return  download;
 		},

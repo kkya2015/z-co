@@ -29,7 +29,7 @@
 	 */
 	$L.closeComponent = function(componentName, animation) {
 		if (typeof componentName === 'undefined') {
-			throw new Error("请传入有效的componentName！");
+			$L.throwError("请传入有效的componentName！");
 		}
 		$L.executeNativeJS(['component', 'closeComponent'], componentName, animation)
 	}

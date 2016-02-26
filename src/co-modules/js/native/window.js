@@ -17,7 +17,7 @@
      */
     this.open = function(url, name) { ///打开新窗口
       if (typeof url === 'undefined') {
-        throw new Error("请传入有效的url路径！");
+        $L.throwError("请传入有效的url路径！");
       }
       windowname = name || url;
       var options = {
@@ -50,9 +50,9 @@
      */
     this.evalScript = function(script) {
       if (typeof script === 'undefined') {
-        throw new Error("请传入有效的JS语句！");
+        $L.throwError("请传入有效的JS语句！");
       } else if (typeof windowname === 'undefined') {
-        throw new Error("无法在未打开的window窗口中执行JS语句！");
+        $L.throwError("无法在未打开的window窗口中执行JS语句！");
       } else {
         $L.executeNativeJS(['window', 'evaluateScript'], '',windowname, '', script)
       }
@@ -64,11 +64,11 @@
      */
     this.evalScriptInPop = function(script,popoverName) {
       if (typeof script === 'undefined') {
-        throw new Error("请传入有效的JS语句！");
+        $L.throwError("请传入有效的JS语句！");
       } else if (typeof windowname === 'undefined') {
-        throw new Error("无法在未打开的window窗口中执行JS语句！");
+        $L.throwError("无法在未打开的window窗口中执行JS语句！");
       }else if (typeof popoverName === 'undefined') {
-        throw new Error("请传入有效的popoverName！");
+        $L.throwError("请传入有效的popoverName！");
       } else {
         $L.executeNativeJS(['window', 'evaluateScript'], '',windowname, popoverName, script)
       }

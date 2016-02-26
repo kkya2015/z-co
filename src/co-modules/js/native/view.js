@@ -150,10 +150,16 @@
      */
     this.addSlideIgnore = function(x, y, width, height) {
       width = width || this.getWidth();
-      height = height || this.getHeight();
-      if ($L.android()) {
+      y = y || 0;
+      if (!height) {
+        height = this.getHeight();
+        if ($L.android()) {
+          y = y * window.devicePixelRatio;
+          height = height - y;
+        }
+      } else {
         height = height * window.devicePixelRatio;
-        y = y || y * window.devicePixelRatio;
+        y = y * window.devicePixelRatio;
       }
       var IgnoreParams = {
         x: x || 0,

@@ -10,11 +10,11 @@
 		}
 		this.send = function(msg, success, error) {
 			if (typeof msg === 'undefined') {
-				throw new Error("请传入有效消息内容！");
+				$L.throwError("请传入有效消息内容！");
 			} else if (typeof recipients === 'undefined') {
-				throw new Error("请設置有效的收件人信息！");
+				$L.throwError("请設置有效的收件人信息！");
 			} else if (!$L.isArray(recipients)) {
-				throw new Error("收件人信息必須是數組對象！");
+				$L.throwError("收件人信息必須是數組對象！");
 			}
 			var mo = $L.executeNativeJS(['message', 'createMessage'], type);
 			if (mo) {

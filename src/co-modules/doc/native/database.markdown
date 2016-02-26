@@ -2,7 +2,7 @@
 ***
 
 
-数据库 通过数据库对象可以进行一般的数据库操作，比如增、删、改、查以及事务等基本操作。
+数据库对象，通过数据库对象可以进行一般的数据库操作，比如增、删、改、查以及事务等基本操作。
 
 
 
@@ -22,7 +22,7 @@
 		-	[selectAll](#selectAll) ：查找所有符合条件的数据。
 		-	[beginTransaction](#beginTransaction) ：开始事务。
 		-	[commit](#commit) ：提交事务。
-		-	[rollback](#rollback) ：提交事务。
+		-	[rollback](#rollback) ：事务回滚。
 
 ***
 ###	<div id="方法">方法</div>
@@ -70,7 +70,7 @@
 
 			var dataBase = app.dataBase.open('dataBaseName');
 
-			var flag = dataBase.close()；
+			var flag = dataBase.close();
 
 			if (flag == 1) {
 			    console.log('关闭成功');
@@ -83,7 +83,7 @@
 
 			var dataBase = app.dataBase.open('dataBaseName');
 
-			var flag = dataBase.deleteDataBase()；
+			var flag = dataBase.deleteDataBase();
 
 			if (flag == 1) {
 			    console.log('删除成功');
@@ -112,7 +112,7 @@
 
 			var dataBase = app.dataBase.open('databaseName');
 
-			dataBase.beginTransaction()；
+			dataBase.beginTransaction();
 
 -	#### <div id="commit" style="color:red">commit()   ⇒ void </div>   
 			提交事务。
@@ -121,7 +121,7 @@
 
 			var dataBase = app.dataBase.open('dataBaseName');
 
-			dataBase.commit()；
+			dataBase.commit();
 
 -	#### <div id="rollback" style="color:red">rollback()   ⇒ void </div>   
 			回滚事务。
@@ -130,4 +130,4 @@
 
 			var dataBase = app.dataBase.open('dataBaseName');
 
-			dataBase.rollback()；
+			dataBase.rollback();

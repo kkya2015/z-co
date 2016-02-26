@@ -41,7 +41,7 @@
 		 */
 		dial: function(number, confirm) {
 			if (typeof number === undefined) {
-				throw new Error("请传入有效的手机号码！");
+				$L.throwError("请传入有效的手机号码！");
 			}
 			if (!confirm) {
 				confirm = false;

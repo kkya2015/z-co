@@ -67,6 +67,7 @@ var gulp = require('gulp'), //基础库
             'src/co-modules/js/native/socketManager.js',
             'src/co-modules/js/native/storage.js',
             'src/co-modules/js/native/zip.js',
+            'src/co-modules/js/native/require.js',
             'src/co-modules/js/debug.js',
             'src/co-modules/js/debug/device.js',
             'src/co-modules/js/debug/os.js',
@@ -76,7 +77,8 @@ var gulp = require('gulp'), //基础库
             'src/co-modules/js/debug/http.js',
             'src/co-modules/js/debug/storage.js',
             'src/co-modules/js/debug/screen.js',
-            'src/co-modules/js/debug/audio.js'
+            'src/co-modules/js/debug/audio.js',
+            'src/co-modules/js/debug/tabMark.js'
         ]
     },
     co = {
@@ -106,11 +108,21 @@ var gulp = require('gulp'), //基础库
             'src/co-modules/js/widgets/tabs.js'
         ]
     },
+    // emu = {
+    //     filename: 'contains',
+    //     js: 'src/co-modules/emu/cont.js',
+    //     html: 'src/co-modules/emu/contains.html',
+    //     css: 'src/co-modules/emu/transitions.css'
+    // },
     emu = {
         filename: 'contains',
-        js: 'src/co-modules/emu/contains.js',
-        html: 'src/co-modules/emu/contains.html',
-        css: 'src/co-modules/emu/transitions.css'
+        jsFiles: [
+            'src/co-modules/emu/contains.js',
+            'src/co-modules/emu/window.js',
+            'src/co-modules/emu/request.js',
+            'src/co-modules/emu/app.js',
+            'src/co-modules/emu/tabMark.js'
+        ]
     },
     dom = {
         filename: 'dom-bak',
@@ -150,6 +162,9 @@ var gulp = require('gulp'), //基础库
         header: [
             '/**',
             ' * Released on: <%= date.year %>-<%= date.month %>-<%= date.day %>',
+            ' * =====================================================',
+            ' * <%= name %> v1.0.1 (https://github.com/dcloudio/mui)',
+            ' * =====================================================',
             ' */',
             ''
         ].join('\n'),
@@ -186,7 +201,8 @@ gulp.task('co-native', function(cb) {
     gulp.src(native.jsFiles) //要合并的文件
         .pipe(concat(native.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
         .pipe(header(banner.header, {
-            date: date
+            date: date,
+            name: 'Native'
         }))
         .pipe(gulp.dest(paths.bak + date.year + date.month + date.day))
         // .pipe(rename({
@@ -194,7 +210,8 @@ gulp.task('co-native', function(cb) {
         // }))
         .pipe(uglify())
         .pipe(header(banner.header, {
-            date: date
+            date: date,
+            name: 'Native'
         }))
         .pipe(gulp.dest(paths.co.scripts))
         .on('finish', function() {
@@ -207,7 +224,8 @@ gulp.task('co-scripts', function(cb) {
     gulp.src(co.jsFiles) //要合并的文件
         .pipe(concat(co.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
         .pipe(header(banner.header, {
-            date: date
+            date: date,
+            name: 'Co'
         }))
         .pipe(gulp.dest(paths.bak + date.year + date.month + date.day))
         // .pipe(rename({
@@ -215,7 +233,8 @@ gulp.task('co-scripts', function(cb) {
         // }))
         .pipe(uglify())
         .pipe(header(banner.header, {
-            date: date
+            date: date,
+            name: 'Co'
         }))
         .pipe(gulp.dest(paths.co.scripts))
         .on('finish', function() {
@@ -228,7 +247,8 @@ gulp.task('co-dom', function(cb) {
     gulp.src(dom.jsFiles) //要合并的文件
         .pipe(concat(dom.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
         .pipe(header(banner.header, {
-            date: date
+            date: date,
+            name: 'DOM'
         }))
         .pipe(gulp.dest(paths.bak + date.year + date.month + date.day))
         // .pipe(rename({
@@ -236,7 +256,8 @@ gulp.task('co-dom', function(cb) {
         // }))
         .pipe(uglify())
         .pipe(header(banner.header, {
-            date: date
+            date: date,
+            name: 'DOM'
         }))
         .pipe(gulp.dest(paths.co.scripts))
         .on('finish', function() {
@@ -249,7 +270,8 @@ gulp.task('co-zepto', function(cb) {
     gulp.src(zepto.jsFiles) //要合并的文件
         .pipe(concat(zepto.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
         .pipe(header(banner.header, {
-            date: date
+            date: date,
+            name: 'Dom'
         }))
         .pipe(gulp.dest(paths.bak + date.year + date.month + date.day))
         // .pipe(rename({
@@ -257,7 +279,8 @@ gulp.task('co-zepto', function(cb) {
         // }))
         .pipe(uglify())
         .pipe(header(banner.header, {
-            date: date
+            date: date,
+            name: 'Dom'
         }))
         .pipe(gulp.dest(paths.co.scripts))
         .on('finish', function() {
@@ -275,7 +298,8 @@ gulp.task('co-css', function(cb) {
             aggressiveMerging: false,
         }))
         .pipe(header(banner.header, {
-            date: date
+            date: date,
+            name: 'Co'
         }))
         .pipe(gulp.dest(paths.co.styles))
         .on('finish', function() {
@@ -402,9 +426,9 @@ gulp.task('examples', function(cb) {
 
 // emu处理
 gulp.task('build-emu', function(cb) {
-    gulp.src(emu.js)
+    gulp.src(emu.jsFiles)
         .pipe(concat(emu.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(gulp.dest(paths.examples.root))
         .on('end', function() {
             cb();
@@ -413,7 +437,7 @@ gulp.task('build-emu', function(cb) {
 
 gulp.task('build-examples', gulp.series('cleanExamples', 'examples'));
 
-gulp.task('dist-js', gulp.series('dist-co', 'dist-dom', 'dist-zepto', 'dist-native'));
+gulp.task('dist-js', gulp.series('dist-co', 'dist-zepto', 'dist-native'));
 
 gulp.task('build-dist', gulp.series('dist-styles', 'dist-js'));
 
@@ -432,7 +456,7 @@ gulp.task('watch', function(cb) {
     livereload.listen();
     var watcher = gulp.watch(paths.source.examples + '**/*.*');
     watcher.on('change', function(file) {
-        console.log("file.path--"+file);
+        console.log("file.path--" + file);
         var ex = file.indexOf('examples');
         // console.log("ex--"+ex);
         var next = file.substr(ex + 9).lastIndexOf('\\');

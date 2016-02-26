@@ -30,7 +30,7 @@
          */
         record: function(success, error) {
           if (recorderIsRecord) {
-            throw new Error('当前正在录音，请等待录音完成后再进行新的录音操作！');
+            $L.throwError('当前正在录音，请等待录音完成后再进行新的录音操作！');
           }
           $L.executeObjFunJS([recorder, 'record'], options, function(recordFile) {
             if ($L.isFunction(success)) {
@@ -50,7 +50,7 @@
          */
         getCurrentTime: function() {
           if (!recorderIsRecord) {
-            throw new Error('先执行录音操作后，才可获取当前录音时间！');
+            $L.throwError('先执行录音操作后，才可获取当前录音时间！');
           }
           var currentTime = $L.executeObjFunJS([recorder, 'getCurrentTime']);
           if (currentTime) {
@@ -110,7 +110,7 @@
          */
         playJustRecord: function() {
           if (!recorderIsOver) {
-            throw new Error('先执行录音操作后，并录音完成后，才可执行播放录音操作！');
+            $L.throwError('先执行录音操作后，并录音完成后，才可执行播放录音操作！');
           }
           $L.executeObjFunJS([recorder, 'playJustRecord']);
         },
@@ -120,7 +120,7 @@
          */
         stop: function() {
           if (!recorderIsRecord) {
-            throw new Error('先执行录音操作后，才可执行录音结束操作！');
+            $L.throwError('先执行录音操作后，才可执行录音结束操作！');
           }
           $L.executeObjFunJS([recorder, 'stop'])
           recorderIsRecord = false;
@@ -135,7 +135,7 @@
      */
     createPlayer: function(path) {
       if (typeof path === undefined) {
-        throw new Error("请传入有效的音频路径！");
+        $L.throwError("请传入有效的音频路径！");
       }
       var player = $L.executeNativeJS(['audio', 'createPlayer'], path)
       return {
@@ -161,7 +161,7 @@
         },
         seekTo: function(position) {
           if (typeof path === undefined) {
-            throw new Error("请传入有效的播放时间戳！");
+            $L.throwError("请传入有效的播放时间戳！");
           }
           $L.executeObjFunJS([player, 'seekTo'], position)
         },
@@ -173,7 +173,7 @@
         },
         setRoute: function(route) {
           if (typeof route === undefined) {
-            throw new Error("请传入有效的音频输出线路！");
+            $L.throwError("请传入有效的音频输出线路！");
           }
           if (route == 1) {
             route = $L.executeConstantJS(['audio', 'ROUTE_EARPIECE'])

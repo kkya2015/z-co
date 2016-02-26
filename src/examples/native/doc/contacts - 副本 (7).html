@@ -1,0 +1,934 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Contacts</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>contacts</h1>
+  <hr />
+  <p>Contacts模块管理系统通讯录，用于可对系统通讯录进行增、删、改、查等操作。</p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#getAddressBook">getAddressBook</a>
+      ：获取通讯录对象
+    </li>
+  </ul>
+  <h3>
+    <a href="#对象">对象</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <p>
+        <a href="#AddressBook">AddressBook</a>
+        ：通讯录对象
+      </p>
+      <ul>
+        <li>
+          方法
+          <ul>
+            <li>
+              <a href="#create">create</a>
+              ：创建联系人
+            </li>
+            <li>
+              <a href="#find">find</a>
+              ：在通讯录中查找联系人
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <p>
+        <a href="#Contact">Contact</a>
+        ：联系人对象
+      </p>
+      <ul>
+        <li>
+          属性
+          <ul>
+            <li>
+              <a href="#displayName">displayName</a>
+              ：联系人显示的名字（仅可读）
+            </li>
+            <li>
+              <a href="#name">name</a>
+              ：联系人名称
+            </li>
+            <li>
+              <a href="#nickname">nickname</a>
+              ：联系人的昵称
+            </li>
+            <li>
+              <a href="#phoneNumbers">phoneNumbers</a>
+              ：联系人的电话
+            </li>
+            <li>
+              <a href="#emails">emails</a>
+              ：联系人的邮箱
+            </li>
+            <li>
+              <a href="#addresses">addresses</a>
+              ： 联系人的地址
+            </li>
+            <li>
+              <a href="#organizations">organizations</a>
+              ： 联系人的地址
+            </li>
+            <li>
+              <a href="#note">note</a>
+              ：联系人的备注
+            </li>
+          </ul>
+        </li>
+        <li>
+          方法
+          <ul>
+            <li>
+              <a href="#save">save</a>
+              ：保存联系人
+            </li>
+            <li>
+              <a href="#remove">remove</a>
+              ：删除联系人
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="getAddressBook" style="color:red">getAddressBook</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>
+        app.contacts.getAddressBook([type])   ⇒
+        <a href="#Contact">Contact</a>
+      </h4>
+      <pre><code>根据指定通讯录类型获取通讯录对象，获取通讯录对象后可对其进行增、删、改操作。</code></pre>
+
+      <ul>
+        <li> <strong>type</strong>
+          ：要获取的通讯录类型,可取通讯录类型常量，可获取手机通讯录或SIM卡通讯录。
+          <ul>
+            <li> <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：0
+            </li>
+            <li>
+              <strong>取值范围</strong>
+              <ul>
+                <li>0：手机通讯录</li>
+                <li>1：SIM卡通讯录(Android设备，iOS设备暂不支持sim卡)</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var addressBook = app.contacts.getAddressBook(1)</code></pre>
+
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="对象">对象</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="AddressBook" style="color:red">AddressBook</div>
+  </h4>
+  <pre><code>var addressBook = app.contacts.getAddressBook()</code></pre>
+
+  <ul>
+    <li>
+      <h4>
+        <div id="create" style="color:red">create(success, [error])   ⇒ void</div>
+      </h4>
+      <pre><code>创建一个系统联系人，并通过回调函数返回联系人对象，可对联系人对象进行操作设置联系人信息，如名称、地址、电话等。</code></pre>
+
+      <ul>
+        <li>
+          <strong>success</strong>
+          ：创建联系人操作成功回调函数
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <a href="#Contact">Contact</a>
+                  ：联系人对象
+                  <ul>
+                    <li>type：Objcet</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>error</strong>
+          ：创建联系人操作失败回调
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>err</strong>
+                  ：创建联系人操作失败信息
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var addressBook = app.contacts.getAddressBook()
+
+    EX - 1：
+    addressBook.create(function(contact) {
+        console.log(contact);
+    });
+
+    EX - 2：
+    addressBook.create(function(contact) {
+        console.log(contact);
+    }, function(err) {
+        console.log('isError');
+    });
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="find" style="color:red">find(options, success, [error])   ⇒ void</div>
+      </h4>
+      <pre><code>在通讯录中查找联系人</code></pre>
+
+      <ul>
+        <li>
+          <strong>options</strong>
+          ：查找联系人参数
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：JSON
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>keys</strong>
+              <ul>
+                <li>
+                  <strong>name</strong>
+                  ：( String )姓名关键字
+                  <ul>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>success</strong>
+          ：查找联系人操作成功的回调函数。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>contacts</strong>
+                  ：查找到的联系人对象数组(
+                  <a href="#Contact">Contact</a>
+                  )
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：Array
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>error</strong>
+          ：查找联系人操作失败的回调函数。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>err</strong>
+                  ：查找联系人操作失败的信息
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var addressBook = app.contacts.getAddressBook()
+
+    EX - 1：
+    addressBook.find({
+        name: '李四'
+    }, function(contacts) {
+        console.log(contacts);
+    });
+
+    EX - 2：
+    addressBook.find({
+        name: '李四'
+    }, function(contacts) {
+        console.log(contacts);
+    }, function(err) {
+        console.log(err);
+    });
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="Contact" style="color:red">Contact</div>
+  </h4>
+  <pre><code>    var addressBook = app.contacts.getAddressBook()
+    addressBook.create(function(contact) {
+        console.log(contact);
+    });
+</code></pre>
+
+  <ul>
+    <li>
+      <h3>属性</h3>
+    </li>
+    <li>
+      <h4>
+        <div id="displayName" style="color:green">displayName</div>
+      </h4>
+      <pre><code>联系人显示的名字（仅可读）</code></pre>
+
+      <ul>
+        <li>
+          <strong>type</strong>
+          ：String
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var addressBook = app.contacts.getAddressBook()
+    addressBook.create(function(contact) {
+        console.log(contact.displayName);
+    });
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="name" style="color:green">name</div>
+      </h4>
+      <pre><code>联系人名称</code></pre>
+
+      <ul>
+        <li>
+          <strong>type</strong>
+          ：JSON
+        </li>
+        <li>
+          <strong>keys</strong>
+          <ul>
+            <li>
+              <strong>familyName</strong>
+              ：( <em>String</em>
+              )联系人的姓
+            </li>
+            <li>
+              <strong>givenName</strong>
+              ：( <em>String</em>
+              )联系人的名
+            </li>
+            <li>
+              <strong>middleName</strong>
+              ：(
+              <em>String</em>
+              )联系人的中间名
+            </li>
+            <li>
+              <strong>honorificPrefix</strong>
+              ：(
+              <em>String</em>
+              )联系人的前缀（如Mr.或Dr.）
+            </li>
+            <li>
+              <strong>honorificSuffix</strong>
+              ：(
+              <em>String</em>
+              )联系人的后缀
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var addressBook = app.contacts.getAddressBook()
+    addressBook.create(function(contact) {
+        console.log(contact.name.familyName);
+    });
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="nickname" style="color:green">nickname</div>
+      </h4>
+      <pre><code>联系人的昵称</code></pre>
+
+      <ul>
+        <li>
+          <strong>type</strong>
+          ：String
+        </li>
+        <li>
+          <strong>默认值</strong>
+          ：无
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var addressBook = app.contacts.getAddressBook()
+    addressBook.create(function(contact) {
+        console.log(contact.nickname);
+    });
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="phoneNumbers" style="color:green">
+          phoneNumbers(
+          <a href="#PhoneNumber">PhoneNumber</a>
+          )
+        </div>
+      </h4>
+      <pre><code>联系人的电话</code></pre>
+
+      <ul>
+        <li>
+          <strong>type</strong>
+          ：Array(
+          <a href="#PhoneNumber">PhoneNumber</a>
+          )
+        </li>
+        <li>
+          <strong>默认值</strong>
+          ：无
+          <ul>
+            <li>
+              <strong><div id="PhoneNumber">PhoneNumber</div></strong> 
+              <ul>
+                <li>
+                  <strong>type</strong>
+                  ：JSON
+                </li>
+                <li>
+                  <strong>keys</strong>
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：(
+                      <em>String</em>
+                      )联系人电话类型，如电话号码中的“mobile”表示移动电话、“main”表示主要联系方式
+                    </li>
+                    <li>
+                      <strong>value</strong>
+                      ：(
+                      <em>String</em>
+                      )电话号码
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var addressBook = app.contacts.getAddressBook()
+    addressBook.create(function(contact) {
+        console.log(contact.phoneNumbers[0].value);
+    });
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="emails" style="color:green">
+          emails(
+          <a href="#Email">Email</a>
+          )
+        </div>
+      </h4>
+      <pre><code>联系人的邮箱</code></pre>
+
+      <ul>
+        <li>
+          <strong>type</strong>
+          ：Array(
+          <a href="#Email">Email</a>
+          )
+        </li>
+        <li>
+          <strong>默认值</strong>
+          ：无
+          <ul>
+            <li>
+              <strong><div id="Email">Email</div></strong> 
+              <ul>
+                <li>
+                  <strong>type</strong>
+                  ：JSON
+                </li>
+                <li>
+                  <strong>默认值</strong>
+                  ：无
+                </li>
+                <li>
+                  <strong>keys</strong>
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：(
+                      <em>String</em>
+                      )联系人邮箱类型，如电话号码中的“home”表示个人邮箱、“work”表示工作邮箱、空值表示为其他
+                    </li>
+                    <li>
+                      <strong>value</strong>
+                      ：(
+                      <em>String</em>
+                      )邮箱地址
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var addressBook = app.contacts.getAddressBook()
+    addressBook.create(function(contact) {
+        console.log(contact.emails[0].value);
+    });
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="addresses" style="color:green">
+          addresses(
+          <a href="#address">address</a>
+          )
+        </div>
+      </h4>
+      <pre><code>联系人的地址</code></pre>
+
+      <ul>
+        <li>
+          <strong>type</strong>
+          ：Array(
+          <a href="#address">address</a>
+          )
+        </li>
+        <li>
+          <strong>默认值</strong>
+          ：无
+          <ul>
+            <li>
+              <strong>
+                <div id="address">address</div>
+              </strong>
+              <ul>
+                <li>
+                  <strong>type</strong>
+                  ：JSON
+                </li>
+                <li>
+                  <strong>keys</strong>
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：(
+                      <em>String</em>
+                      )联系人地址类型，如“home”表示家庭地址，“work”表示工作地址，值为空或其他字段时表示 显示地址为——其他
+                    </li>
+                    <li>
+                      <strong>streetAddress</strong>
+                      ：(
+                      <em>String</em>
+                      )街道地址
+                    </li>
+                    <li>
+                      <strong>locality</strong>
+                      ：(
+                      <em>String</em>
+                      )城市或地区
+                    </li>
+                    <li>
+                      <strong>region</strong>
+                      ：(
+                      <em>String</em>
+                      )省或地区
+                    </li>
+                    <li>
+                      <strong>country</strong>
+                      ：(
+                      <em>String</em>
+                      )国家
+                    </li>
+                    <li>
+                      <strong>postalCode</strong>
+                      ：(
+                      <em>String</em>
+                      )邮政编码
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var addressBook = app.contacts.getAddressBook()
+    addressBook.create(function(contact) {
+        console.log(contact.address[0].type);
+    });
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="organizations" style="color:green">
+          organizations(
+          <a href="#organization">organization</a>
+          )
+        </div>
+      </h4>
+      <pre><code>联系人所属组织信息</code></pre>
+
+      <ul>
+        <li>
+          <strong>type</strong>
+          ：Array(
+          <a href="#organization">organization</a>
+          )
+        </li>
+        <li>
+          <strong>默认值</strong>
+          ：无
+          <ul>
+            <li>
+              <strong>
+                <div id="organization">organization</div>
+              </strong>
+              <ul>
+                <li>
+                  <strong>type</strong>
+                  ：JSON
+                </li>
+                <li>
+                  <strong>keys</strong>
+                  <ul>
+                    <li>
+                      <strong>name</strong>
+                      ：(
+                      <em>String</em>
+                      )联系人所属组织名称
+                    </li>
+                    <li>
+                      <strong>department</strong>
+                      ：(
+                      <em>String</em>
+                      )联系人所属组织名称
+                    </li>
+                    <li>
+                      <strong>title</strong>
+                      ：(
+                      <em>String</em>
+                      )联系人在组织中的职位
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var addressBook = app.contacts.getAddressBook()
+    addressBook.create(function(contact) {
+        console.log(contact.organizations[0].name);
+    });
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="note" style="color:green">note</div>
+      </h4>
+      <pre><code>联系人的备注</code></pre>
+
+      <ul>
+        <li>
+          <strong>type</strong>
+          ：String
+        </li>
+        <li>
+          <strong>默认值</strong>
+          ：无
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var addressBook = app.contacts.getAddressBook()
+    addressBook.create(function(contact) {
+        console.log(contact.organizations[0].name);
+    });
+</code></pre>
+
+    </li>
+    <li>
+      <h3>方法</h3>
+    </li>
+    <li>
+      <h4>
+        <div id="save" style="color:red">save(success, error)   ⇒ void</div>
+      </h4>
+      <pre><code>将联系人数据保存到通讯录中，操作成功将调用success回调函数，操作失败将通过通过error回调函数返回错误信息。</code></pre>
+
+      <ul>
+        <li>
+          <strong>success</strong>
+          ：添加联系人操作成功回调
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>error</strong>
+          ：添加联系人操作失败回调
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>err</strong>
+                  ：添加联系人操作失败信息
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var addressBook = app.contacts.getAddressBook()
+
+    addressBook.create(function(contact) {
+        contact.name = {
+            givenName: &quot;名字&quot;,
+            familyName: &quot;姓氏&quot;
+        };
+        contact.save(function() {
+            console.log('Save Success!');
+        }, function(err) {
+            console.log(err);
+        })
+    });
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="remove" style="color:red">remove(success, error)   ⇒ void</div>
+      </h4>
+      <pre><code>删除联系人，操作成功将调用success回调函数，操作失败将通过通过error回调函数返回错误信息。</code></pre>
+
+      <ul>
+        <li>
+          <strong>success</strong>
+          ：删除联系人操作成功回调
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>error</strong>
+          ：删除联系人操作失败回调
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>err</strong>
+                  ：添加联系人操作失败信息
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var addressBook = app.contacts.getAddressBook()
+
+    addressBook.find({
+        name: '李四'
+    }, function(contacts) {
+        var contact = contacts[0]
+        contact.remove(function() {
+            console.log('Remove Success!');
+        }, function(err) {
+            console.log(err);
+        })
+    });
+</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

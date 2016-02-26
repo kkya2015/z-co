@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>contacts</title>
+    <title>database</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -34,15 +34,19 @@
         <div class="ui-nav-bar-inner">
             <a class="ui-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
             </a>
-            <h1 class="ui-nav-bar-title">Contacts</h1>
+            <h1 class="ui-nav-bar-title">Database</h1>
             <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
             </a>
         </div>
     </header>
-    <a id='create' class="button button-block button-rounded button-inverse">新建联系人</a>
-    <a id='find' class="button button-block button-rounded button-inverse">修改联系人</a>
-    <a id='remove' class="button button-block button-rounded button-inverse">删除联系人</a>
-
+    <a id='beginTrans' class="button button-block button-rounded button-inverse">开始事务</a>
+    <a id='execute' class="button button-block button-rounded button-inverse">执行SQL</a>
+    <a id='commit' class="button button-block button-rounded button-inverse">提交事务</a>
+    <a id='find' class="button button-block button-rounded button-inverse">查找符合条件的数据</a>
+    <a id='rollback' class="button button-block button-rounded button-inverse">事务回滚</a>
+    <a id='close' class="button button-block button-rounded button-inverse">关闭数据库</a>
+    <a id='delete' class="button button-block button-rounded button-inverse">删除数据库</a>
+    
     <div id="log">Contacts模块管理系统通讯录，用于可对系统通讯录进行增、删、改、查等操作。</div>
     <script src="../dist/js/native.js"></script>
     <script src="../dist/js/dom.js"></script>
@@ -54,13 +58,13 @@
 var view = app.currentView();
 domReady(function(require) {
 
-    var addressBook = app.contacts.getAddressBook()
-    $('#create').button(function(el, evt) {
-        create(addressBook)
+    var dataBase = app.dataBase.open('dataBaseName');
+    $('#beginTrans').button(function(el, evt) {
+        beginTrans(dataBase)
     })
 
-    $('#find').button(function(el, evt) {
-        find(addressBook)
+    $('#beginTrans').button(function(el, evt) {
+        beginTrans(addressBook)
     })
 
     $('#remove').button(function(el, evt) {
@@ -68,7 +72,7 @@ domReady(function(require) {
     })
 
     $('.ui-nav-bar-right').button(function() {
-        setDocTarget('doc/contacts.html', 'Contacts Doc')
+        setDocTarget('doc/database.html', 'Database Doc')
         var win = app.createWindow();
         win.open('doc.html')
     })
@@ -76,21 +80,8 @@ domReady(function(require) {
 
 });
 
-function create(addressBook) {
-    addressBook.create(function(contact) {
-        contact.name = {
-            givenName: "李四",
-            familyName: "姓氏"
-        };
-        contact.save(function() {
-            printout('添加联系人成功!');
-        }, function(err) {
-            printout('添加联系人失败!' + err);
-        })
-
-    });
-
-
+function beginTrans(dataBase) {
+    
 }
 
 function find(addressBook) {

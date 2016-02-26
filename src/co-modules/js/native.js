@@ -245,6 +245,10 @@ var app = (function(global) {
     return elements
   }
 
+  $L.throwError = function(errorInfo) {
+    throw new Error(errorInfo);
+  };
+
   var resolveFun = function(arr) {
     var fun = baseObj;
     var callObj = baseObj;
@@ -270,6 +274,19 @@ var app = (function(global) {
     var callFun = resolveFun(arguments[0]);
     if ($L.isFunction(callFun.fun)) {
       return callFun.fun.apply(callFun.callObj, args);
+    }
+  }
+
+  /*
+   * 执行require方法统一入口
+   */
+  $L.executeRequireJS = function() {
+    var args = Array.prototype.slice.call(arguments);
+    if (baseObj) {
+      var fun = baseObj['require'];
+      if ($L.isFunction(fun)) {
+        return fun.apply(baseObj, args);
+      }
     }
   }
 
@@ -474,11 +491,11 @@ var app = (function(global) {
   $L.addSlideDrawer = function(url, type, edge) {
     var patrn = /^[0-9]{1,20}$/;
     if (typeof url === 'undefined') {
-      throw new Error("请传入有效的抽屉页面路径！");
+      $L.throwError("请传入有效的抽屉页面路径！");
     } else if ($L.isPlainObject(url)) {
       var uri = url['url'];
       if (typeof uri === 'undefined') {
-        throw new Error("请传入有效的抽屉页面路径！");
+        $L.throwError("请传入有效的抽屉页面路径！");
       } else {
         type = url['type'];
         edge = url['edge'];
@@ -551,11 +568,11 @@ var app = (function(global) {
    */
   $L.evalScriptInComponent = function(componentName, windowName, script, popoverName) {
     if (typeof componentName === 'undefined') {
-      throw new Error("请传入有效的componentName！");
+      $L.throwError("请传入有效的componentName！");
     } else if (typeof windowName === 'undefined') {
-      throw new Error("请传入有效的windowName！");
+      $L.throwError("请传入有效的windowName！");
     } else if (typeof script === 'undefined') {
-      throw new Error("请传入有效的JS语句！");
+      $L.throwError("请传入有效的JS语句！");
     }
 
     if (typeof popoverName === 'undefined') {
@@ -573,7 +590,7 @@ var app = (function(global) {
    */
   $L.evalScriptInWindow = function(script, windowName) {
     if (typeof script === 'undefined') {
-      throw new Error("请传入有效的JS语句！");
+      $L.throwError("请传入有效的JS语句！");
     } else if (typeof windowName === 'undefined') {
       $L.executeNativeJS(['window', 'evaluateScript'], '', '', '', script)
     } else {
@@ -589,9 +606,9 @@ var app = (function(global) {
    */
   $L.evalScriptInPop = function(script, popoverName, windowName) {
     if (typeof script === 'undefined') {
-      throw new Error("请传入有效的JS语句！");
+      $L.throwError("请传入有效的JS语句！");
     } else if (typeof popoverName === 'undefined') {
-      throw new Error("请传入有效的popoverName！");
+      $L.throwError("请传入有效的popoverName！");
     } else if (typeof windowName === 'undefined') {
       $L.executeNativeJS(['window', 'evaluateScript'], '', '', popoverName, script)
     } else {
@@ -622,11 +639,11 @@ var app = (function(global) {
    */
   $L.alert = function(message, title, btnCaption, callback) {
     if (typeof message === 'undefined') {
-      throw new Error("请传入有效消息内容！");
+      $L.throwError("请传入有效消息内容！");
     } else if ($L.isPlainObject(message)) {
       var msg = message['message'];
       if (typeof msg === 'undefined') {
-        throw new Error("请传入有效消息内容！");
+        $L.throwError("请传入有效消息内容！");
       } else {
         title = message['title'];
         btnCaption = message['btnCaption'];
@@ -663,11 +680,11 @@ var app = (function(global) {
    */
   $L.confirm = function(message, title, btnCaptions, callback) {
     if (typeof message === 'undefined') {
-      throw new Error("请传入有效消息内容！");
+      $L.throwError("请传入有效消息内容！");
     } else if ($L.isPlainObject(message)) {
       var msg = message['message'];
       if (typeof msg === 'undefined') {
-        throw new Error("请传入有效消息内容！");
+        $L.throwError("请传入有效消息内容！");
       } else {
         title = message['title'];
         btnCaptions = message['btnCaptions'];
@@ -706,11 +723,11 @@ var app = (function(global) {
    */
   $L.prompt = function(message, title, btnCaptions, inputValue, inputTpye, callback) {
     if (typeof message === 'undefined') {
-      throw new Error("请传入有效消息内容！");
+      $L.throwError("请传入有效消息内容！");
     } else if ($L.isPlainObject(message)) {
       var msg = message['message'];
       if (typeof msg === 'undefined') {
-        throw new Error("请传入有效消息内容！");
+        $L.throwError("请传入有效消息内容！");
       } else {
         title = message['title'];
         btnCaptions = message['btnCaptions'];

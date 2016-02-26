@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Contacts</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>database</h1>
+  <hr />
+  <p>数据库对象，通过数据库对象可以进行一般的数据库操作，比如增、删、改、查以及事务等基本操作。</p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#open">open</a>
+      ：打开一个dataBase，获得一个dataBase对象。
+    </li>
+  </ul>
+  <h3>
+    <a href="#对象">对象</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#DataBase">DataBase</a>
+      ：数据库对象
+      <ul>
+        <li>
+          方法
+          <ul>
+            <li>
+              <a href="#executeSql">executeSql</a>
+              ：执行某一个Sql语句。
+            </li>
+            <li>
+              <a href="#close">close</a>
+              ：关闭数据库。
+            </li>
+            <li>
+              <a href="#deleteDataBase">deleteDataBase</a>
+              ：删除数据库。
+            </li>
+            <li>
+              <a href="#selectAll">selectAll</a>
+              ：查找所有符合条件的数据。
+            </li>
+            <li>
+              <a href="#beginTransaction">beginTransaction</a>
+              ：开始事务。
+            </li>
+            <li>
+              <a href="#commit">commit</a>
+              ：提交事务。
+            </li>
+            <li>
+              <a href="#rollback">rollback</a>
+              ：事务回滚。
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="open" style="color:red">open</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>
+        app.dataBase.open(dataBaseName)   ⇒
+        <a href="#DataBase">DataBase</a>
+      </h4>
+      <pre><code>    打开一个dataBase，获得一个dataBase对象，若存在此对象，则直接返回；若不存在，则创建一个新的dataBase。
+</code></pre>
+
+      <ul>
+        <li> <strong>dataBaseName</strong>
+          ：支持名字(在默认路径创建数据库)和协议路径(请参照
+          <a href="./xieyilujin">协议路径</a>
+          )
+          <ul>
+            <li> <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var dataBase = app.dataBase.open('dataBaseName');</code></pre>
+
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="对象">对象</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="DataBase" style="color:red">DataBase</div>
+  </h4>
+  <pre><code>var dataBase = app.dataBase.open('dataBaseName');</code></pre>
+
+  <ul>
+    <li>
+      <h4>
+        <div id="executeSql" style="color:red">executeSql(sql)   ⇒ Number</div>
+      </h4>
+      <pre><code>执行某一个Sql语句，比如建表、插入、删除、修改等语句。成功返回 1， 失败返回 0。</code></pre>
+
+      <ul>
+        <li>
+          <strong>sql</strong>
+          ：要执行的Sql语句。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var dataBase = app.dataBase.open('dataBaseName');
+
+    var flag = dataBase.executeSql('CREATE TABLE IF NOT EXISTS t_students (id integer PRIMARY KEY AUTOINCREMENT,name text,age integer,number DOUBLE,buer BOOL)');
+
+    if (flag == 1) {
+        console.log('执行成功');
+    }
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="close" style="color:red">close()   ⇒ Number</div>
+      </h4>
+      <pre><code>关闭数据库。成功返回 1， 失败返回 0。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var dataBase = app.dataBase.open('dataBaseName');
+
+    var flag = dataBase.close()；
+
+    if (flag == 1) {
+        console.log('关闭成功');
+    }
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="deleteDataBase" style="color:red">deleteDataBase()   ⇒ Number</div>
+      </h4>
+      <pre><code>删除数据库。成功返回 1， 失败返回 0。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var dataBase = app.dataBase.open('dataBaseName');
+
+    var flag = dataBase.deleteDataBase()；
+
+    if (flag == 1) {
+        console.log('删除成功');
+    }
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="selectAll" style="color:red">selectAll(sql)   ⇒ Array</div>
+      </h4>
+      <pre><code>查找所有符合条件的数据。返回值为包含表字段的JSON对象组成的数组</code></pre>
+
+      <ul>
+        <li>
+          <strong>sql</strong>
+          ：要执行的Sql语句。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var dataBase = app.dataBase.open('dataBaseName');
+
+    var res = dataBase.selectAll('select * from t_students');
+
+    if (res.length == &gt;0) {
+        console.log(res[0].name);
+    }
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="beginTransaction" style="color:red">beginTransaction()   ⇒ void</div>
+      </h4>
+      <pre><code>开始事务。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var dataBase = app.dataBase.open('databaseName');
+
+    dataBase.beginTransaction()；
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="commit" style="color:red">commit()   ⇒ void</div>
+      </h4>
+      <pre><code>提交事务。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var dataBase = app.dataBase.open('dataBaseName');
+
+    dataBase.commit()；
+</code></pre>
+
+    </li>
+    <li>
+      <h4>
+        <div id="rollback" style="color:red">rollback()   ⇒ void</div>
+      </h4>
+      <pre><code>回滚事务。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var dataBase = app.dataBase.open('dataBaseName');
+
+    dataBase.rollback()；
+</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

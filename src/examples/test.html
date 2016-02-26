@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello UI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="dist/css/co.css">
+    <style type="text/css">
+</style>
+	</head>
+	<body>
+    <header class="ui-nav-bar">
+      <div class="ui-nav-bar-inner">
+        <a class="ui-nav-bar-link"><i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-bars"></i></a>
+        <h1 class="ui-nav-bar-title">CO  Widgets</h1>
+        <a class="ui-nav-bar-link"><i class="ui-nav-bar-icon ui-nav-bar-right ui-icon-info-filled" style="color: #999;"></i></a>
+      </div>
+    </header>
+    <div class="ui-accordion-list ui-content">
+        <ul>
+            <li class="ui-accordion-list-item" data-target="accordion.html">
+                <a class="ui-accordion-list-item-link">
+                    <div class="ui-accordion-list-item-inner">
+                        accordion
+                    </div>
+                </a>
+            </li>
+            <li class="ui-accordion-list-item" data-target="accordionlist.html">
+                <a class="ui-accordion-list-item-link">
+                    <div class="ui-accordion-list-item-inner">
+                        折叠列表
+                    </div>
+                </a>
+            </li>
+            <li class="ui-accordion-list-item" data-target="button.html">
+                <a class="ui-accordion-list-item-link">
+                    <div class="ui-accordion-list-item-inner">
+                        按钮
+                    </div>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+
+		<script src="dist/js/native.js"></script>	
+        <script src="dist/js/dom.js"></script>
+		<script src="dist/js/co.js"></script>
+</body>
+<script>
+
+    var win = app.createWindow();
+    var view = app.currentView();
+    domReady(function(require){
+        var tab = app.require('tabMark');
+        var totalHei = $(document.body).height();
+        var totalWid = $(document.body).width();
+        var dataSources = {
+            titleFont:14.0, //字体大小
+            titleHighlightFont:16.0, //选中字体大小
+            titleColor:"#aaaaaa",//字体颜色
+            titleHighlightColor:"#307ab3", //字体选中颜色
+            vernierColor:"#307ab3", //选中下标颜色
+            naviBgColor:"#ffffff", //背景颜色
+            btnHeight:36,//横条高度
+            manyBtn:true ,//是否有按钮
+            dataSource: [
+                {
+                    menu:'头条',
+                    url:'news_first.html'
+                },
+                {
+                    menu:'科技',
+                    url:'news_technology.html'
+                },
+                {
+                    menu:'体育',
+                    url:'news_sports.html'
+                },
+                {
+                    menu:'社会',
+                    url:'news_sociology.html',
+                },
+                {
+                    menu:'财经',
+                    url:'news_finance.html'
+                },
+                {
+                    menu:'汽车',
+                    url:'news_car.html'
+                },
+                {
+                    menu:'时尚',
+                    url:'news_fashion.html'
+                },
+                {
+                    menu:'历史',
+                    url:'news_history.html'
+                }
+                ]
+            }
+            tab.setDataSource(dataSources);
+            tab.setFrame(0,0,totalWid,totalHei);
+            tab.show();
+    })
+   </script>
+</html>
