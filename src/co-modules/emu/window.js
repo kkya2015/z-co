@@ -5,21 +5,27 @@
         var arr = $E.windows.splice(index, len - index);
         for (var i = 0; i < arr.length; i++) {
             var pageId = arr[i];
+            if ($E.slidePageId == pageId) return;
             var win = document.getElementById(pageId);
             if (win) {
                 win.className = 'page-from-center-to-right';
                 win.addEventListener("webkitAnimationEnd", function() {
                     pageId = this.id;
-                    var pops = $E.winMap[pageId]['pops'];
-                    if (pops) {
-                        for (var i = 0; i < pops.length; i++) {
-                            var popId = pops[i];
-                            var pop = document.getElementById(popId);
-                            pop && pop.parentNode.removeChild(pop)
+                    var winP = $E.winMap[pageId];
+                    if (winP) {
+                        var pops = winP['pops'];
+                        if (pops) {
+                            for (var i = 0; i < pops.length; i++) {
+                                var popId = pops[i];
+                                var pop = document.getElementById(popId);
+                                pop && pop.parentNode.removeChild(pop)
+                            }
                         }
+                        delete $E.winMap[pageId];
                     }
-                    delete $E.winMap[pageId];
-                    this.parentNode.removeChild(this);
+                    if (this.parentNode) {
+                        this.parentNode.removeChild(this);
+                    }
                 }, false);
             }
 
@@ -162,6 +168,7 @@
     }
 
     $E.closePopover = function(windowname, pageId) {
+        if (typeof windowname !== 'undefined' && windowname != 'undefined') pageId = $E.strEncode(windowname);
         var pop = document.getElementById(pageId);
         if (pop) pop.parentNode.removeChild(pop);
     }
@@ -197,7 +204,10 @@
         if (win) {
             delete $E.winMap[pageId];
             win.parentNode.removeChild(win);
+            var index = $E.windows.indexOf(pageId);
+            $E.windows.splice(index, index)
         }
+        $E.slidePageId = pageId;
         $E.winMap[pageId] = {};
         $E.winMap[pageId]['pops'] = [];
         $E.windows.push(pageId);
@@ -299,6 +309,7 @@
         var mask = document.getElementById('drawerMask');
         if (mask) {
             mask.style.display = 'none';
+            mask.parentNode.removeChild(mask);
         }
     }
 

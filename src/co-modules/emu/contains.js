@@ -19,7 +19,7 @@ var emu = (function(global) {
 
 
 
-    var uuid = function(len, radix) {
+    $E.uuid = function(len, radix) {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 
         var uuid = [],
@@ -79,8 +79,8 @@ var emu = (function(global) {
     $E.Zindex = 10000
 
     $E.rootName = 'root';
-    // $E.rootUrl = GetQueryString('pageId') || 'native.html';
-    $E.rootUrl = GetQueryString('pageId') || 'index.html';
+    $E.rootUrl = GetQueryString('pageId') || 'native.html';
+    // $E.rootUrl = GetQueryString('pageId') || 'index.html';
     // $E.rootUrl = GetQueryString('pageId') || 'test.html';
     $E.windows = []
     $E.winMap = {}

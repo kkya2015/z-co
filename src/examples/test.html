@@ -13,39 +13,7 @@
 </style>
 	</head>
 	<body>
-    <header class="ui-nav-bar">
-      <div class="ui-nav-bar-inner">
-        <a class="ui-nav-bar-link"><i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-bars"></i></a>
-        <h1 class="ui-nav-bar-title">CO  Widgets</h1>
-        <a class="ui-nav-bar-link"><i class="ui-nav-bar-icon ui-nav-bar-right ui-icon-info-filled" style="color: #999;"></i></a>
-      </div>
-    </header>
-    <div class="ui-accordion-list ui-content">
-        <ul>
-            <li class="ui-accordion-list-item" data-target="accordion.html">
-                <a class="ui-accordion-list-item-link">
-                    <div class="ui-accordion-list-item-inner">
-                        accordion
-                    </div>
-                </a>
-            </li>
-            <li class="ui-accordion-list-item" data-target="accordionlist.html">
-                <a class="ui-accordion-list-item-link">
-                    <div class="ui-accordion-list-item-inner">
-                        折叠列表
-                    </div>
-                </a>
-            </li>
-            <li class="ui-accordion-list-item" data-target="button.html">
-                <a class="ui-accordion-list-item-link">
-                    <div class="ui-accordion-list-item-inner">
-                        按钮
-                    </div>
-                </a>
-            </li>
-            
-        </ul>
-    </div>
+
 
 		<script src="dist/js/native.js"></script>	
         <script src="dist/js/dom.js"></script>
@@ -68,44 +36,48 @@
             naviBgColor:"#ffffff", //背景颜色
             btnHeight:36,//横条高度
             manyBtn:true ,//是否有按钮
+            // naviHidden:true,
             dataSource: [
                 {
                     menu:'头条',
-                    url:'news_first.html'
+                    url:'header.html'
                 },
                 {
                     menu:'科技',
-                    url:'news_technology.html'
+                    url:'cards.html'
                 },
                 {
                     menu:'体育',
-                    url:'news_sports.html'
+                    url:'accordion.html'
                 },
                 {
                     menu:'社会',
-                    url:'news_sociology.html',
+                    url:'dialog.html',
                 },
                 {
                     menu:'财经',
-                    url:'news_finance.html'
+                    url:'fullpage.html'
                 },
                 {
                     menu:'汽车',
-                    url:'news_car.html'
+                    url:'input.html'
                 },
                 {
                     menu:'时尚',
-                    url:'news_fashion.html'
+                    url:'lazyloadimage.html'
                 },
                 {
                     menu:'历史',
-                    url:'news_history.html'
+                    url:'navigator.html'
                 }
                 ]
             }
             tab.setDataSource(dataSources);
             tab.setFrame(0,0,totalWid,totalHei);
             tab.show();
+            // tab.hide();
+            // tab.remove();
+            // tab.showContentAtIndex(2);
     })
    </script>
 </html>

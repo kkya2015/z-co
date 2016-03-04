@@ -1,5 +1,5 @@
 /**
- * Released on: 2016-2-26
+ * Released on: 2016-3-1
  * =====================================================
  * Native v1.0.1 (https://github.com/dcloudio/mui)
  * =====================================================
@@ -1181,7 +1181,7 @@ window.A === undefined && (window.A = app);
       }
 
       if (typeof windowname === 'undefined') {
-        $L.executeNativeJS(['window', 'closeSelf'], animation)
+        this.close()
       } else {
         $L.executeNativeJS(['window', 'backToWindow'], windowname, animation)
       }
@@ -1409,6 +1409,20 @@ window.A === undefined && (window.A = app);
         height: height
       };
       $L.executeNativeJS(['window', 'setPopoverRect'], rect)
+    }
+
+    this.closePopover = function(popovername) {
+      if (popovername) $L.executeNativeJS(['window', 'closePopover'], popovername)
+    }
+
+    this.close = function() {
+      var animation = {
+        type: viewAnimationType,
+        direction: viewAnimationDirection,
+        time: viewAnimationDuration,
+        curve: viewAnimationCurve
+      }
+      $L.executeNativeJS(['window', 'closeSelf'], animation)
     }
 
   }
@@ -3122,7 +3136,20 @@ window.A === undefined && (window.A = app);
 
 }(app, this));
 /*===============================================================================
-************   ui native app   ************
+************   ui native require   ************
+===============================================================================*/
+;
+(function($L, global) {
+
+	$L.require = function(widget) {
+		if (widget == 'tabMark') {
+			return $L.require.tabMark();
+		}
+	}
+
+}(app, this));
+/*===============================================================================
+************   ui plugin tabMark   ************
 ===============================================================================*/
 ;
 (function($L, global) {
@@ -3200,12 +3227,8 @@ window.A === undefined && (window.A = app);
 
 	}
 
-
-
-	$L.require = function(widget) {
-		if (widget == 'tabMark') {
-			return new tabMark();
-		}
+	$L.require.tabMark = function(){
+		return new tabMark()
 	}
 
 }(app, this));
@@ -3658,9 +3681,28 @@ window.A === undefined && (window.A = app);
 		if (key == "show") {
 			var dataS = arguments[1];
 			var frameRect = arguments[2];
-			dataS = JSON.stringify(dataS);
-			frameRect = JSON.stringify(frameRect);
-			var js = "tabMarkShow('" + dataS + "','" + frameRect + "')"
+			if (dataS && frameRect) {
+				dataS = JSON.stringify(dataS);
+				frameRect = JSON.stringify(frameRect);
+			} else {
+				return;
+			}
+			var baseUrl = this.getPageDir();
+			var windowname = this.getQueryString('pageId');
+			var js = "tabMarkShow('" + dataS + "','" + frameRect + "','" + baseUrl + "','" + windowname + "')"
+			this.postMessage(js);
+		} else if (key == "hide") {
+			var dataS = arguments[1];
+			var frameRect = arguments[2];
+			if (dataS && frameRect) {
+				dataS = JSON.stringify(dataS);
+				frameRect = JSON.stringify(frameRect);
+			} else {
+				return;
+			}
+			var baseUrl = this.getPageDir();
+			var windowname = this.getQueryString('pageId');
+			var js = "tabMarkShow('" + dataS + "','" + frameRect + "','" + baseUrl + "','" + windowname + "')"
 			this.postMessage(js);
 		}
 	}

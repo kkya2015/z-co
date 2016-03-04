@@ -121,7 +121,7 @@
       }
 
       if (typeof windowname === 'undefined') {
-        $L.executeNativeJS(['window', 'closeSelf'], animation)
+        this.close()
       } else {
         $L.executeNativeJS(['window', 'backToWindow'], windowname, animation)
       }
@@ -349,6 +349,20 @@
         height: height
       };
       $L.executeNativeJS(['window', 'setPopoverRect'], rect)
+    }
+
+    this.closePopover = function(popovername) {
+      if (popovername) $L.executeNativeJS(['window', 'closePopover'], popovername)
+    }
+
+    this.close = function() {
+      var animation = {
+        type: viewAnimationType,
+        direction: viewAnimationDirection,
+        time: viewAnimationDuration,
+        curve: viewAnimationCurve
+      }
+      $L.executeNativeJS(['window', 'closeSelf'], animation)
     }
 
   }

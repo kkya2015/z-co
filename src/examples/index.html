@@ -243,20 +243,24 @@
     var win = app.createWindow();
     var view = app.currentView();
     domReady(function(require){
-        require("accordionList");
-        $('.ui-accordion-list').accordionList({});
-        $('.ui-accordion-list').on('tapped',function(e,el){
-            win.open(el.data('target'));
-        })
+        // require("accordionList");
+        // $('.ui-accordion-list').accordionList({});
+        // $('.ui-accordion-list').on('tapped',function(e,el){
+        //     win.open(el.data('target'));
+        // })
         var y = $('.ui-nav-bar').height();
         var height = $('.ui-content').height();
         var shop = view.createPopover(0,y,0,height);
-        shop.open('native/app.html');
+        shop.open('test.html');
 
-        app.addSlideDrawer('dialog.html','left',200);
         $('.ui-nav-bar-left').button(function(){
-            app.openLeftSlideDrawer();
+            app.evalScriptInPop('test()', '头条');
         })
+
+        // app.addSlideDrawer('dialog.html','left',200);
+        // $('.ui-nav-bar-left').button(function(){
+        //     app.openLeftSlideDrawer();
+        // })
   })
    </script>
 </html>
