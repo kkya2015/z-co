@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Contacts</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>gallery</h1>
+  <hr />
+  <p>gallery模块管理系统相册，支持从相册中选择图片或视频文件、保存图片或视频文件到相册等功能。</p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#pick">pick</a>
+      ：从系统相册选择文件（图片或视频）。
+    </li>
+    <li>
+      <a href="#save">save</a>
+      ：保存文件到系统相册中。
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="pick" style="color:red">pick</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.gallery.pick(success, [error], [option])   ⇒ void</h4>
+      <pre><code>从系统相册中选择图片或视频文件。每次仅能选择一个文件，选择后通过回调函数返回选择的文件路径。</code></pre>
+
+      <ul>
+        <li> <strong>success</strong>
+          ：从系统相册中选择文件完成后的回调函数
+          <ul>
+            <li> <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>path</strong>
+                  ：选择的文件路径(当为多文件选择时，返回的是由“,”分割的字符串)
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>error</strong>
+          ：从系统相册中选择文件操作错误的回调函数。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>err</strong>
+                  ：操作的错误信息
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>option</strong>
+          ： 从相册中选择文件的参数。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：JSON
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>keys</strong>
+              <ul>
+                <li>
+                  <strong>filter</strong>
+                  ：( String )相册中选择文件类型过滤器,可通过此参数设定相册选择器中可选择的文件类型，可设置仅可选择图片文 件或视频文件，默认值为仅可选择图片文件。
+                  <ul>
+                    <li>
+                      <strong>默认值</strong>
+                      ：'image'
+                      <ul>
+                        <li>
+                          <strong>取值范围</strong>
+                          <ul>
+                            <li>
+                              <strong>'image'</strong>
+                              ：仅可选择图片文件
+                            </li>
+                            <li>
+                              <strong>'video'</strong>
+                              ：仅可选择视频文件
+                            </li>
+                            <li>
+                              <strong>'none'</strong>
+                              ：不过滤，可选择图片或视频文件
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>multiple</strong>
+                  ：是否支持多选图片,为 true 时表示可从系统相册中选择多张图片。
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：Boolen
+                    </li>
+                    <li>
+                      <strong>默认值</strong>
+                      ：true
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    EX-1：
+    app.gallery.pick(function(path) {
+        console.log(path);
+    });
+
+    EX-2：
+    app.gallery.pick(function(path) {
+        console.log(path);
+    }, {
+        filter: &quot;image&quot;,
+        multiple: true
+    });
+
+    EX-3：
+    app.gallery.pick(function(path) {
+        console.log(path);
+    }, function(err) {
+        console.log(err);
+    });
+
+    EX-4：
+    app.gallery.pick(function(path) {
+        console.log(path);
+    }, function(err) {
+        console.log(err);
+    }, {
+        filter: &quot;image&quot;,
+        multiple: true
+    });
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="save" style="color:red">save</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.gallery.save(path, success, [error])   ⇒ void</h4>
+      <pre><code>    保存文件到系统相册中。 每次仅能保存一个文件，支持图片类型（jpg/jpeg、png、bmp等格式）和视频文件（3gp、mov等格式）。 若保存的文件系统不支持，则通过error返回错误信息。
+</code></pre>
+
+      <ul>
+        <li>
+          <strong>path</strong>
+          ：  要保存到系统相册中的文件文件地址
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>success</strong>
+          ：保存文件到系统相册中成功的回调函数
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>info</strong>
+                  ：操作成功信息
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          **
+          <strong>error</strong>
+          ：保存文件到系统相册中失败的回调函数。
+          <ul>
+            <li>type**：function</li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>err</strong>
+                  ：操作的错误信息
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    EX-1：
+    app.gallery.save(&quot;res://1.jpg&quot;,
+        function(info) {
+            console.log(info);
+        });
+
+    EX-2：
+    app.gallery.save(&quot;res://1.jpg&quot;,
+        function(info) {
+            console.log(info);
+        },
+        function(err) {
+            console.log(err);
+        });
+</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

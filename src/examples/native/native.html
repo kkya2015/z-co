@@ -99,7 +99,7 @@
                 <a class="ui-accordion-list-item-link">
                     <div class="ui-accordion-list-item-inner">
                         <span class="title">
-                            contacts
+                            Contacts
                             <div class="des">管理系统通讯录</div>
                         </span>
                     </div>
@@ -110,63 +110,63 @@
                 <a class="ui-accordion-list-item-link">
                     <div class="ui-accordion-list-item-inner">
                         <span class="title">
-                            database
+                            Database
                             <div class="des">数据库管理</div>
                         </span>
                     </div>
 
                 </a>
             </li>
-            <li class="ui-accordion-list-item" data-target="camera.html">
+            <li class="ui-accordion-list-item" data-target="device.html">
                 <a class="ui-accordion-list-item-link">
                     <div class="ui-accordion-list-item-inner">
                         <span class="title">
-                            Camera
-                            <div class="des">管理设备的摄像头，可用于拍照、摄像操作</div>
+                            Device
+                            <div class="des">管理设备信息</div>
                         </span>
                     </div>
 
                 </a>
             </li>
-            <li class="ui-accordion-list-item" data-target="camera.html">
+            <li class="ui-accordion-list-item" data-target="downloader.html">
                 <a class="ui-accordion-list-item-link">
                     <div class="ui-accordion-list-item-inner">
                         <span class="title">
-                            Camera
-                            <div class="des">管理设备的摄像头，可用于拍照、摄像操作</div>
+                            Downloader
+                            <div class="des">模块管理文件下载</div>
                         </span>
                     </div>
 
                 </a>
             </li>
-            <li class="ui-accordion-list-item" data-target="camera.html">
+            <li class="ui-accordion-list-item" data-target="event.html">
                 <a class="ui-accordion-list-item-link">
                     <div class="ui-accordion-list-item-inner">
                         <span class="title">
-                            Camera
-                            <div class="des">管理设备的摄像头，可用于拍照、摄像操作</div>
+                            Event
+                            <div class="des">事件的监听和广播</div>
                         </span>
                     </div>
 
                 </a>
             </li>
-            <li class="ui-accordion-list-item" data-target="camera.html">
+            <li class="ui-accordion-list-item" data-target="gallery.html">
                 <a class="ui-accordion-list-item-link">
                     <div class="ui-accordion-list-item-inner">
                         <span class="title">
-                            Camera
-                            <div class="des">管理设备的摄像头，可用于拍照、摄像操作</div>
+                            Gallery
+                            <div class="des">管理系统相册</div>
                         </span>
                     </div>
 
                 </a>
             </li>
-            <li class="ui-accordion-list-item" data-target="camera.html">
+            <li class="ui-accordion-list-item" data-target="geolocation.html">
                 <a class="ui-accordion-list-item-link">
                     <div class="ui-accordion-list-item-inner">
                         <span class="title">
-                            Camera
-                            <div class="des">管理设备的摄像头，可用于拍照、摄像操作</div>
+                            Geolocation
+                            <div class="des">管理设备位置信息</div>
                         </span>
                     </div>
 
@@ -342,6 +342,7 @@
         $('.ui-accordion-list').accordionList({});
         $('.ui-accordion-list').on('tapped',function(e,el){
             win.open(el.data('target'));
+            win.setAnimationDirection(42);
         })
   })
    </script>

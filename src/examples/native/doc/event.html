@@ -1,0 +1,370 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Contacts</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>event</h1>
+  <hr />
+  <p>event用于事件的监听和广播</p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#addEvent">addEvent</a>
+      ：添加事件监听
+    </li>
+    <li>
+      <a href="#addBatteryChangeEvent">addBatteryChangeEvent</a>
+      ：添加电池状态变化事件监听
+    </li>
+    <li>
+      <a href="#addNetworkChangeEvent">addNetworkChangeEvent</a>
+      ：添加网络状态变化事件监听
+    </li>
+    <li>
+      <a href="#removeBatteryChangeEvent">removeBatteryChangeEvent</a>
+      ：删除电池状态变化事件监听
+    </li>
+    <li>
+      <a href="#removeEvent">removeEvent</a>
+      ：移除事件监听
+    </li>
+    <li>
+      <a href="#removeNetworkChangeEvent">removeNetworkChangeEvent</a>
+      ：删除网络状态变化事件监听
+    </li>
+    <li>
+      <a href="#sendEvent">sendEvent</a>
+      ：发送广播
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="addEvent" style="color:red">addEvent</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.event.addEvent(eventName, callback)   ⇒ void</h4>
+      <pre><code>添加事件监听</code></pre>
+
+      <ul>
+        <li> <strong>eventName</strong>
+          ： 事件名称
+          <ul>
+            <li> <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>callback</strong>
+          ： 事件回调
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>params</strong>
+                  ： 发送事件广播时的入参（参考：
+                  <a href="#sendEvent">sendEvent</a>
+                  ）
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：JSON
+                    </li>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    app.event.addEvent('event', function(object) {
+        console.log(object.key);
+    });
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="addBatteryChangeEvent" style="color:red">addBatteryChangeEvent</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.event.addBatteryChangeEvent(callback)   ⇒ void</h4>
+      <pre><code>添加电池状态变化事件监听</code></pre>
+
+      <ul>
+        <li>
+          <strong>callback</strong>
+          ： 事件回调
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>state</strong>
+                  ： 电池状态值
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：Number
+                    </li>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                      <ul>
+                        <li>
+                          <strong>值范围</strong>
+                          ：
+                          <ul>
+                            <li>6：电量低</li>
+                            <li>7：从电量低恢复为正常</li>
+                            <li>8：正在充电</li>
+                            <li>9：没在充电</li>
+                            <li>10：AC充电器充电（iOS不支持）</li>
+                            <li>11：USB充电（iOS不支持）</li>
+                            <li>12：无线充电（iOS不支持）</li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    app.event.addBatteryChangeEvent(function(state) {
+        if(state == 6)console.log('电量低！')
+    });
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="addNetworkChangeEvent" style="color:red">addNetworkChangeEvent</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.event.addNetworkChangeEvent(callback)   ⇒ void</h4>
+      <pre><code>添加网络状态变化事件监听</code></pre>
+
+      <ul>
+        <li>
+          <strong>callback</strong>
+          ： 事件回调
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>state</strong>
+                  ： 网络状态值
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：Number
+                    </li>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                      <ul>
+                        <li>
+                          <strong>值范围</strong>
+                          ：
+                          <ul>
+                            <li>0：无网络</li>
+                            <li>1：WIFI</li>
+                            <li>2：ETHERNET（iOS不支持）</li>
+                            <li>3：MOBILE</li>
+                            <li>4：VPN</li>
+                            <li>5：WIMAX（iOS不支持）</li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    app.event.addNetworkChangeEvent(function(state) {
+        if(state == 0)console.log('无网络！')
+    });
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="removeBatteryChangeEvent" style="color:red">removeBatteryChangeEvent</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.event.removeBatteryChangeEvent()   ⇒ void</h4>
+      <pre><code>删除电池状态变化事件监听</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.event.removeBatteryChangeEvent();</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="removeEvent" style="color:red">removeEvent</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.event.removeEvent(eventName)   ⇒ void</h4>
+      <pre><code>移除事件监听</code></pre>
+
+      <ul>
+        <li>
+          <strong>eventName</strong>
+          ： 事件名称
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.event.removeEvent('event');</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="removeNetworkChangeEvent" style="color:red">removeNetworkChangeEvent</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.event.removeNetworkChangeEvent()   ⇒ void</h4>
+      <pre><code>删除网络状态变化事件监听</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.event.removeNetworkChangeEvent();</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="sendEvent" style="color:red">sendEvent</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.event.sendEvent(eventName,[params])   ⇒ void</h4>
+      <pre><code>发送事件广播</code></pre>
+
+      <ul>
+        <li>
+          <strong>eventName</strong>
+          ： 事件名称
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>params</strong>
+          ： 触发事件回调时传入的参数（参考：
+          <a href="#addEvent">addEvent</a>
+          ）
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：JSON
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    app.event.sendEvent('event', {
+        key: 'value'
+    });
+</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

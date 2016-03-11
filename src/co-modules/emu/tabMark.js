@@ -1,7 +1,7 @@
 ;
 (function($E, global) {
 
-	$E.tabMarkShow = function(dataS, frameRect, baseUrl, windowName) {
+	$E.tabMarkShow = function(dataS, frameRect, windowName) {
 		var pageId = $E.strEncode('tabMark.html' + windowName);
 		var win = document.getElementById(pageId);
 		if (win) {
@@ -18,7 +18,7 @@
 		var url = 'tabMark.html';
 		var data = JSON.parse(dataS);
 
-		data.baseUrl = baseUrl;
+		data.baseUrl = $E.baseUrl;
 		data.pageId = pageId;
 		data.parentName = parentName;
 		data.viewHeight = frameRect.height;

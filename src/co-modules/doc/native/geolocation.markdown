@@ -19,7 +19,7 @@ Geolocation模块管理设备位置信息，用于获取地理位置信息，如
 ***
 
 #### <div id="getCurrentPosition" style="color:red">getCurrentPosition</div>
--	####	app.geolocation.getCurrentPosition(success, error, options)   ⇒ void
+-	####	app.geolocation.getCurrentPosition(success, [error], [options])   ⇒ void
 	位置信息将通过手机GPS设备或其它信息如IP地址、移动网络信号获取，由于获取位置信息可能需要较长的时间，当成功获取位置信息后将通过success回调函数返回。
 	-	**success**：获取设备位置信息成功回调函数
 		-	**type**：function
@@ -46,7 +46,7 @@ Geolocation模块管理设备位置信息，用于获取地理位置信息，如
 			-	**err**：获取位置操作的错误信息
 				-	**type**：String
 	
-	-	**options**：调用麦克风设备进行录音的参数
+	-	**options**：获取设备位置信息的参数
 		-	**type**：JSON
 		-	**默认值**：无
 		-	**keys**
@@ -86,7 +86,7 @@ Geolocation模块管理设备位置信息，用于获取地理位置信息，如
 
 ####	<div id="watchPosition" style="color:red">watchPosition</div>
 
--	####	app.geolocation.watchPosition(success, error, options)   ⇒ void
+-	####	app.geolocation.watchPosition(success, [error], [options])   ⇒ void
 	位置信息将通过手机GPS设备或其它信息如IP地址、移动网络信号获取。当位置信息更新后将通过success回调函数返回。位置信息获取失败则调用回调函数error。
 	-	**success**：获取设备位置信息成功回调函数
 		-	**type**：function
@@ -113,7 +113,7 @@ Geolocation模块管理设备位置信息，用于获取地理位置信息，如
 			-	**err**：获取位置操作的错误信息
 				-	**type**：String
 	
-	-	**options**：调用麦克风设备进行录音的参数
+	-	**options**：获取设备位置信息的参数
 		-	**type**：JSON
 		-	**默认值**：无
 		-	**keys**

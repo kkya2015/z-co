@@ -8,7 +8,7 @@
 			var type = args[1]
 			var url = args[2]
 			if (type == 0) {
-				url = this.getPageDir() + args[2]
+				url = args[2]
 			}
 			// var js = "openWindow('" + windowname + "','" + url + "','" + type + "')"
 			var js = "openWindow('" + windowname + "','" + url + "')"
@@ -27,7 +27,7 @@
 			this.postMessage(js);
 		} else if (key == 'openPopover') {
 			var popname = args[0]
-			var url = this.getPageDir() + args[2]
+			var url = args[2]
 			var rect = JSON.stringify(args[3])
 			var windowname = this.getQueryString('pageId');
 			var js = "openPopover('" + popname + "','" + url + "','" + rect + "','" + windowname + "')"
@@ -42,13 +42,12 @@
 			var js = "openPopover('" + popname + "')"
 			this.postMessage(js);
 		} else if (key == 'setSlideLayout') {
-			var url = this.getPageDir()
 			var params = args[0]
 			var type = params.type
 			if (type == 'left') {
-				params.leftPane.url = url + params.leftPane.url
+				params.leftPane.url = params.leftPane.url
 			} else {
-				params.rightPane.url = url + params.rightPane.url
+				params.rightPane.url = params.rightPane.url
 			}
 			var params = JSON.stringify(args[0])
 			var js = "setSlideLayout('" + params + "')"

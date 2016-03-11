@@ -17,3 +17,16 @@ function getDocTarget() {
 	return res
 }
 
+function regTarget(url, title) {
+	$(document).find('.ui-nav-action-back').button(function(evt) {
+		app.currentView().back();
+	})
+	if (url) {
+		$('.ui-nav-bar-right').button(function() {
+			setDocTarget(url, title)
+			var win = app.createWindow();
+			win.open('doc.html')
+		})
+	}
+
+}

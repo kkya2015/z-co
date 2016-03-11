@@ -77,7 +77,7 @@
 		 * @param callback: 必选 事件回调
 		 */
 		removeBatteryChangeEvent: function(callback) {
-			$L.executeNativeJS(['eventListener', 'addEventListener'], 'battery_state_changed');
+			$L.executeNativeJS(['eventListener', 'removeEventListener'], 'battery_state_changed');
 		}
 	}
 

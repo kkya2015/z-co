@@ -32,7 +32,7 @@
 <body>
     <header class="ui-nav-bar">
         <div class="ui-nav-bar-inner">
-            <a class="ui-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
+            <a class="ui-nav-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
             </a>
             <h1 class="ui-nav-bar-title">Camera</h1>
             <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
@@ -56,7 +56,7 @@
     var view = app.currentView(),
     path = 'data://';
 domReady(function(require) {
-
+    regTarget('doc/camera.html', 'Camera Doc')
     var camera = app.camera.getCamera(path)
     $('#image').button(function(el, evt) {
         image(camera)
@@ -66,11 +66,6 @@ domReady(function(require) {
         video(camera)
     })
 
-    $('.ui-nav-bar-right').button(function() {
-        setDocTarget('doc/camera.html', 'Camera Doc')
-        var win = app.createWindow();
-        win.open('doc.html')
-    })
 
 
 });
@@ -100,7 +95,9 @@ function video(camera) {
 
     camera.captureVideo(function(capturedFile) {
         printout('摄像成功：' + capturedFile)
-
+        app.gallery.save(capturedFile,function(info) {
+               app.alert(info);
+           });
     });
 }
 

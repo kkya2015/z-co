@@ -3,7 +3,7 @@
 ===============================================================================*/
 var app = (function(global) {
   var $L = {
-    version: '0.0.1'
+    version: '1.0.2'
   }
   var class2type = {},
     toString = class2type.toString,

@@ -32,7 +32,7 @@
 <body>
     <header class="ui-nav-bar">
         <div class="ui-nav-bar-inner">
-            <a class="ui-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
+            <a class="ui-nav-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
             </a>
             <h1 class="ui-nav-bar-title">Contacts</h1>
             <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
@@ -54,6 +54,7 @@
 var view = app.currentView();
 domReady(function(require) {
 
+    regTarget('doc/contacts.html', 'Contacts Doc')
     var addressBook = app.contacts.getAddressBook()
     $('#create').button(function(el, evt) {
         create(addressBook)
@@ -66,13 +67,6 @@ domReady(function(require) {
     $('#remove').button(function(el, evt) {
         remove(addressBook)
     })
-
-    $('.ui-nav-bar-right').button(function() {
-        setDocTarget('doc/contacts.html', 'Contacts Doc')
-        var win = app.createWindow();
-        win.open('doc.html')
-    })
-
 
 });
 

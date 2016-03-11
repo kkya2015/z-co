@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>event</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../dist/css/co.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .button {
+            margin: 5px 15px;
+        }
+        .button-primary{
+            background-color:#CD6600;
+        }
+      
+        </style>
+
+</head>
+<body>
+    <header class="ui-nav-bar">
+        <div class="ui-nav-bar-inner">
+            <a class="ui-nav-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
+            </a>
+            <h1 class="ui-nav-bar-title">Event</h1>
+            <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
+            </a>
+        </div>
+    </header>
+    <a id='addBattery' class="button button-block button-rounded button-inverse">添加电池状态变化事件监听</a>
+    <a id='removeBattery' class="button button-block button-rounded button-inverse">删除电池状态变化事件监听</a>
+    <a id='addNetwork' class="button button-block button-rounded button-inverse">添加网络状态变化事件监听</a>
+    <a id='removeNetwork' class="button button-block button-rounded button-inverse">删除网络状态变化事件监听</a>
+    <a id='addEvent' class="button button-block button-rounded button-inverse">添加自定义事件监听</a>
+    <a id='removeEvent' class="button button-block button-rounded button-inverse">删除自定义事件监听</a>
+    <a id='sendEvent' class="button button-block button-rounded button-inverse">发送自定义事件广播</a>
+
+    <div id="log">
+        event用于事件的监听和广播。
+    </div>
+    <script src="../dist/js/native.js"></script>
+    <script src="../dist/js/dom.js"></script>
+    <script src="../dist/js/co.js"></script>
+    <script src="js/common.js"></script>
+</body>
+<script>
+    var view = app.currentView();
+    domReady(function(require) {
+        regTarget('doc/event.html','Event Doc')
+        
+        $('#addBattery').button(function(el, evt) {
+            app.event.addBatteryChangeEvent(function(state) {
+                switch (state) {
+                    case 6:
+                        printout('当前电池状态为：电量低！')
+                        break;
+                    case 7:
+                        printout('当前电池状态为：从电量低恢复为正常！')
+                        break;
+                    case 8:
+                        printout('当前电池状态为：正在充电！')
+                        break;
+                    case 9:
+                        printout('当前电池状态为：没在充电！')
+                        break;
+                    case 10:
+                        printout('当前电池状态为：AC充电器充电（iOS不支持）')
+                        break;
+                    case 11:
+                        printout('当前电池状态为：USB充电（iOS不支持）')
+                        break;
+                    case 12:
+                        printout('当前电池状态为：无线充电（iOS不支持）')
+                        break;
+                    default:
+                        printout('无效的电池状态值！')
+                }
+           });
+
+            printout('添加电池状态变化事件监听成功！')
+        })
+
+        $('#removeBattery').button(function(el, evt) {
+            app.event.removeBatteryChangeEvent();
+            printout('删除电池状态变化事件监听成功！')
+        })
+
+        $('#addNetwork').button(function(el, evt) {
+            app.event.addNetworkChangeEvent(function(state) {
+                switch (state) {
+                    case 0:
+                        printout('当前网络状态为：无网络！')
+                        break;
+                    case 1:
+                        printout('当前网络状态为：WIFI！')
+                        break;
+                    case 2:
+                        printout('当前网络状态为：ETHERNET（iOS不支持）')
+                        break;
+                    case 3:
+                        printout('当前网络状态为：MOBILE')
+                        break;
+                    case 4:
+                        printout('当前网络状态为：VPN')
+                        break;
+                    case 5:
+                        printout('当前网络状态为：WIMAX（iOS不支持）')
+                        break;
+                    default:
+                        printout('无效的网络状态值！')
+                }
+           });
+            printout('添加网络状态变化事件监听成功！')
+        })
+
+        $('#removeNetwork').button(function(el, evt) {
+            app.event.removeNetworkChangeEvent();
+            printout('删除网络状态变化事件监听成功！')
+        })
+
+        $('#addEvent').button(function(el, evt) {
+            app.event.addEvent('myEvent', function(object) {
+               app.alert(object.key);
+           });
+            printout('添加自定义事件监听成功！')
+        })
+
+        $('#removeEvent').button(function(el, evt) {
+            app.event.removeEvent('myEvent');
+            printout('删除自定义事件监听成功！')
+        })
+
+        $('#sendEvent').button(function(el, evt) {
+            app.event.sendEvent('myEvent',{
+                   key: '该事件是在整个APP中广播，可在其他页面监听！'
+               });
+        })
+
+
+    });
+
+    
+</script>
+</html>

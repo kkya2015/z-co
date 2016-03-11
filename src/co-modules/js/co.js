@@ -6,7 +6,7 @@
 (function(global, $, undefined) {
 	var co = {
 			// The current version of co.js being used
-			version: "1.0.1",
+			version: "1.0.2",
 			verticalSwipe: true //是否可以纵向滑动
 		},
 		$ui = {},

@@ -2,7 +2,6 @@ var emu = (function(global) {
     var $E = {
         version: '1.0.1'
     }
-
     var EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     var DecodeChars = new Array(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
         52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
@@ -77,14 +76,36 @@ var emu = (function(global) {
     $E.body = document.body
     $E.bWidth = $E.body.offsetWidth
     $E.Zindex = 10000
-
     $E.rootName = 'root';
-    $E.rootUrl = GetQueryString('pageId') || 'native.html';
-    // $E.rootUrl = GetQueryString('pageId') || 'index.html';
-    // $E.rootUrl = GetQueryString('pageId') || 'test.html';
+    $E.root = GetQueryString('pageId');
+    if ($E.root) {
+        var comp = $E.root.lastIndexOf('component/');
+        var sprit = $E.root.substr(comp).indexOf('/');
+        var lastUrl = $E.root.substr(comp + sprit + 1);
+        var lastSprit = lastUrl.indexOf('/')
+        var component = $E.root.substr(0, comp + sprit + 1);
+        var entry = lastUrl.substr(0, lastSprit + 1);
+        $E.rootUrl = lastUrl.substr(lastSprit + 1);
+        $E.baseUrl = component + entry;
+    } else {
+        // $E.rootUrl = 'index.html';
+        $E.rootUrl = 'native.html';
+        // $E.rootUrl = 'testTab.html';
+        $E.baseUrl = '';
+    }
+
     $E.windows = []
     $E.winMap = {}
     $E.type = type
+
+    $E.parseUrl = function(url) {
+        if (url.indexOf('///') != -1) {
+            url = url.replace('///', '/').substr($E.baseUrl.length)
+        }
+        url = $E.baseUrl + url;
+        return url;
+    }
+
 
     $E.isPlainObject = function(obj) {
         return isObject(obj) && !isWindow(obj) && Object.getPrototypeOf(obj) == Object.prototype

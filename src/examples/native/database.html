@@ -32,7 +32,7 @@
 <body>
     <header class="ui-nav-bar">
         <div class="ui-nav-bar-inner">
-            <a class="ui-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
+            <a class="ui-nav-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
             </a>
             <h1 class="ui-nav-bar-title">Database</h1>
             <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
@@ -40,8 +40,9 @@
         </div>
     </header>
     <a id='beginTrans' class="button button-block button-rounded button-inverse">开始事务</a>
-    <a id='execute' class="button button-block button-rounded button-inverse">执行SQL</a>
+    <a id='create' class="button button-block button-rounded button-inverse">创建表</a>
     <a id='commit' class="button button-block button-rounded button-inverse">提交事务</a>
+    <a id='insert' class="button button-block button-rounded button-inverse">插入数据</a>
     <a id='find' class="button button-block button-rounded button-inverse">查找符合条件的数据</a>
     <a id='rollback' class="button button-block button-rounded button-inverse">事务回滚</a>
     <a id='close' class="button button-block button-rounded button-inverse">关闭数据库</a>
@@ -53,75 +54,128 @@
     <script src="../dist/js/co.js"></script>
     <script src="js/common.js"></script>
 </body>
-    <script>
+<script>
 
 var view = app.currentView();
 domReady(function(require) {
 
+    regTarget('doc/database.html','Database Doc')
     var dataBase = app.dataBase.open('dataBaseName');
     $('#beginTrans').button(function(el, evt) {
         beginTrans(dataBase)
     })
 
-    $('#beginTrans').button(function(el, evt) {
-        beginTrans(addressBook)
+    $('#create').button(function() {
+        create(dataBase)
     })
 
-    $('#remove').button(function(el, evt) {
-        remove(addressBook)
+    $('#insert').button(function() {
+        insert(dataBase)
     })
 
-    $('.ui-nav-bar-right').button(function() {
-        setDocTarget('doc/database.html', 'Database Doc')
-        var win = app.createWindow();
-        win.open('doc.html')
+    $('#commit').button(function() {
+        commit(dataBase)
+    })
+
+    $('#find').button(function() {
+        find(dataBase)
+    })
+
+    $('#rollback').button(function() {
+        rollback(dataBase)
+    })
+
+    $('#close').button(function() {
+        close(dataBase)
+    })
+
+    $('#delete').button(function() {
+        deleted(dataBase)
     })
 
 
 });
 
 function beginTrans(dataBase) {
+    var flag = dataBase.beginTransaction();
+    printout("开始事务成功!");
+}
+
+function create(dataBase) {
+    var flag = dataBase.executeSql('CREATE TABLE IF NOT EXISTS t_students (id integer PRIMARY KEY AUTOINCREMENT,name text,age integer,number DOUBLE,buer BOOL)');
+
     
+    if (flag == 1) {
+        var html = "创建表成功!"
+    } else if (flag == 0) {
+        var html = "创建表失败!"
+    }
+    printout(html)
 }
 
-function find(addressBook) {
-
-    addressBook.find({
-        name: '李四'
-    }, function(contacts) {
-        if (contacts) {
-            $.each(contacts, function(index, contact) {
-                contact.name = {
-                    givenName: "张三",
-                    familyName: "姓氏"
-                };
-                contact.save(function() {
-                    printout('修改联系人成功!');
-                }, function(err) {
-                    printout('修改联系人失败!' + err);
-                })
-            })
-        }
-    });
-
+function commit(dataBase) {
+    dataBase.commit();
+    printout("提交事务成功!")
 }
 
-function remove(addressBook) {
+function insert(dataBase) {
+    var flag = dataBase.executeSql("INSERT INTO t_students (name,age,number,buer) VALUES ('showhill',325,10.23,1)");
+    
+    if (flag == 1) {
+        var html = "插入数据成功!"
+    } else if (flag == 0) {
+        var html = "插入数据失败!"
+    }
+    printout(html)
+}
 
-    addressBook.find({
-        name: '张三'
-    }, function(contacts) {
-        if (contacts) {
-            $.each(contacts, function(index, contact) {
-                contact.remove(function() {
-                    printout('删除联系人成功!');
-                }, function(err) {
-                    printout('删除联系人失败!' + err);
-                })
-            })
-        }
-    });
 
+
+function find(dataBase) {
+    var res = dataBase.selectAll('select * from t_students');
+    
+    printout("查询到的当前表中含有 " + res.length + "名用户 ");
+}
+
+
+
+function rollback(dataBase) {
+    var html = ""
+    var flag = dataBase.rollback();
+    
+    html = html + "开始回滚... <br/>";
+    if (flag == 1) {
+        html = html + "回滚成功! <br/>";
+    } else if (flag == '0') {
+        html = html + "回滚失败! <br/>";
+    }
+    var result = dataBase.selectAll('select * from t_students');
+    html = html + "回滚后含有" + result.length + "名用户 <br/>"
+    printout(html)
+}
+
+
+function close(dataBase) {
+    var flag = dataBase.close();
+    
+    if (flag == 1) {
+        var html = "关闭数据库成功!"
+    } else if (flag == 0) {
+        var html = "关闭数据库失败!"
+    }
+    printout(html)
+}
+
+
+function deleted(dataBase) {
+    var flag = dataBase.deleteDataBase();
+    
+    if (flag == 1) {
+        var html = "删除数据库成功!"
+    } else if (flag == 0) {
+        var html = "删除数据库失败!"
+    }
+    printout(html)
 }
 
 </script>

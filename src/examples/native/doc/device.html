@@ -1,0 +1,358 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Contacts</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>device</h1>
+  <hr />
+  <p>device模块管理设备信息，用于获取手机设备的相关信息，如IMEI、IMSI、型号、厂商等。</p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#getImei">getImei</a>
+      ：获取设备的国际移动设备身份码
+    </li>
+    <li>
+      <a href="#getImsi">getImsi</a>
+      ：获取设备的国际移动用户识别码
+    </li>
+    <li>
+      <a href="#getModel">getModel</a>
+      ：获取设备的型号
+    </li>
+    <li>
+      <a href="#getVendor">getVendor</a>
+      ：获取设备的生产厂商
+    </li>
+    <li>
+      <a href="#getUuid">getUuid</a>
+      ：获取设备的唯一标识
+    </li>
+    <li>
+      <a href="#dial">dial</a>
+      ：拨打电话
+    </li>
+    <li>
+      <a href="#beep">beep</a>
+      ：发出蜂鸣声
+    </li>
+    <li>
+      <a href="#vibrate">vibrate</a>
+      ：设备振动
+    </li>
+    <li>
+      <a href="#setWakeUp">setWakeUp</a>
+      ：设置应用保持唤醒（屏幕常亮）状态
+    </li>
+    <li>
+      <a href="#setWakeOff">setWakeOff</a>
+      ：关闭应用保持唤醒（屏幕常亮）状态
+    </li>
+    <li>
+      <a href="#isWakelock">isWakelock</a>
+      ：获取程序是否一直保持唤醒（屏幕常亮）状态
+    </li>
+    <li>
+      <a href="#setVolume">setVolume</a>
+      ：设置设备的系统音量
+    </li>
+    <li>
+      <a href="#getVolume">getVolume</a>
+      ：获取设备的系统音量
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="getImei" style="color:red">getImei</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.getImei()   ⇒ String</h4>
+      <pre><code>获取设备的国际移动设备身份码。 如果设备不支持则返回空字符串,不支持iOS设备.</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var imei = app.device.getImei()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getImsi" style="color:red">getImsi</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.getImsi()   ⇒ Array</h4>
+      <pre><code>    获取设备上插入SIM的国际移动设备身份码。 如果设备支持多卡模式则返回包含所有SIM身份码的字符串数组。 如果设备不支持或没有插入SIM卡则返回空数组,不支持iOS设备.
+</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var imsi = app.device.getImsi()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getModel" style="color:red">getModel</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.getModel()   ⇒ String</h4>
+      <pre><code>获取设备的型号信息。 如果设备不支持则返回空字符串。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var model = app.device.getModel()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getVendor" style="color:red">getVendor</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.getVendor()   ⇒ String</h4>
+      <pre><code>获取设备的型号信息。 如果设备不支持则返回空字符串。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var vendor = app.device.getVendor()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getUuid" style="color:red">getUuid</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.getUuid()   ⇒ String</h4>
+      <pre><code>获取设备的唯一标识号，根据包名随机生成的设备标识号。注意：在设备重置后会重新生成。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var uuid = app.device.getUuid()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="dial" style="color:red">dial</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.dial(number, [confirm])   ⇒ void</h4>
+      <pre><code>调用系统程序拨打电话。</code></pre>
+
+      <ul>
+        <li> <strong>number</strong>
+          ：要拨打的电话号码
+          <ul>
+            <li> <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>confirm</strong>
+          ：是否弹出确认对话框
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Boolean
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：false
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.device.dial('17701326856');</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="beep" style="color:red">beep</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.beep([times])   ⇒ void</h4>
+      <pre><code>调用此方法使得设备发出蜂鸣声。</code></pre>
+
+      <ul>
+        <li>
+          <strong>times</strong>
+          ：蜂鸣声重复的次数，默认发出一次蜂鸣声，iOS设备不支持
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：1
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.device.beep(2);</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="vibrate" style="color:red">vibrate</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.vibrate([milliseconds])   ⇒ void</h4>
+      <pre><code>调用此方法使得设备振动。</code></pre>
+
+      <ul>
+        <li>
+          <strong>milliseconds</strong>
+          ：设备振动持续的时间，单位为ms，默认为500ms。ios不支持
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：500
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.device.vibrate(1000);</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="setWakeUp" style="color:red">setWakeUp</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.setWakeUp()   ⇒ void</h4>
+      <pre><code>设置应用保持唤醒（屏幕常亮）状态</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.device.setWakeUp();</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="setWakeOff" style="color:red">setWakeOff</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.setWakeOff()   ⇒ void</h4>
+      <pre><code>关闭程序保持唤醒状态。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.device.setWakeOff();</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="isWakelock" style="color:red">isWakelock</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.isWakelock()   ⇒ Boolean</h4>
+      <pre><code>获取程序是否一直保持唤醒（屏幕常亮）状态</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.device.isWakelock();</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="setVolume" style="color:red">setVolume</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.setVolume(volume)   ⇒ void</h4>
+      <pre><code>    调用此方法调节设备的系统音量。Android设置音量后对所有项的音量生效，如通话音量、系统音量、铃声音量、音乐音量、提示声音音量。(iOS设置音量后仅对媒体声音有效)
+</code></pre>
+
+      <ul>
+        <li>
+          <strong>volume</strong>
+          ：设备的系统音量值，设置设备音量后对所有程序生效，退出程序系统仍然保持最后设定的音量值。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>取值范围</strong>
+              ：0 到1之间，0表示静音，1表示最大音量值
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.device.setVolume(0.5);</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getVolume" style="color:red">getVolume</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.device.getVolume()   ⇒ Number</h4>
+      <pre><code>获取设备的系统音量</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.device.getVolume();</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>geolocation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../dist/css/co.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .button {
+            margin: 5px 15px;
+        }
+        .button-primary{
+            background-color:#CD6600;
+        }
+      
+        </style>
+
+</head>
+<body>
+    <header class="ui-nav-bar">
+        <div class="ui-nav-bar-inner">
+            <a class="ui-nav-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
+            </a>
+            <h1 class="ui-nav-bar-title">Geolocation</h1>
+            <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
+            </a>
+        </div>
+    </header>
+    <a id='getCurrentPosition' class="button button-block button-rounded button-inverse">获取当前设备位置信息</a>
+    <a id='watchPosition' class="button button-block button-rounded button-inverse">监听设备位置变化信息</a>
+    <a id='clearWatch' class="button button-block button-rounded button-inverse">关闭监听设备位置信息</a>
+
+    <div id="log">
+        Geolocation模块管理设备位置信息，用于获取地理位置信息，如经度、纬度等,亦可以调用设备的 GPS 定位来获取高精度的地理位置信息。
+    </div>
+    <script src="../dist/js/native.js"></script>
+    <script src="../dist/js/dom.js"></script>
+    <script src="../dist/js/co.js"></script>
+    <script src="js/common.js"></script>
+</body>
+<script>
+    var view = app.currentView();
+    domReady(function(require) {
+        regTarget('doc/geolocation.html','Geolocation Doc')
+        
+        $('#getCurrentPosition').button(function(el, evt) {
+            app.geolocation.getCurrentPosition(function(position) {
+                var html = "当前设备纬度值 :" + position.coords.latitude
+                        +"<br/>"
+                        +"当前设备经度值 :" + position.coords.longitude
+                        +"<br/>"
+                        +"当前设备经度值 :" + position.coords.altitude
+                        +"<br/>"
+                        +"当前精确度 :" + position.coords.accuracy
+                        +"<br/>"
+                        +"当前精确度 :" + position.coords.altitudeAccuracy
+                        +"<br/>"
+                        +"当前方向 :" + position.coords.heading
+                        +"<br/>"
+                        +"当前速度 :" + position.coords.speed
+                        +"<br/>"
+
+                printout(html)
+            });
+        })
+
+        $('#watchPosition').button(function(el, evt) {
+            app.geolocation.watchPosition(function(position) {
+                var html = "当前设备纬度值 :" + position.coords.latitude
+                        +"<br/>"
+                        +"当前设备经度值 :" + position.coords.longitude
+                        +"<br/>"
+                        +"当前设备经度值 :" + position.coords.altitude
+                        +"<br/>"
+                        +"当前精确度 :" + position.coords.accuracy
+                        +"<br/>"
+                        +"当前精确度 :" + position.coords.altitudeAccuracy
+                        +"<br/>"
+                        +"当前方向 :" + position.coords.heading
+                        +"<br/>"
+                        +"当前速度 :" + position.coords.speed
+                        +"<br/>"
+
+                printout(html)
+            });
+        })
+
+        $('#clearWatch').button(function(el, evt) {
+            app.geolocation.clearWatch();
+        })
+
+
+    });
+
+    
+</script>
+</html>

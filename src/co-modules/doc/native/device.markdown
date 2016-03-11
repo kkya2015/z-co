@@ -4,8 +4,7 @@
 ***
 
 
-device模块管理设备信息，用于获取手机设备的相关信息，如IMEI、IMSI、型号、厂商等。通过rd.device获取设备信息管理对象。
-
+device模块管理设备信息，用于获取手机设备的相关信息，如IMEI、IMSI、型号、厂商等。
 
 
 ###	索引
@@ -23,8 +22,8 @@ device模块管理设备信息，用于获取手机设备的相关信息，如IM
 *	[setWakeUp](#setWakeUp) ：设置应用保持唤醒（屏幕常亮）状态
 *	[setWakeOff](#setWakeOff) ：关闭应用保持唤醒（屏幕常亮）状态
 *	[isWakelock](#isWakelock) ：获取程序是否一直保持唤醒（屏幕常亮）状态
-*	[setVolume](#setVolume) ：设置设备的系统音量
-*	[getVolume](#getVolume) ：获取设备的系统音量
+*	[setVolume](#setVolume) ：设置设备的媒体音量
+*	[getVolume](#getVolume) ：获取设备的媒体音量
 
 ***
 ###	<div id="方法">方法</div>
@@ -131,7 +130,7 @@ device模块管理设备信息，用于获取手机设备的相关信息，如IM
 
 #### <div id="setVolume" style="color:red">setVolume</div>
 -	####	app.device.setVolume(volume)   ⇒ void   
-			调用此方法调节设备的系统音量。Android设置音量后对所有项的音量生效，如通话音量、系统音量、铃声音量、音乐音量、提示声音音量。(iOS设置音量后仅对媒体声音有效)
+			调用此方法调节设备的媒体音量。Android设置音量后对所有项的音量生效，如通话音量、系统音量、铃声音量、音乐音量、提示声音音量。(iOS设置音量后仅对媒体声音有效)
 	-	**volume**：设备的系统音量值，设置设备音量后对所有程序生效，退出程序系统仍然保持最后设定的音量值。
 		-	**type**：Number 
 		-	**默认值**：无

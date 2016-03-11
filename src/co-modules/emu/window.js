@@ -66,7 +66,7 @@
         iframe.onload = iframe.onreadystatechange = function() {
             $E.iframeload.call(iframe, pageId);
         }
-        iframe.src = url + "?pageId=" + pageId;
+        iframe.src = $E.parseUrl(url) + "?pageId=" + pageId;
         if (noTransition != 'true') {
             view.className = 'page-from-right-to-center';
             view.addEventListener("webkitAnimationEnd", function() {
@@ -151,7 +151,7 @@
             iframe.onload = iframe.onreadystatechange = function() {
                 $E.iframeload.call(iframe, pageId);
             }
-            iframe.src = url + "?pageId=" + pageId;
+            iframe.src = $E.parseUrl(url) + "?pageId=" + pageId;
             return view;
         }
 
@@ -232,7 +232,7 @@
         iframe.onload = iframe.onreadystatechange = function() {
             $E.iframeload.call(iframe, pageId);
         }
-        iframe.src = url + "?pageId=" + pageId;
+        iframe.src = $E.parseUrl(url) + "?pageId=" + pageId;
         if (type == 'right') {
             view.style.cssText += '-webkit-transition-duration:' + 500 +
                 'ms;-webkit-transform: translate(' +

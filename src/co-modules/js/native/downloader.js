@@ -1,9 +1,11 @@
 /*===============================================================================
 ************   ui native downloader   ************
 ===============================================================================*/
-;(function($L, global) {
+;
+(function($L, global) {
 
 	var downloader = function(url, option, download) {
+		var self = this;
 		if (!download) download = $L.executeNativeJS(['downloader', 'createDownload'], url, option);
 		this.getId = function() {
 			if (download) return download.id;
@@ -48,9 +50,9 @@
 			$L.executeObjFunJS([download, 'abort'])
 		}
 		this.addEventListener = function(listener) {
-			$L.executeObjFunJS([download, 'addEventListener'],function(dl,status){
+			$L.executeObjFunJS([download, 'addEventListener'], function(dl, status) {
 				if ($L.isFunction(listener)) {
-					listener.call(global, this,status);
+					listener.call(global, self, status);
 				}
 			})
 		}
@@ -58,9 +60,9 @@
 			$L.executeObjFunJS([download, 'removeEventListener'])
 		}
 		this.addCompletedListener = function(listener) {
-			$L.executeObjFunJS([download, 'addCompletedListener'],function(dl,status){
+			$L.executeObjFunJS([download, 'addCompletedListener'], function(dl, status) {
 				if ($L.isFunction(listener)) {
-					listener.call(global, this,status);
+					listener.call(global, self, status);
 				}
 			})
 		}
@@ -84,7 +86,7 @@
 		 * @param state: ( 下载任务状态 ) 必选 要清除下载任务的状态。
 		 */
 		clear: function(state) {
-			if(!state) state = -1;
+			if (!state) state = -1;
 			$L.executeNativeJS(['downloader', 'clear'], state);
 		},
 
@@ -94,11 +96,11 @@
 		 * @return downloads
 		 */
 		enumerate: function(state) {
-			if(!state) state = -1;
+			if (!state) state = -1;
 			var downloads = $L.executeNativeJS(['downloader', 'enumerate'], state);
-			if(downloads && $L.isArray(downloads)){
+			if (downloads && $L.isArray(downloads)) {
 				return downloads;
-			}else{
+			} else {
 				return [];
 			}
 		},
@@ -109,9 +111,9 @@
 		 * @return download
 		 */
 		getDownLoaderById: function(id) {
-			if(!id) $L.throwError("请传入有效的下载任务ID！");
+			if (!id) $L.throwError("请传入有效的下载任务ID！");
 			var download = $L.executeNativeJS(['downloader', 'enumerateById'], id);
-			return  download;
+			return new downloader('', '', download);
 		},
 
 		/*
@@ -119,21 +121,21 @@
 		 * @param id: ( Number ) 必选 要清除下载任务的id。
 		 */
 		remove: function(id) {
-			$L.executeNativeJS(['downloader', 'remove'],id);
+			$L.executeNativeJS(['downloader', 'remove'], id);
 		},
 
 		/*
 		 * 设置并发任务最大数
 		 */
 		setMaxRunningSize: function(num) {
-			$L.executeNativeJS(['downloader', 'setMaxRunningSize'],num);
+			$L.executeNativeJS(['downloader', 'setMaxRunningSize'], num);
 		},
 
 		/*
 		 * 设置总下载速度
 		 */
 		setSpeed: function(speed) {
-			$L.executeNativeJS(['downloader', 'setSpeed'],speed);
+			$L.executeNativeJS(['downloader', 'setSpeed'], speed);
 		},
 
 		/*
@@ -143,7 +145,7 @@
 			$L.executeNativeJS(['downloader', 'startAll']);
 		},
 
-		
+
 	}
 
 }(app, this));

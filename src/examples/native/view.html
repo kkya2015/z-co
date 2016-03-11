@@ -17,7 +17,7 @@
     <body>
         <header class="ui-nav-bar">
             <div class="ui-nav-bar-inner">
-                <a class="ui-action-back ui-nav-bar-link">
+                <a class="ui-nav-action-back ui-nav-bar-link">
                     <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des">Back</span>
               </i>
                 </a>
@@ -38,6 +38,7 @@
      <script>
             var view = app.view.currentView();
             domReady(function(require){
+                regTarget()
                 $('.button').button(function(btn,vet){
                     var text = btn.innerHTML;
                     if(text == '设置状态栏文字颜色'){

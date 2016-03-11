@@ -11,9 +11,8 @@
 			} else {
 				return;
 			}
-			var baseUrl = this.getPageDir();
 			var windowname = this.getQueryString('pageId');
-			var js = "tabMarkShow('" + dataS + "','" + frameRect + "','" + baseUrl + "','" + windowname + "')"
+			var js = "tabMarkShow('" + dataS + "','" + frameRect + "','" + windowname + "')"
 			this.postMessage(js);
 		} else if (key == "hide") {
 			var windowname = this.getQueryString('pageId');

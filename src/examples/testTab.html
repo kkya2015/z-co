@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello UI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="dist/css/co.css">
+    <style type="text/css">
+</style>
+	</head>
+	<body>
+
+
+		<script src="dist/js/native.js"></script>	
+        <script src="dist/js/dom.js"></script>
+		<script src="dist/js/co.js"></script>
+</body>
+<script>
+
+    var win = app.createWindow();
+    var view = app.currentView();
+    domReady(function(require){
+        var tab = app.require('tabMark');
+        var totalHei = $(document.body).height();
+        var totalWid = $(document.body).width();
+        var dataSources = {
+            titleFont:14.0, //字体大小
+            titleHighlightFont:16.0, //选中字体大小
+            titleColor:"#aaaaaa",//字体颜色
+            titleHighlightColor:"#307ab3", //字体选中颜色
+            vernierColor:"#307ab3", //选中下标颜色
+            naviBgColor:"#ffffff", //背景颜色
+            btnHeight:36,//横条高度
+            manyBtn:true ,//是否有按钮
+            // naviHidden:true,
+            dataSource: [
+                {
+                    menu:'头条',
+                    url:'header.html'
+                },
+                {
+                    menu:'科技',
+                    url:'cards.html'
+                },
+                {
+                    menu:'体育',
+                    url:'accordion.html'
+                },
+                {
+                    menu:'社会',
+                    url:'dialog.html',
+                },
+                {
+                    menu:'财经',
+                    url:'fullpage.html'
+                },
+                {
+                    menu:'汽车',
+                    url:'input.html'
+                },
+                {
+                    menu:'时尚',
+                    url:'lazyloadimage.html'
+                },
+                {
+                    menu:'历史',
+                    url:'navigator.html'
+                }
+                ]
+            }
+            tab.setDataSource(dataSources);
+            tab.setFrame(0,0,totalWid,totalHei);
+            tab.show();
+            // tab.hide();
+            // tab.remove();
+            // tab.showContentAtIndex(2);
+    })
+   </script>
+</html>

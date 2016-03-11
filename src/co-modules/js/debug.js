@@ -1,10 +1,7 @@
 ;
 (function($L, global) {
 	$L.debug = function() {
-		var div = document.createElement('div');
-		div.innerHTML = '<a href="./"></a>';
-		var pageDir = div.firstChild.href;
-		div = null;
+		document.body.style.cursor = '-webkit-grab'
 		$L.debug.uuid = 0;
 		$L.debug.xhr = {}
 		window.addEventListener('message', function(e) {
@@ -51,9 +48,6 @@
 			var r = window.location.search.substr(1).match(reg);
 			if (r != null) return (r[2]);
 			return null;
-		}
-		$L.debug.getPageDir = function() {
-			return pageDir;
 		}
 		$L.debug.postMessage = function(js) {
 			window.parent.postMessage(js, '*');
