@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Contacts</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>os</h1>
+  <hr />
+  <p>os模块管理操作系统信息</p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#getLanguage">getLanguage</a>
+      ：获取当前操作系统设置的系统语言
+    </li>
+    <li>
+      <a href="#getVersion">getVersion</a>
+      ：获取当前操作系统的版本信息
+    </li>
+    <li>
+      <a href="#getName">getName</a>
+      ：获取当前操作系统的名称
+    </li>
+    <li>
+      <a href="#getVendor">getVendor</a>
+      ：获取当前操作系统的供应商名称
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="getLanguage" style="color:red">getLanguage</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.os.getLanguage()   ⇒ String</h4>
+      <p>获取当前操作系统设置的系统语言</p>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var lg = app.os.getLanguage()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getVersion" style="color:red">getVersion</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.os.getVersion()   ⇒ String</h4>
+      <p>获取当前操作系统的版本信息</p>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var version = app.os.getVersion()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getName" style="color:red">getName</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.os.getName()   ⇒ String</h4>
+      <p>获取当前操作系统的名称,Android设备返回字符串“Android” iOS设备返回字符串“iOS”</p>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var name = app.os.getName()
+    if(name == 'Android')console.log('Android');
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getVendor" style="color:red">getVendor</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.os.getVendor()   ⇒ String</h4>
+      <p>获取当前操作系统的供应商名称</p>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var vendor = app.os.getVendor()</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

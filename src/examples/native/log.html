@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>log</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../dist/css/co.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .button {
+            margin: 5px 15px;
+        }
+        .button-primary{
+            background-color:#CD6600;
+        }
+
+        .des {
+            padding: 2em 1em;
+            text-align:left;
+            text-indent: 2em;
+            word-break: break-all;
+        }
+      
+        </style>
+
+</head>
+<body>
+    <header class="ui-nav-bar">
+        <div class="ui-nav-bar-inner">
+            <a class="ui-nav-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
+            </a>
+            <h1 class="ui-nav-bar-title">Log</h1>
+            <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
+            </a>
+        </div>
+    </header>
+    <a id='info' class="button button-block button-rounded button-inverse">打印info的log</a>
+    <a id='warning' class="button button-block button-rounded button-inverse">打印warning的log</a>
+    <a id='error' class="button button-block button-rounded button-inverse">打印error的log</a>
+
+    <p class="des">
+                需将IDE与手机接入同一网络，并在IDE上手动开启日志功能，才可在控制台接收日志。
+    </p>
+
+    <div id="log">
+        log管理模块，通过UDP传送，将log信息打印到IDE上，方便调试程序。（无字符限制）。
+    </div>
+    <script src="../dist/js/native.js"></script>
+    <script src="../dist/js/dom.js"></script>
+    <script src="../dist/js/co.js"></script>
+    <script src="js/common.js"></script>
+</body>
+<script>
+    var view = app.currentView();
+    domReady(function(require) {
+        regTarget('doc/log.html','Log Doc')
+        
+        $('#info').button(function(el, evt) {
+            app.log.info('手机打印日志测试')
+        })
+
+        $('#warning').button(function(el, evt) {
+            app.log.warning('手机打印日志测试')
+        })
+
+        $('#error').button(function(el, evt) {
+            app.log.error('手机打印日志测试')
+        })
+
+    });
+
+    
+</script>
+</html>

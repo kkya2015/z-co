@@ -1,0 +1,423 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>window</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>window</h1>
+  <hr />
+  <p>
+    窗口对象是实现多窗口机制的基本单元。app维护了一个窗口堆栈，每个窗口以唯一的窗口名字来区别。除起始页的name是由系统默认设置为'root'，其余窗口的name值均有打开时赋值。
+  </p>
+  <p>创建一个window对象很简单，只需通过app对象的createWindow方法即可。</p>
+  <pre><code>var win = app.createWindow();</code></pre>
+
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#open">open</a>
+      ：打开新创建的窗口
+    </li>
+    <li>
+      <a href="#setType">setType</a>
+      ：设置窗口类型
+    </li>
+    <li>
+      <a href="#setAnimationType">setAnimationType</a>
+      ：设置打开时的动画类型(仅IOS有效)
+    </li>
+    <li>
+      <a href="#setAnimationDirection">setAnimationDirection</a>
+      ：设置打开时的动画方向(仅IOS有效)
+    </li>
+    <li>
+      <a href="#setAnimationDuration">setAnimationDuration</a>
+      ：设置打开时的动画持续时间(仅IOS有效)
+    </li>
+    <li>
+      <a href="#setAnimationCurve">setAnimationCurve</a>
+      ：设置打开时的动画曲线(仅IOS有效)
+    </li>
+    <li>
+      <a href="#evalScript">evalScript</a>
+      ：在当前窗口执行JS语句
+    </li>
+    <li>
+      <a href="#evalScriptInPop">evalScriptInPop</a>
+      ：在当前窗口的pop中执行JS语句
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="open" style="color:red">open</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>open(url, [windowname])   ⇒ void</h4>
+      <pre><code>打开一个指定地址的窗口,若存在相同name的window窗口，则展现该window窗口</code></pre>
+
+      <ul>
+        <li> <strong>url</strong>
+          ：要打开页面的地址
+          <ul>
+            <li> <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>windowname</strong>
+          ：窗口的name值，默认同url相同
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：同url相同
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var win = app.createWindow();
+
+    EX-1：
+    win.open('navigator.html','navigator');
+
+    EX-2：
+    win.open('navigator.html');
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="setType" style="color:red">setType</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>setType([type])   ⇒ void</h4>
+      <pre><code>在窗口打开前，设置打开窗口类型</code></pre>
+
+      <ul>
+        <li>
+          <strong>type</strong>
+          ：窗口类型
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：0
+            </li>
+            <li>
+              <strong>取值范围</strong>
+              <ul>
+                <li>0：本地地址</li>
+                <li>1：html字符串</li>
+                <li>2：网络地址</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var win = app.createWindow();
+
+    EX-1：
+    win.setType(0); //设置为本地地址
+
+    EX-2：
+    win.setType(1); //设置为html字符串
+
+    EX-3：
+    win.setType(2); //设置为网络地址
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="setAnimationType" style="color:red">setAnimationType</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>setAnimationType([type])   ⇒ void</h4>
+      <pre><code>设置打开窗口动画效果(仅IOS有效),Android只支持设置无动画（-1）,其它动画无效。</code></pre>
+
+      <ul>
+        <li>
+          <strong>type</strong>
+          ：动画效果类型,仅IOS支持,Android只支持设置无动画（-1）,其它动画无效。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：11
+            </li>
+            <li>
+              <strong>取值范围</strong>
+              <ul>
+                <li>10：淡入淡出</li>
+                <li>11：推入</li>
+                <li>12：显露</li>
+                <li>13：切入</li>
+                <li>14：立方体翻转</li>
+                <li>15：上翻页</li>
+                <li>16：下翻页</li>
+                <li>17：收缩</li>
+                <li>18：水滴</li>
+                <li>19：翻转</li>
+                <li>20：旋转</li>
+                <li>21：照相机打开</li>
+                <li>22：照相机关闭</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var win = app.createWindow();
+
+    EX-1：
+    win.setAnimationType(10); //设置为淡入淡出
+
+    EX-2：
+    win.setAnimationType(12); //设置为显露
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="setAnimationDirection" style="color:red">setAnimationDirection</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>setAnimationDirection([direction])   ⇒ void</h4>
+      <pre><code>设置打开窗口动画方向(仅IOS有效)</code></pre>
+
+      <ul>
+        <li>
+          <strong>direction</strong>
+          ：动画方向
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：41
+            </li>
+            <li>
+              <strong>取值范围</strong>
+              <ul>
+                <li>40：从左往右</li>
+                <li>41：从右往左</li>
+                <li>42：从上往下</li>
+                <li>43：从下往上</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var win = app.createWindow();
+
+    EX-1：
+    win.setAnimationDirection(40); //设置为从左往右
+
+    EX-2：
+    win.setAnimationDirection(42); //设置为从上往下
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="setAnimationDuration" style="color:red">setAnimationDuration</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>setAnimationDuration([duration])   ⇒ void</h4>
+      <pre><code>设置打开窗口动画持续时间(仅IOS有效)</code></pre>
+
+      <ul>
+        <li>
+          <strong>duration</strong>
+          ：动画时间
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：300（单位ms）
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var win = app.createWindow();
+    win.setAnimationDuration(200); //设置为动画时间为200ms
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="setAnimationCurve" style="color:red">setAnimationCurve</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>setAnimationCurve([curve])   ⇒ void</h4>
+      <pre><code>设置打开窗口动画曲线(仅IOS有效)</code></pre>
+
+      <ul>
+        <li>
+          <strong>curve</strong>
+          :动画曲线类型
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：53
+            </li>
+            <li>
+              <strong>取值范围</strong>
+              <ul>
+                <li>50：线性</li>
+                <li>51：从慢到快</li>
+                <li>52：从快到慢</li>
+                <li>53：从慢到快到慢</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var win = app.createWindow();
+    win.setAnimationCurve(50); //设置动画曲线为线性
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="evalScript" style="color:red">evalScript</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>evalScript(script)   ⇒ void</h4>
+      <pre><code>在该窗口对象内执行JS语句</code></pre>
+
+      <ul>
+        <li>
+          <strong>script</strong>
+          :需要执行的JS语句
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              :无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var win = app.createWindow();
+    win.evalScript('console.log(&quot;这是从别的窗口执行的JS语句&quot;);');
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="evalScriptInPop" style="color:red">evalScriptInPop</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>evalScriptInPop(script, popoverName)   ⇒ void</h4>
+      <pre><code>在该窗口指定pop执行JS语句</code></pre>
+
+      <ul>
+        <li>
+          <strong>script</strong>
+          :需要执行的JS语句
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              :无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>popoverName</strong>
+          ：需要执行JS语句的pop名称
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var win = app.createWindow();
+    win.evalScriptInPop('console.log(&quot;这是从别的窗口执行的JS语句&quot;);','popoverName');
+</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

@@ -1,0 +1,374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>popover</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>popover</h1>
+  <hr />
+  <p>popover是窗口上的浮动窗口</p>
+  <p>创建一个popover对象很简单，只需通过当前页面对象的createPopover方法即可。</p>
+  <pre><code>    var view = app.currentView();
+    var popover = view.createPopover(0,64,0,0)
+</code></pre>
+
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#open">open</a>
+      ：打开一个指定地址的popover(重复调用的效果同front方法)
+    </li>
+    <li>
+      <a href="#setType">setType</a>
+      ：设置popover类型
+    </li>
+    <li>
+      <a href="#hide">hide</a>
+      ：设置popover隐藏
+    </li>
+    <li>
+      <a href="#show">show</a>
+      ：设置popover显示
+    </li>
+    <li>
+      <a href="#front">front</a>
+      ：把popover置于最前面
+    </li>
+    <li>
+      <a href="#frontOf">frontOf</a>
+      ：把popover置于指定popover上面
+    </li>
+    <li>
+      <a href="#behind">behind</a>
+      ：把popover置于最后面
+    </li>
+    <li>
+      <a href="#behindOf">behindOf</a>
+      ：把popover置于指定popover下面
+    </li>
+    <li>
+      <a href="#close">close</a>
+      ：关闭popover
+    </li>
+    <li>
+      <a href="#evalScript">evalScript</a>
+      ：在popover中执行JS语句
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="open"  style="color:red">open</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>open(url, [popovername])   ⇒ void</h4>
+      <p>打开一个指定地址的popover(重复调用的效果同front方法)</p>
+      <ul>
+        <li> <strong>url</strong>
+          ：要打开页面的地址
+          <ul>
+            <li> <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>popovername</strong>
+          ：popover的name值，默认同url相同
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：同url相同
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var view = app.currentView();
+    var popover = view.createPopover(0,64,0,0)
+    popover.open('navigator.html','navigator');
+    popover.open('navigator.html');
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="setType" style="color:red">setType</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>setType([type])   ⇒ void</h4>
+      <p>在popover打开前，设置打开popover类型</p>
+      <ul>
+        <li>
+          <strong>type</strong>
+          ：popover类型
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：0
+            </li>
+            <li>
+              <strong>取值范围</strong>
+              <ul>
+                <li>0：本地地址</li>
+                <li>1：html字符串</li>
+                <li>2：网络地址</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var view = app.currentView();
+    var popover = view.createPopover(0,64,0,0);
+    popover.setType(0); //设置为本地地址
+    popover.open('navigator.html','navigator');
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="hide" style="color:red">hide</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>hide()   ⇒ void</h4>
+      <p>在popover打开后，设置popover不可见</p>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var view = app.currentView();
+    var popover = view.createPopover(0,64,0,0);
+    popover.open('navigator.html','navigator');
+    popover.hide(); //隐藏popover
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="show" style="color:red">show</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>show()   ⇒ void</h4>
+      <p>在popover打开后，设置popover可见</p>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var view = app.currentView();
+    var popover = view.createPopover(0,64,0,0);
+    popover.open('navigator.html','navigator');
+    popover.show(); //显示popover
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="front" style="color:red">front</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>front()   ⇒ void</h4>
+      <p>在popover打开后，把popover置于最前面</p>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var view = app.currentView();
+    var popover = view.createPopover(0,64,0,0);
+    popover.open('navigator.html','navigator');
+    popover.front(); //置于最前面
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="frontOf" style="color:red">frontOf</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>frontOf(popover)   ⇒ void</h4>
+      <p>在popover打开后，把popover置于另一个打开的popover上面</p>
+      <ul>
+        <li>
+          <strong>popover</strong>
+          :另一个处于打开状态的popover
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：popover
+            </li>
+            <li>
+              <strong>默认值</strong>
+              :无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var view = app.currentView();
+    var popover1 = view.createPopover(0,64,0,0);
+    popover1.open('navigator.html','navigator');
+    var popover2 = view.createPopover(0,64,0,0);
+    popover2.open('tab.html','tab');
+    popover.frontOf(popover2); //把popover置于popover2上面
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="behind" style="color:red">behind</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>behind()   ⇒ void</h4>
+      <p>在popover打开后，把popover置于最后面</p>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var view = app.currentView();
+    var popover = view.createPopover(0,64,0,0);
+    popover.open('navigator.html','navigator');
+    popover.behind(); //置于最后面
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="behindOf" style="color:red">behindOf</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>behindOf(popover)   ⇒ void</h4>
+      <p>在popover打开后，把popover置于另一个打开的popover下面</p>
+      <ul>
+        <li>
+          <strong>popover</strong>
+          :另一个处于打开状态的popover
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：popover
+            </li>
+            <li>
+              <strong>默认值</strong>
+              :无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var view = app.currentView();
+    var popover1 = view.createPopover(0,64,0,0);
+    popover1.open('navigator.html','navigator');
+    var popover2 = view.createPopover(0,64,0,0);
+    popover2.open('tab.html','tab');
+    popover.behindOf(popover2); //把popover置于popover2下面
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="close" style="color:red">close</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>close()   ⇒ void</h4>
+      <p>在popover打开后，关闭该popover</p>
+      <ul>
+        <li>
+          <strong>animationType</strong>
+          ：动画效果类型
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var view = app.currentView();
+    var popover = view.createPopover(0,64,0,0);
+    popover.open('navigator.html','navigator');
+    popover.close(10);
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="evalScript" style="color:red">evalScript</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>evalScript(script)   ⇒ void</h4>
+      <p>在popover打开后，在该popover对象内的页面执行JS语句</p>
+      <ul>
+        <li>
+          <strong>script</strong>
+          :需要执行的JS语句
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              :无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    var view = app.currentView();
+    var popover = view.createPopover(0,64,0,0);
+    popover.open('navigator.html','navigator');
+    popover.evalScript('console.log(&quot;这是popover内的页面执行的JS语句&quot;);');
+</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

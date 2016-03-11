@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Log</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>log</h1>
+  <hr />
+  <p>log管理模块，通过UDP传送，将log信息打印到IDE上，方便调试程序。（无字符限制）</p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#info">info</a>
+      ：打印information的log
+    </li>
+    <li>
+      <a href="#warning">warning</a>
+      ：打印warning的log
+    </li>
+    <li>
+      <a href="#error">error</a>
+      ：打印error的log
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="info" style="color:red">info</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.log.info(info)   ⇒ void</h4>
+      <p>将Information发送到IDE控制台。</p>
+      <ul>
+        <li> <strong>info</strong>
+          ： 发送的信息
+          <ul>
+            <li> <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.log.info('info')</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="warning" style="color:red">warning</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.log.warning(info)   ⇒ void</h4>
+      <p>将warning发送到IDE控制台。</p>
+      <ul>
+        <li>
+          <strong>info</strong>
+          ： 发送的信息
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.log.warning('warning')</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="error" style="color:red">error</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.log.error(info)   ⇒ void</h4>
+      <p>将error发送到IDE控制台。</p>
+      <ul>
+        <li>
+          <strong>info</strong>
+          ： 发送的信息
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.log.error('error')</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
