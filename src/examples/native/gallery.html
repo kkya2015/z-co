@@ -32,8 +32,8 @@
     <a id='pick' class="button button-block button-rounded button-inverse">从系统相册选择文件</a>
     <a id='save' class="button button-block button-rounded button-inverse">保存文件到系统相册中</a>
 
-    <div id="log">
-        gallery模块管理系统相册，支持从相册中选择图片或视频文件、保存图片或视频文件到相册等功能。
+    <div id="logP">
+        <div id="log">gallery模块管理系统相册，支持从相册中选择图片或视频文件、保存图片或视频文件到相册等功能。</div>
     </div>
     <script src="../dist/js/native.js"></script>
     <script src="../dist/js/dom.js"></script>
@@ -52,7 +52,9 @@
         })
 
         $('#save').button(function(el, evt) {
-
+			app.gallery.save("cpt://img/q.jpg",function() {
+		           printout('保存成功！');
+		     });
         })
 
 

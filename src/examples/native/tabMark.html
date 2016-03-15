@@ -1,96 +1,303 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
-    <title>tabMark</title>
+    <title>Hello UI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link rel="stylesheet" href="../dist/css/co.css">
-    <link rel="stylesheet" href="css/common.css">
-    <style>
-        .button {
-            margin: 5px 15px;
-        }
-        .button-primary{
-            background-color:#CD6600;
-        }
-      
-        </style>
 
+    <style type="text/css">
+    html,
+body {
+  width: 100%;
+  height: 100%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  background-color: #efeff4;
+}
+.ui-navigator {
+    background:#FCFCFC;
+    position: relative;
+}
+.ui-navigator-list {
+    width: 100%;
+    list-style: none;
+    display: -webkit-box;
+    margin: 0;
+    padding: 0;
+}
+
+.ui-navigator .bar {
+    bottom: 0px;
+    height: 2px;
+    position: absolute;
+    overflow: hidden;
+    -webkit-box-sizing:border-box;
+    margin: 0 10px;
+    -webkit-transition: left 200ms ease-out;
+    background-color: #6EACCC;
+}
+.ui-navigator-list li {
+    list-style: none;
+    line-height: 34px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    -webkit-box-flex: 1;
+    display: -webkit-box;
+    white-space:nowrap;/*内容不换行*/
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+}
+.ui-navigator-list li a {
+    text-decoration: none;
+    color: #BBB7B0;
+    display: block;
+    width: 100%;
+    -webkit-box-sizing:border-box;
+    padding: 0 15px;
+}
+.ui-navigator-list li.ui-state-hover,
+.ui-navigator-list li.ui-state-active a{
+    color: #6EACCC;
+}
+
+.ui-navigator.ui-navigator-wrapper {
+  z-index: 1;
+  width: 100%;
+  overflow: hidden;
+  position:relative;
+  -webkit-backface-visibility: hidden;
+  -webkit-user-select:none;
+  cursor:pointer;
+}
+
+.ui-navigator {
+    padding: 0;
+    margin: 0;
+    // display: inline-block;/*重要，靠他让宽度由子节点撑开*/
+}
+.ui-navigator .ui-navigator-list {
+    display: table;
+    table-layout: fixed;/*宽度可控*/
+    white-space:nowrap;/*内容不换行*/
+    width: auto;
+}
+.ui-navigator .ui-navigator-list:after {
+    content: '';
+    clear: both;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+.ui-navigator .ui-navigator-list li {
+    display: inline-block;
+}
+
+
+    </style>
 </head>
 <body>
-    <header class="ui-nav-bar">
-        <div class="ui-nav-bar-inner">
-            <a class="ui-nav-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
-            </a>
-            <h1 class="ui-nav-bar-title">TabMark</h1>
-            <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
-            </a>
-        </div>
-    </header>
-    
+    <div class="ui-navigator ui-navigator-wrapper" style="display:none">
+        <ul class="ui-navigator-list" style="transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1); transition-duration: 0ms; transform: translate(0px, 0px) translateZ(0px);">
+            <span class="bar" style="left: 0px;"></span>
+        </ul>
 
-    <script src="../dist/js/native.js"></script>
+    </div>
     <script src="../dist/js/dom.js"></script>
-    <script src="../dist/js/co.js"></script>
-    <script src="js/common.js"></script>
 </body>
-<script>
-    var view = app.currentView();
-    domReady(function(require) {
-        regTarget('doc/tabMark.html','TabMark Doc')
-        
-        var tabMark = app.require("tabMark");
-        var dataSources = {
-            titleFont:14.0, //字体大小
-            titleHighlightFont:16.0, //选中字体大小
-            titleColor:"#aaaaaa",//字体颜色
-            titleHighlightColor:"#307ab3", //字体选中颜色
-            vernierColor:"#307ab3", //选中下标颜色
-            naviBgColor:"#ffffff", //背景颜色
-            btnHeight:36,//横条高度
-            manyBtn:true ,//是否有按钮
-            dataSource: [
-                {
-                    menu:'加速器',
-                    url:'doc/accelerometer.html'
-                },
-                {
-                    menu:'选择框',
-                    url:'doc/actionSheet.html'
-                },
-                {
-                    menu:'音频',
-                    url:'doc/audio.html'
-                },
-                {
-                    menu:'照相机',
-                    url:'doc/camera.html',
-                },
-                {
-                    menu:'通讯录',
-                    url:'doc/contacts.html'
-                },
-                {
-                    menu:'数据库',
-                    url:'doc/database.html'
-                },
-                {
-                    menu:'相册',
-                    url:'doc/gallery.html'
-                },
-                {
-                    menu:'短信',
-                    url:'doc/message.html'
-                }
-                ]
+    <script>
+ var touchesStart,
+    touchesEnd,
+    dataS,
+    parentName,
+    list,
+    cssPrefix = $.fx.cssPrefix,
+    translateZ = ' translateZ(0)',
+    bWidth = $(document.body).width(),
+    baseDist = 0;
+var _nav = $('.ui-navigator');
+_nav.$list = _nav.find('ul').first();
+_nav.$bar = _nav.find('.bar');
+
+window.addEventListener('message', function(e) {
+    _nav.css('display', 'block');
+    var msg = JSON.parse(e.data);
+    var type = msg.type;
+    var data = msg.data
+    if (type == 'init') {
+        dataS = data;
+        parentName = dataS.parentName
+        init()
+    } else if (type == 'executeF') {
+        if (data) {
+            var args = data.split('|');
+            var funName = args[0];
+            if (window[funName]) {
+                window[funName].call(window, args[1])
             }
-            tabMark.setDataSource(dataSources);
-            tabMark.setFrame(0,$('.ui-nav-bar').height(),view.getWidth(),view.getHeight()-$('.ui-nav-bar').height());
-            tabMark.show();
+        }
+    }
+
+}, false);
+
+
+function init() {
+    var dataSource = dataS.dataSource;
+    $.each(dataSource, function(index, item) {
+        var inedx = index + 1;
+        var title = item.menu
+        var url = dataS.baseUrl + item.url;
+        var htmlStr = '<li data-url="' + url + '" data-name="' + title + '" data-index="' + inedx + '">' +
+            '<a>' + title + '</li>';
+        _nav.$list.append(htmlStr);
+    })
+
+    list = _nav.$list.children('li');
+    var defaultIndex = dataS.defaultIndex
+    if (!defaultIndex) defaultIndex = 1
+    showIndex(defaultIndex)
+    var naviHidden = dataS.naviHidden
+    if (naviHidden) {
+        _nav.$list.css('display', 'none')
+        return;
+    }
+
+
+
+    var vernierColor = dataS.vernierColor
+    if (vernierColor) {
+        _nav.$bar.css('backgroundColor', vernierColor)
+    }
+    var naviBgColor = dataS.naviBgColor
+    if (naviBgColor) {
+        _nav.css('backgroundColor', naviBgColor)
+    }
+    _nav.$list.on('click',
+        'li:not(.ui-state-disable)>a',
+        function(e) {
+            var to = $(this).parent().data('index');
+            showIndex(to)
+        });
+
+}
+
+function showIndex(to) {
+    to = to - 1
+    if (to < 0) to = 0
+    var li = list.removeClass('ui-state-active')
+        .eq(to)
+        .addClass('ui-state-active');
+    _nav.$bar.css({
+        left: li.offset().left - _nav.$list.offset().left,
+        width: li.width() - 20
     });
 
+    var titleColor = dataS.titleColor
+    if (titleColor) {
+        list.find('a').css('color', titleColor)
+    }
+    var titleFont = dataS.titleFont
+    if (titleFont) {
+        list.css('fontSize', titleFont)
+    }
+    var titleHighlightFont = dataS.titleHighlightFont
+    if (titleHighlightFont) {
+        li.css('fontSize', titleHighlightFont)
+    }
+
+    var titleHighlightColor = dataS.titleHighlightColor
+    if (titleHighlightColor) {
+        li.find('a').css('color', titleHighlightColor)
+    }
+
+    var url = li.data('url');
+    var windowName = li.data('name');
+    var naviHidden = dataS.naviHidden
+    var viewHeight = dataS.viewHeight
+    if(viewHeight == 0){
+        viewHeight = $(document.body).height()
+    }
+    if (naviHidden) {
+        var js = "tabMarkAppend('" + windowName + "','" + url + "','" + dataS.pageId + "','" + parentName + "','" + 0 + "','" + viewHeight + "')"
+        window.parent.postMessage(js, '*');
+    } else {
+        viewHeight = viewHeight - 34;
+        var js = "tabMarkAppend('" + windowName + "','" + url + "','" + dataS.pageId + "','" + parentName + "','" + 34 + "','" + viewHeight + "')"
+        window.parent.postMessage(js, '*');
+    }
+
+}
+
+var touchHandler = function(e) {
+    switch (e.type) {
+        case 'mousedown':
+            mousedown.call(this, e);
+            break;
+        case 'mousemove':
+            mousemove.call(this, e);
+            break;
+        case 'mouseup':
+            mouseup.call(this, e);
+            break;
+    }
+    e.stopPropagation()
+};
+
+_nav.on('mousedown', touchHandler)
+
+function mousedown(e) {
+    touchesStart = {
+        x: e.clientX,
+        y: e.clientY,
+        time: +new Date()
+    };
+
+    _nav.on('mousemove' + ' mouseup' + ' mouseout', touchHandler);
+}
+
+function mousemove(e) {
+    var width = _nav.$list.width(),
+        style = _nav.$list[0].style,
+        abs = Math.abs(bWidth - width);
+    touchesEnd = {
+        x: e.clientX,
+        y: e.clientY
+    };
+    if (Math.abs(angle(touchesStart, touchesEnd)) > 30) return;
+    var dist = touchesEnd.x - touchesStart.x
+    dist = dist / 10;
+    dist = baseDist + dist
+    if (dist > 0) {
+        dist = 0;
+    } else if (dist < 0 && dist < (0 - abs)) {
+        dist = 0 - abs;
+    }
+    baseDist = dist;
+    style.cssText += cssPrefix + 'transition-duration:' + 0 +
+        'ms;' + cssPrefix + 'transform: translate(' +
+        dist + 'px, 0)' + translateZ + ';';
+
+}
+
+function mouseup(e) {
+    _nav.off('mousemove' + ' mouseup' + ' mouseout', touchHandler);
+}
+
+
+
+var angle = function(start, end) {
+    var diff_x = end.x - start.x,
+        diff_y = end.y - start.y;
+    //返回角度,不是弧度
+    return 360 * Math.atan(diff_y / diff_x) / (2 * Math.PI);
+}   
     
-</script>
-</html>
+   </script></html>

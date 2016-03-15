@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>networkinfo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="stylesheet" href="res/doc.css">
+<style type="text/css">
+
+</style>
+</head>
+<body>
+<h1>networkinfo</h1>
+<hr />
+<p>用于获取网络信息</p>
+<h3>索引</h3>
+<hr />
+<h3><a href="#方法">方法</a>：</h3>
+<ul>
+<li><a href="#getCurrentType">getCurrentType</a> ：获取设备当前连接的网络类型</li>
+</ul>
+<hr />
+<h3><div id="方法">方法</div></h3>
+<hr />
+<h4><div id="getCurrentType"	style="color:red">getCurrentType</div></h4>
+<ul>
+<li>
+<h4>app.networkinfo.getCurrentType()   ⇒ Number</h4>
+<p>获取设备当前连接的网络类型</p>
+<ul>
+<li>
+<strong>返回值</strong>：网络类型
+<ul>
+<li>0：网络连接状态未知</li>
+<li>1：未连接网络</li>
+<li>2：有线网络</li>
+<li>3：无线WIFI网络</li>
+<li>4：蜂窝移动2G网络</li>
+<li>5：蜂窝移动3G网络</li>
+<li>6：蜂窝移动4G网络</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h5>示例：</h5>
+<pre><code>    var net = app.networkinfo.getCurrentType()
+    if(net == 6)console.log('当前连接网络为4G');
+</code></pre>
+
+</li>
+</ul>
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

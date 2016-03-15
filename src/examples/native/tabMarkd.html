@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>tabMark</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../dist/css/co.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .button {
+            margin: 5px 15px;
+        }
+        .button-primary{
+            background-color:#CD6600;
+        }
+      
+        </style>
+
+</head>
+<body>
+    <header class="ui-nav-bar">
+        <div class="ui-nav-bar-inner">
+            <a class="ui-nav-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
+            </a>
+            <h1 class="ui-nav-bar-title">TabMark</h1>
+            <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
+            </a>
+        </div>
+    </header>
+    
+
+    <script src="../dist/js/native.js"></script>
+    <script src="../dist/js/dom.js"></script>
+    <script src="../dist/js/co.js"></script>
+    <script src="js/common.js"></script>
+</body>
+<script>
+    var view = app.currentView();
+    domReady(function(require) {
+        regTarget('doc/tabMark.html','TabMark Doc')
+        
+        var tabMark = app.require("tabMark");
+        var dataSources = {
+            titleFont:14.0, //字体大小
+            titleHighlightFont:16.0, //选中字体大小
+            titleColor:"#aaaaaa",//字体颜色
+            titleHighlightColor:"#307ab3", //字体选中颜色
+            vernierColor:"#307ab3", //选中下标颜色
+            naviBgColor:"#ffffff", //背景颜色
+            btnHeight:36,//横条高度
+            manyBtn:true ,//是否有按钮
+            dataSource: [
+                {
+                    menu:'加速器',
+                    url:'doc/accelerometer.html'
+                },
+                {
+                    menu:'选择框',
+                    url:'doc/actionSheet.html'
+                },
+                {
+                    menu:'音频',
+                    url:'doc/audio.html'
+                },
+                {
+                    menu:'照相机',
+                    url:'doc/camera.html',
+                },
+                {
+                    menu:'通讯录',
+                    url:'doc/contacts.html'
+                },
+                {
+                    menu:'数据库',
+                    url:'doc/database.html'
+                },
+                {
+                    menu:'相册',
+                    url:'doc/gallery.html'
+                },
+                {
+                    menu:'短信',
+                    url:'doc/message.html'
+                }
+                ]
+            }
+            tabMark.setDataSource(dataSources);
+            tabMark.setFrame(0,$('.ui-nav-bar').height(),view.getWidth(),view.getHeight()-$('.ui-nav-bar').height());
+            tabMark.show();
+    });
+
+    
+</script>
+</html>

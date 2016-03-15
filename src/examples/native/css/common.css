@@ -1,9 +1,17 @@
-#log {
-    height: 64px;
+#logP{
+	height: 5em;
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-top: 2px solid #AAA;
+    background: #FFF;
+}
+
+#log {
+    height: 100%;
     color: #f00;
     background: #FFF;
     font-size: 12px;
@@ -11,8 +19,66 @@
     word-break: break-all;
     z-index: 6666;
     padding: 8px 16px;
+}
+#log2 {
+	height: 4.2em;
+	min-width:95%;
+    color: #f00;
+    background: #FFF;
+    font-size: 12px;
+    line-height: 16px;
+    word-break: break-all;
+    z-index: 6666;
     overflow-x: hidden;
-    overflow-y: scroll;
-    border-top: 2px solid #AAA;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    padding-left: .5em;
+    padding-right: .5em;
+}
+.container .header{
+	height:3em;
+}
+.container .footer{
+	height:3.2em;
+}
+.f-wei{
+	font-weight: 600;
+}
+.c-f4f{
+	background-color: #f4f4f4 !important;
+}
+.t-202{
+	color:#202020;
+}
+.t-585{
+	color:#585757;
+}
+.font-09 {
+    font-size: .9em !important;
+}
+.b-ccc{
+	border-color: #cccccc;
+}
+.bor-l4{
+    border-left: 5px #007AFF solid;
+}
+.padd-tb-04{
+	padding-top: .4em;
+	padding-bottom: .4em;
+}
+.padd-05-1{
+	padding: .5em 1em;
+}
+.padd-1{
+	padding: 1em;
+}
+.mar-tb-04{
+	margin-top: .4em;
+	margin-bottom: .4em;
+}
+.hei-3{
+	height:3em;
+}
+.line-hei2{
+	line-height: 2em;
 }

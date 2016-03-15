@@ -46,7 +46,11 @@
         <ul></ul>
     </div>
 
-    <div id="log">Camera模块管理设备的摄像头，可用于拍照、摄像操作。</div>
+    <div id="logP">
+        <div id="log">
+            Camera模块管理设备的摄像头，可用于拍照、摄像操作。
+        </div>
+    </div>
     <script src="../dist/js/native.js"></script>
     <script src="../dist/js/dom.js"></script>
     <script src="../dist/js/co.js"></script>
@@ -95,9 +99,7 @@ function video(camera) {
 
     camera.captureVideo(function(capturedFile) {
         printout('摄像成功：' + capturedFile)
-        app.gallery.save(capturedFile,function(info) {
-               app.alert(info);
-           });
+
     });
 }
 

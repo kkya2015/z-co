@@ -25,13 +25,13 @@
 						if (data) {
 							try {
 								data = JSON.parse(data)
+								success.call(global, {}, data)
 							} catch (e) {
-								alert(data)
+								error.call(global, 0, {}, data)
 							}
 						} else {
-							data = {}
+							success.call(global, {}, data)
 						}
-						success.call(global, {}, data)
 					}
 				} else {
 					if ($L.isFunction(success)) {

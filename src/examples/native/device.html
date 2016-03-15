@@ -18,8 +18,8 @@
         .ui-nav-bar ~ .ui-content {
             position: fixed;
             overflow-y: scroll;
-            top: 45px;
-            bottom: 85px;
+            padding-top: 10px;
+            padding-bottom: 95px;
         }
         </style>
 
@@ -49,7 +49,11 @@
     <a id='isWakelock' class="button button-block button-rounded button-inverse">是否保持唤醒</a>
     <a id='getVolume' class="button button-block button-rounded button-inverse">获取媒体音量</a>
     </div>
-    <div id="log">device模块管理设备信息，用于获取手机设备的相关信息，如IMEI、IMSI、型号、厂商等。</div>
+    <div id="logP">
+        <div id="log">
+            device模块管理设备信息，用于获取手机设备的相关信息，如IMEI、IMSI、型号、厂商等。
+        </div>
+    </div>
     <script src="../dist/js/native.js"></script>
     <script src="../dist/js/dom.js"></script>
     <script src="../dist/js/co.js"></script>
