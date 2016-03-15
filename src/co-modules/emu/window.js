@@ -53,7 +53,7 @@
         view.id = pageId;
         // view.style.transform: translate3d(100%, 0, 0);
         var iframe = document.createElement("iframe");
-        iframe.style.position = "absolute";
+        iframe.style.position = "relative";
         iframe.style.borderWidth = "0px";
         iframe.style.left = "0px";
         iframe.style.top = "0px";
@@ -71,6 +71,11 @@
             view.className = 'page-from-right-to-center';
             view.addEventListener("webkitAnimationEnd", function() {
                 view.className = '';
+                view.style.width = "99.99%";
+                setTimeout(function() {
+                    view.style.width = "100%";
+                }, 0)
+
             }, false);
         }
         $E.body.appendChild(view);
@@ -87,8 +92,8 @@
     }
 
     $E.backToWindow = function(windowname) {
-        if ($E.rootUrl.indexOf(windowname) != -1 || windowname == rootName) {
-            var pageId = $E.strEncode(rootName);
+        if ($E.rootUrl.indexOf(windowname) != -1 || windowname == $E.rootName) {
+            var pageId = $E.strEncode($E.rootName);
         } else {
             pageId = $E.strEncode(windowname)
         }
@@ -161,7 +166,9 @@
         } else {
             var pop = document.getElementById(windowname);
             var parentName = pop.parentName;
-            $E.winMap[parentName]['pops'].push(pageId);
+            if ($E.winMap[parentName]) {
+                $E.winMap[parentName]['pops'].push(pageId);
+            }
             document.getElementById(parentName).appendChild(createView(parentName));
         }
 

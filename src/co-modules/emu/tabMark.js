@@ -28,17 +28,17 @@
 		view.style.position = "absolute";
 		view.style.left = frameRect.x + "px";
 		view.style.top = frameRect.y + "px";
-		if (frameRect.width == 0) {
-			view.style.width = "100%";
-		} else {
-			view.style.width = frameRect.width + 'px';
-		}
+		// if (frameRect.width == 0) {
+		// 	view.style.width = "100%";
+		// } else {
+		view.style.width = frameRect.width + 'px';
+		// }
 
-		if (frameRect.height == 0) {
-			view.style.height = "100%";
-		} else {
-			view.style.height = frameRect.height + 'px';
-		}
+		// if (frameRect.height == 0) {
+		// 	view.style.height = "100%";
+		// } else {
+		view.style.height = frameRect.height + 'px';
+		// }
 
 
 		view.style.zIndex = ++$E.Zindex;

@@ -1,0 +1,584 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Zip</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>tabMark</h1>
+  <hr />
+  <p>
+    用于多窗口内容浏览,用户通过滑动切换各个窗口,或者通过点击顶部menu栏切换各个窗口.各窗口内容支持本地网页文件和网络的url链接.通过app.require(&quot;tabMark&quot;)方法获取该对象.每require一次,就会获取一个新的tabMark对象.在使用中注意作用域以及重复require.
+  </p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#setDataSource">setDataSource</a>
+      ：设置数据源.
+    </li>
+    <li>
+      <a href="#setFrame">setFrame</a>
+      ：设置插件的显示位置及尺寸.
+    </li>
+    <li>
+      <a href="#show">show</a>
+      ：显示内容视图.
+    </li>
+    <li>
+      <a href="#hide">hide</a>
+      ：隐藏内容视图.
+    </li>
+    <li>
+      <a href="#remove">remove</a>
+      ：移除内容视图.
+    </li>
+    <li>
+      <a href="#addEditCallback">addEditCallback</a>
+      ：添加编辑按钮监听回调.
+    </li>
+    <li>
+      <a href="#showContentAtIndex">showContentAtIndex</a>
+      ：滚动到某个子视图.
+    </li>
+    <li>
+      <a href="#addScrollCallback">addScrollCallback</a>
+      ： 添加滚动回调.
+    </li>
+    <li>
+      <a href="#addIgnoreArea">addIgnoreArea</a>
+      ：添加忽略手势窗口区域，不支持iOS.
+    </li>
+  </ul>
+  <h2>
+    <div style="color:red">tabMark</div>
+  </h2>
+  <pre><code>    //注意  在整篇文档中,此对象只创建一次. 请不要重复创建.
+     var  tabmark  = app.require(&quot;tabMark&quot;);
+</code></pre>
+
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="setDataSource" style="color:red">setDataSource</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>setDataSource(dataSources)   ⇒ void</h4>
+      <pre><code>    设置数据源，此方法要在调用show之前设置，优先级最高。
+    通过此方法，设置插件所需要的数据源，包括menu标题，每个menu对应的窗口的内容url，以及menu的样式等参数。
+</code></pre>
+
+      <ul>
+        <li> <strong>dataSources</strong>
+          ：数据源
+          <ul>
+            <li> <strong>type</strong>
+              ：JSON
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>keys</strong>
+              <ul>
+                <li>
+                  <strong>titleFont</strong>
+                  : （ <em>Number</em>
+                  ）导航栏文字大小
+                </li>
+                <li>
+                  <strong>titleHighlightFont</strong>
+                  : （ <em>Number</em>
+                  ）选中状态时导航栏文字大小
+                </li>
+                <li>
+                  <strong>titleColor</strong>
+                  : （
+                  <em>String</em>
+                  ）导航栏文字颜色
+                </li>
+                <li>
+                  <strong>titleHighlightColor</strong>
+                  : （
+                  <em>String</em>
+                  ）选中状态时导航栏文字颜色
+                </li>
+                <li>
+                  <strong>vernierColor</strong>
+                  : （
+                  <em>String</em>
+                  ）游标颜色
+                </li>
+                <li>
+                  <strong>naviBgColor</strong>
+                  : （
+                  <em>String</em>
+                  ）导航栏背景色
+                </li>
+                <li>
+                  <strong>btnHeight</strong>
+                  : （
+                  <em>Number</em>
+                  ）导航栏高度(每个按钮的高度)
+                </li>
+                <li>
+                  <strong>manyBtn</strong>
+                  : （
+                  <em>Boolean</em>
+                  ）多按钮状态,true(自适应按钮宽度) false:(自动等距分割)
+                </li>
+                <li>
+                  <strong>EditButtonImg</strong>
+                  : （
+                  <em>String</em>
+                  ）编辑按钮的图片 当manyBtn为true,并且EditButtonImg有值时,编辑按钮才会显示
+                </li>
+                <li>
+                  <strong>interval</strong>
+                  : （
+                  <em>Boolean</em>
+                  ）是否显示分割线 true:显示 false:不显示，Android不支持
+                </li>
+                <li>
+                  <strong>naviHidden</strong>
+                  : （
+                  <em>Boolean</em>
+                  ）导航栏隐藏. true:隐藏 false:不隐藏导航栏
+                </li>
+                <li>
+                  <strong>defaultIndex</strong>
+                  : （
+                  <em>Number</em>
+                  ）设置默认显示第几个视图内容
+                </li>
+                <li>
+                  <strong>dataSource</strong>
+                  : （
+                  <em>Array[JSON]</em>
+                  ）内容视图数组
+                  <ul>
+                    <li>menu : ( String ) 内容视图的标题.用于显示在导航栏.</li>
+                    <li>url :( String ) 内容视图的url.</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    //注意  在整篇文档中,此对象只创建一次. 请不要重复创建.
+    var  tabmark  = app.require(&quot;tabMark&quot;);
+    var  dataSources = {
+        titleFont:12.0, //文字大小
+        titleHighlightFont:15.0,//文字高亮大小
+        titleColor:&quot;#000000&quot;,//文字颜色
+        titleHighlightColor:&quot;#FF0000&quot;,//文字高亮颜色
+        vernierColor:&quot;#000000&quot;,//游标颜色
+        naviBgColor:&quot;#D1D1D1&quot;,//导航条背景色
+        btnHeight:36.0,//导航条(按钮)高度
+        manyBtn:false,//true:多按钮模式(自适应按钮宽度)  false:自动等距分割
+        EditButtonImg:&quot;abc.png&quot;,//编辑按钮图片
+        interval: true, //分割线，android不支持
+        naviHidden:false, //是否隐藏导航条
+        defaultIndex:4,//默认开启的页面 
+        dataSource:[
+                    {menu:'百度1',
+                    url:'device.html'
+                    },
+                    {menu:'新浪2',
+                    url:'alert.html'
+                    },
+                    {menu:'腾讯3',
+                    url:'windowTest.html'
+                    },
+                    {menu:'搜狐4',
+                    url:'refresh.html'
+                    },
+                    {menu:'新浪1',
+                    url:'refresh.html'
+                    },
+                    {menu:'腾讯1',
+                    url:'refresh.html'
+                    },
+                    {menu:'搜狐1',
+                    url:'refresh.html'
+                    },
+                    {menu:'网易5',
+                    url:'video.html'
+                    }
+                    ]
+    }
+    tabmark.setDataSource(dataSources);
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="setFrame" style="color:red">setFrame</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>setFrame(x, y, width, height)   ⇒ void</h4>
+      <pre><code>通过此方法,设置插件将要显示的位置及尺寸.</code></pre>
+
+      <ul>
+        <li>
+          <strong>x</strong>
+          ：x轴开始坐标 仅支持整型
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>y</strong>
+          ：y轴开始坐标 仅支持整型
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>width</strong>
+          ：所占区域的宽度 仅支持整型
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>height</strong>
+          ：所占区域的高度 仅支持整型
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    //注意  在整篇文档中,此对象只创建一次. 请不要重复创建.
+    var  tabmark  = app.require(&quot;tabMark&quot;);
+    tabmark.setFrame(0,0,300,500);
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="show" style="color:red">show</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>show()   ⇒ void</h4>
+      <pre><code>通过此方法,显示插件。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    //注意  在整篇文档中,此对象只创建一次. 请不要重复创建.
+    var  tabmark  = app.require(&quot;tabMark&quot;);
+    tabmark.show();
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="hide" style="color:red">hide</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>hide()   ⇒ void</h4>
+      <pre><code>通过此方法,隐藏已经显示的插件。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    //注意  在整篇文档中,此对象只创建一次. 请不要重复创建.
+    var  tabmark  = app.require(&quot;tabMark&quot;);
+    tabmark.hide();
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="remove" style="color:red">remove</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>remove()   ⇒ void</h4>
+      <pre><code>通过此方法,移除插件。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    //注意  在整篇文档中,此对象只创建一次. 请不要重复创建.
+    var  tabmark  = app.require(&quot;tabMark&quot;);
+    tabmark.remove();
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="addEditCallback" style="color:red">addEditCallback</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>addEditCallback(editCallback)   ⇒ void</h4>
+      <pre><code>添加编辑按钮点击事件回调.</code></pre>
+
+      <ul>
+        <li>
+          <strong>editCallback</strong>
+          ：编辑按钮被点击回调方法
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    //注意  在整篇文档中,此对象只创建一次. 请不要重复创建.
+    var  tabmark  = app.require(&quot;tabMark&quot;);
+    tabmark.addEditCallback(function(){
+        console.log('点击了编辑按钮'); 
+    });
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="addScrollCallback" style="color:red">addScrollCallback</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>addScrollCallback(scrollCallback)   ⇒ void</h4>
+      <pre><code>当内容区域切换时,通过此方法添加的回调函数通知开发者.</code></pre>
+
+      <ul>
+        <li>
+          <strong>scrollCallback</strong>
+          ：内容滚动回调方法
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    //注意  在整篇文档中,此对象只创建一次. 请不要重复创建.
+    var  tabmark  = app.require(&quot;tabMark&quot;);
+    tabmark.addScrollCallback(function(){
+        console.log('内容区域发生了切换'); 
+    });
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="showContentAtIndex" style="color:red">showContentAtIndex</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>showContentAtIndex(index)   ⇒ void</h4>
+      <pre><code>通过此方法,切换当前显示内容.也可以通过滑动内容视图或者点击导航栏选项实现.</code></pre>
+
+      <ul>
+        <li>
+          <strong>index</strong>
+          ： 视图下标
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>取值范围： 1~内容视图个数</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    //注意  在整篇文档中,此对象只创建一次. 请不要重复创建.
+    var  tabmark  = app.require(&quot;tabMark&quot;);
+    tabmark.showContentAtIndex(2); //显示第二个tab页面
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="addIgnoreArea" style="color:red">addIgnoreArea</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>addIgnoreArea(tabName,IgnoreParams)   ⇒ void</h4>
+      <pre><code>该方法只用于安卓,iOS不需要执行此方法.</code></pre>
+
+      <ul>
+        <li>
+          <strong>tabName</strong>
+          ： tab menu名称（对应dataSource对象的menu属性），设置某个tab窗口忽略手势
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>IgnoreParams</strong>
+          ： 窗口区域信息
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：JSON
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>keys</strong>
+              <ul>
+                <li>
+                  <strong>x</strong>
+                  ：区域坐标x值.
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：Number
+                    </li>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>y</strong>
+                  ：区域坐标x值.
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：Number
+                    </li>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>width</strong>
+                  ：区域宽度.
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：Number
+                    </li>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>height</strong>
+                  ：区域高度.
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：Number
+                    </li>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    //注意  在整篇文档中,此对象只创建一次. 请不要重复创建.
+    var tabmark = app.require(&quot;tabMark&quot;);
+    var IgnoreParams = {
+        x: 0,
+        y: 0,
+        width: 500,
+        height: 500
+    };
+    tabMark.addIgnoreArea(&quot;tab menu name&quot;, IgnoreParams);
+</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

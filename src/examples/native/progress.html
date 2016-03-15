@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>progress</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../dist/css/co.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .button {
+            margin: 5px 15px;
+        }
+        .button-primary{
+            background-color:#CD6600;
+        }
+
+        .des {
+            padding: 2em 1em;
+            text-align:left;
+            text-indent: 2em;
+            word-break: break-all;
+        }
+      
+        </style>
+
+</head>
+<body>
+    <header class="ui-nav-bar">
+        <div class="ui-nav-bar-inner">
+            <a class="ui-nav-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
+            </a>
+            <h1 class="ui-nav-bar-title">Progress</h1>
+            <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
+            </a>
+        </div>
+    </header>
+    <a id='show' class="button button-block button-rounded button-inverse">显示进度框</a>
+    <a id='toast' class="button button-block button-rounded button-inverse">显示自动隐藏提示框</a>
+
+    <div id="log">
+        加载信息提示框。
+    </div>
+    <script src="../dist/js/native.js"></script>
+    <script src="../dist/js/dom.js"></script>
+    <script src="../dist/js/co.js"></script>
+    <script src="js/common.js"></script>
+</body>
+<script>
+    var view = app.currentView();
+    domReady(function(require) {
+        regTarget('doc/progress.html','Progress Doc')
+        
+        $('#show').button(function(el, evt) {
+            app.progress.showProgress({
+               title: {
+                   name: '努力加载中...',
+                   fontSize: '16',
+                   color: '#3300cc'
+               },
+               detailTitle: {
+                   name: '4秒后自动隐藏',
+                   fontSize: '16',
+                   color: '#3300cc'
+               },
+               bgColor: '#9900ff',
+               bgOpacity: '0.6'
+           }, 0)
+
+            setTimeout(function(){
+                app.progress.hideProgress()
+            },4000)
+        })
+
+        $('#toast').button(function(el, evt) {
+            app.progress.showToast('4',{
+               title: {
+                   name: '努力加载中...',
+                   fontSize: '16',
+                   color: '#3300cc'
+               },
+               detailTitle: {
+                   name: '哈哈哈哈',
+                   fontSize: '16',
+                   color: '#3300cc'
+               },
+               bgColor: '#9900ff',
+               bgOpacity: '0.6'
+           })
+        })
+
+    });
+
+    
+</script>
+</html>

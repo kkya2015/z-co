@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Screen</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>screen</h1>
+  <hr />
+  <p>screen模块管理设备屏幕信息</p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#getResolutionWidth">getResolutionWidth</a>
+      ：获取当前设备屏幕宽度分辨率
+    </li>
+    <li>
+      <a href="#getResolutionHeight">getResolutionHeight</a>
+      ：获取当前设备屏幕高度分辨率
+    </li>
+    <li>
+      <a href="#getScale">getScale</a>
+      ：获取当前设备逻辑分辨率与实际分辨率的比例
+    </li>
+    <li>
+      <a href="#getDpiX">getDpiX</a>
+      ：获取当前设备屏幕水平方向的密度
+    </li>
+    <li>
+      <a href="#getDpiY">getDpiY</a>
+      ：获取当前设备屏幕垂直方向的密度
+    </li>
+    <li>
+      <a href="#setBrightness">setBrightness</a>
+      ：设置屏幕亮度
+    </li>
+    <li>
+      <a href="#getBrightness">getBrightness</a>
+      ：获取屏幕亮度值
+    </li>
+    <li>
+      <a href="#lockOrientation">lockOrientation</a>
+      ：锁定屏幕方向,iOS设备不支持.
+    </li>
+    <li>
+      <a href="#unlockOrientation">unlockOrientation</a>
+      ：解除锁定屏幕方向,iOS设备不支持.
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="getResolutionWidth" style="color:red">getResolutionWidth</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.screen.getResolutionWidth()   ⇒ Number</h4>
+      <pre><code>    获取当前设备屏幕宽度分辨率，屏幕区域包括系统状态栏显示区域和应用显示区域，screen获取的是设备屏幕总区域的逻辑分辨率，单位为px。 如果需要获取实际分辨率则需要乘以比例值scale。
+</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var resolutionHeight = app.screen.getResolutionWidth()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getResolutionHeight" style="color:red">getResolutionHeight</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.screen.getResolutionHeight()   ⇒ Number</h4>
+      <pre><code>    获取当前设备屏幕高度分辨率，屏幕区域包括系统状态栏显示区域和应用显示区域，screen获取的是设备屏幕总区域的逻辑分辨率，单位为px。 如果需要获取实际分辨率则需要乘以比例值scale。
+</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var resolutionHeight = app.screen.getResolutionHeight()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getScale" style="color:red">getScale</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.screen.getScale()   ⇒ Number</h4>
+      <pre><code>    获取当前设备逻辑分辨率与实际分辨率的比例，屏幕分辨率分逻辑分辨率和实际分辨率，在html页面中使用的像素值都是相对于逻辑分辨率，此值就是逻辑分辨率和实际分辨率的比例，实际分辨率=逻辑分辨率*比例。
+</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var scale = app.screen.getScale()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getDpiX" style="color:red">getDpiX</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.screen.getDpiX()   ⇒ Number</h4>
+      <pre><code>获取当前设备屏幕水平方向的密度，设备屏幕的密度为每英寸所显示的像素点数，密度越高显示清晰度越高，单位为dpi。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var dpiX = app.screen.getDpiX()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getDpiY" style="color:red">getDpiY</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.screen.getDpiY()   ⇒ Number</h4>
+      <pre><code>获取当前设备屏幕垂直方向的密度，设备屏幕的密度为每英寸所显示的像素点数，密度越高显示清晰度越高，单位为dpi。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var dpiY = app.screen.getDpiY()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="setBrightness" style="color:red">setBrightness</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.screen.setBrightness(brightness)   ⇒ void</h4>
+      <pre><code>调用此方法调节设备屏幕亮度。</code></pre>
+
+      <ul>
+        <li> <strong>brightness</strong>
+          ： 屏幕的亮度值，设置屏幕亮度仅对当前程序在前台运行时有效，退出程序后屏幕亮度由系统设置的值决定。
+          <ul>
+            <li> <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>取值范围</strong>
+              ：0 - 1，0表示最低亮度值，1表示最高亮度值。
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.screen.setBrightness(0.5)</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="getBrightness" style="color:red">getBrightness</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.screen.getBrightness()   ⇒ Number</h4>
+      <pre><code>屏幕亮度值范围为0到1，0表示最低亮度值，1表示最高亮度值。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var brightness  = app.screen.getBrightness()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="lockOrientation" style="color:red">lockOrientation</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.screen.lockOrientation()   ⇒ void</h4>
+      <pre><code>    锁定屏幕方向后屏幕只能按锁定的屏幕方向显示，关闭当前页面后仍然有效。 可再次调用此方法修改屏幕锁定方向或调用unlockOrientation()方法恢复到应用的默认值。
+</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.screen.lockOrientation()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="unLockOrientation" style="color:red">unLockOrientation</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.screen.unLockOrientation()   ⇒ void</h4>
+      <pre><code>解除锁定屏幕方向后将恢复应用默认的屏幕显示方向（通常为应用打包发布时设置的方向）。</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.screen.unLockOrientation()</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

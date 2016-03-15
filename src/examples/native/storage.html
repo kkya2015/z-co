@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>storage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../dist/css/co.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .button {
+            margin: 5px 15px;
+        }
+        .button-primary{
+            background-color:#CD6600;
+        }
+      
+        </style>
+
+</head>
+<body>
+    <header class="ui-nav-bar">
+        <div class="ui-nav-bar-inner">
+            <a class="ui-nav-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
+            </a>
+            <h1 class="ui-nav-bar-title">Storage</h1>
+            <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
+            </a>
+        </div>
+    </header>
+    <a id='getLength' class="button button-block button-rounded button-inverse">获取存储的个数</a>
+    <a id='set' class="button button-block button-rounded button-inverse">修改或添加存储的值</a>
+    <a id='get' class="button button-block button-rounded button-inverse">获取最后一个的值</a>
+    <a id='remove' class="button button-block button-rounded button-inverse">删除最后一个的值</a>
+    <a id='clear' class="button button-block button-rounded button-inverse">清除应用所有的存储数据</a>
+    <a id='key' class="button button-block button-rounded button-inverse">获取索引为0的key值</a>
+
+
+    <div id="log">
+        storage模块管理应用本地数据存储区，用于应用数据的保存、读取和删除。
+    </div>
+    <script src="../dist/js/native.js"></script>
+    <script src="../dist/js/dom.js"></script>
+    <script src="../dist/js/co.js"></script>
+    <script src="js/common.js"></script>
+</body>
+<script>
+    var view = app.currentView();
+    domReady(function(require) {
+        regTarget('doc/storage.html','Storage Doc')
+        var index = 1;
+        $('#getLength').button(function(el, evt) {
+            printout('应用存储区中保存的键值对的个数：'+app.storage.getLength())
+        })
+
+        $('#set').button(function(el, evt) {
+            app.storage.set('key' + index, 'value' + index)
+            printout('添加键值对成功！当前存储的键值对个数：'+app.storage.getLength())
+            index++
+        })
+
+        $('#get').button(function(el, evt) {
+            printout('获取值为key的键值对的值：'+app.storage.get('key'+(app.storage.getLength() - 1)))
+        })
+
+        $('#remove').button(function(el, evt) {
+            app.storage.remove('key' + (app.storage.getLength() - 1))
+            printout('删除值为key的键值对的值成功！当前存储的键值对个数：'+app.storage.getLength())
+        })
+
+        $('#clear').button(function(el, evt) {
+            app.storage.clear()
+            printout('清除应用所有的键值对存储数据成功！当前存储的键值对个数：'+app.storage.getLength())
+        })
+
+        $('#key').button(function(el, evt) {
+            printout('下标为0的key值为：'+app.storage.key(0))
+        })
+
+    });
+
+    
+</script>
+</html>

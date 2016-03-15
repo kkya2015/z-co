@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Zip</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>zip</h1>
+  <hr />
+  <p>zip模块管理文件压缩和解压。</p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#compress">compress</a>
+      ：压缩成Zip文件。
+    </li>
+    <li>
+      <a href="#decompress">decompress</a>
+      ：解压缩Zip文件。
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="compress" style="color:red">compress</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.zip.compress(src, zipfile, success, [error])   ⇒ void</h4>
+      <pre><code>压缩成Zip文件</code></pre>
+
+      <ul>
+        <li> <strong>src</strong>
+          ： 要压缩的源文件路径，支持文件路径或目录，iOS必须为协议路径。例如：&quot;res://....&quot;
+          <ul>
+            <li> <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>zipfile</strong>
+          ： 压缩后保存的Zip文件路径,iOS必须为协议路径。例如：&quot;res://....&quot;
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>success</strong>
+          ： 压缩Zip文件操作成功回调，在压缩操作成功时调用
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>error</strong>
+          ：压缩Zip文件操作失败回调，在压缩操作失败时调用
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>err</strong>
+                  ：操作成功后返回相应的失败信息
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    EX-1：
+    app.zip.compress(&quot;res://1.png&quot;, 'data://apple1.zip', function() {
+        console.log('压缩成功！');
+    });
+
+    EX-2：
+    app.zip.compress(&quot;res://1.png&quot;, 'data://apple1.zip', function() {
+        console.log('压缩成功！');
+    }, function(err) {
+        console.log(err);
+    });
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="decompress" style="color:red">decompress</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>
+        app.zip.decompress(zipfile, target, success, [error])   ⇒ void
+      </h4>
+      <pre><code>解压缩Zip文件。</code></pre>
+
+      <ul>
+        <li>
+          <strong>zipfile</strong>
+          ： 需解压Zip文件路径，iOS必须为协议路径。例如：&quot;res://....&quot;
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>target</strong>
+          ： 解压Zip文件的目标路径，iOS必须为协议路径。例如：&quot;res://....&quot;
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>success</strong>
+          ： 解压Zip文件操作成功回调，在解压操作成功时调用。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>error</strong>
+          ：解压Zip文件操作失败回调，在解压操作失败时调用。
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Function
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>参数</strong>
+              <ul>
+                <li>
+                  <strong>err</strong>
+                  ：操作成功后返回相应的失败信息
+                  <ul>
+                    <li>
+                      <strong>type</strong>
+                      ：String
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    EX-1：
+    app.zip.decompress('data://apple1.zip' ,'res://orange' , function() {
+        console.log('解压成功！');
+    });
+
+    EX-2：
+    app.zip.decompress('data://apple1.zip' ,'res://orange' , function() {
+        console.log('解压成功！');
+    }, function(err) {
+        console.log(err);
+    });
+</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

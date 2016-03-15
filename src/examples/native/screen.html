@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>screen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../dist/css/co.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .button {
+            margin: 5px 15px;
+        }
+        .button-primary{
+            background-color:#CD6600;
+        }
+
+        .des {
+            padding: 2em 1em;
+            text-align:left;
+            text-indent: 2em;
+            word-break: break-all;
+        }
+      
+        </style>
+
+</head>
+<body>
+    <header class="ui-nav-bar">
+        <div class="ui-nav-bar-inner">
+            <a class="ui-nav-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
+            </a>
+            <h1 class="ui-nav-bar-title">Screen</h1>
+            <a class="ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-right fa-book"></i>
+            </a>
+        </div>
+    </header>
+    <a id='getResolutionWidth' class="button button-block button-rounded button-inverse">设备屏幕宽度分辨率</a>
+    <a id='getResolutionHeight' class="button button-block button-rounded button-inverse">设备屏幕高度分辨率</a>
+    <a id='getScale' class="button button-block button-rounded button-inverse">设备逻辑分辨率与实际分辨率的比例</a>
+    <a id='getDpiX' class="button button-block button-rounded button-inverse">设备屏幕水平方向的密度</a>
+    <a id='getDpiY' class="button button-block button-rounded button-inverse">设备屏幕垂直方向的密度</a>
+    <a id='setBrightness' class="button button-block button-rounded button-inverse">设置屏幕亮度</a>
+    <a id='getBrightness' class="button button-block button-rounded button-inverse">获取屏幕亮度值</a>
+    <a id='lockOrientation' class="button button-block button-rounded button-inverse">锁定屏幕方向,iOS设备不支持</a>
+    <a id='unlockOrientation' class="button button-block button-rounded button-inverse">解除锁定屏幕方向,iOS设备不支持</a>
+
+    <div id="log">
+        screen模块管理设备屏幕信息。
+    </div>
+    <script src="../dist/js/native.js"></script>
+    <script src="../dist/js/dom.js"></script>
+    <script src="../dist/js/co.js"></script>
+    <script src="js/common.js"></script>
+</body>
+<script>
+    var view = app.currentView();
+    domReady(function(require) {
+        regTarget('doc/screen.html','Screen Doc')
+        
+        $('#getResolutionWidth').button(function(el, evt) {
+            printout('当前设备屏幕宽度分辨率：'+app.screen.getResolutionWidth())
+            
+        })
+
+        $('#getResolutionHeight').button(function(el, evt) {
+            printout('当前设备屏幕高度分辨率：'+app.screen.getResolutionHeight())
+        })
+
+        $('#getScale').button(function(el, evt) {
+            printout('当前设备逻辑分辨率与实际分辨率的比例：'+app.screen.getScale())
+        })
+
+        $('#getDpiX').button(function(el, evt) {
+            printout('当前设备屏幕水平方向的密度：'+app.screen.getDpiX())
+        })
+
+        $('#getDpiY').button(function(el, evt) {
+            printout('当前设备屏幕垂直方向的密度：'+app.screen.getDpiY())
+        })
+
+        $('#setBrightness').button(function(el, evt) {
+            app.screen.setBrightness(0.5)
+            printout('设置当前设备设备屏幕亮度为0.5')
+        })
+        
+        $('#getBrightness').button(function(el, evt) {
+            printout('当前设备屏幕屏幕亮度值：'+app.screen.getBrightness())
+        })
+
+        $('#lockOrientation').button(function(el, evt) {
+            app.screen.lockOrientation()
+            printout('锁定屏幕方向成功！')
+        })
+
+        $('#unLockOrientation').button(function(el, evt) {
+            app.screen.unLockOrientation()
+            printout('解锁屏幕方向成功！')
+        })
+
+    });
+
+    
+</script>
+</html>

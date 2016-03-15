@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>storage</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>storage</h1>
+  <hr />
+  <p>storage模块管理应用本地数据存储区，用于应用数据的保存和读取。</p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#getLength">getLength</a>
+      ：获取应用存储区中保存的键值对的个数
+    </li>
+    <li>
+      <a href="#set">set</a>
+      ：修改或添加键值(key-value)对数据到应用数据存储中
+    </li>
+    <li>
+      <a href="#get">get</a>
+      ：通过键(key)检索获取应用存储的值
+    </li>
+    <li>
+      <a href="#remove">remove</a>
+      ：通过key值删除键值对存储的数据
+    </li>
+    <li>
+      <a href="#clear">clear</a>
+      ：清除应用所有的键值对存储数据
+    </li>
+    <li>
+      <a href="#key">key</a>
+      ：获取键值对中指定索引值的key值
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="getLength" style="color:red">getLength</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.storage.getLength()   ⇒ Number</h4>
+      <pre><code>获取应用存储区中保存的键值对的个数</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var length = app.storage.getLength();</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="set" style="color:red">set</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.storage.set(key, value)   ⇒ void</h4>
+      <pre><code>修改或添加键值(key-value)对数据到应用数据存储中</code></pre>
+
+      <ul>
+        <li> <strong>key</strong>
+          ： 存储的键值
+          <ul>
+            <li> <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>value</strong>
+          ： 存储的内容
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.storage.set('key', 'value')</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="get" style="color:red">get</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.storage.get(key)   ⇒ String</h4>
+      <pre><code>通过键(key)检索获取应用存储的值</code></pre>
+
+      <ul>
+        <li>
+          <strong>key</strong>
+          ： 存储的键值
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var val = app.storage.get('key');</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="remove" style="color:red">remove</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.storage.remove(key)   ⇒ void</h4>
+      <pre><code>通过key值删除键值对存储的数据</code></pre>
+
+      <ul>
+        <li>
+          <strong>key</strong>
+          ： 存储的键值
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：String
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.storage.remove('key');</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="clear" style="color:red">clear</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.storage.clear()   ⇒ void</h4>
+      <pre><code>清除应用所有的键值对存储数据</code></pre>
+
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.storage.clear();</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="key" style="color:red">key</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.storage.key(index)   ⇒ String</h4>
+      <pre><code>获取键值对中指定索引值的key值(索引从0开始)</code></pre>
+
+      <ul>
+        <li>
+          <strong>index</strong>
+          ： 存储键值的索引
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>var key = app.storage.key(1)</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

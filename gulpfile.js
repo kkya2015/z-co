@@ -164,7 +164,7 @@ var gulp = require('gulp'), //基础库
             '/**',
             ' * Released on: <%= date.year %>-<%= date.month %>-<%= date.day %>',
             ' * =====================================================',
-            ' * <%= name %> v1.0.2 (http://docs.369cloud.com/engine/jssdk/JS-SDK)',
+            ' * <%= name %> v1.0.3 (http://docs.369cloud.com/engine/jssdk/JS-SDK)',
             ' * =====================================================',
             ' */',
             ''
@@ -429,7 +429,16 @@ gulp.task('examples', function(cb) {
 gulp.task('build-emu', function(cb) {
     gulp.src(emu.jsFiles)
         .pipe(concat(emu.filename + ".js")) // 合并匹配到的js文件并命名为 "all.js"
+        .pipe(header(banner.header, {
+            date: date,
+            name: 'Emu'
+        }))
+        .pipe(gulp.dest(paths.bak + date.year + date.month + date.day))
         .pipe(uglify())
+        .pipe(header(banner.header, {
+            date: date,
+            name: 'Emu'
+        }))
         .pipe(gulp.dest(paths.examples.root))
         .on('end', function() {
             cb();

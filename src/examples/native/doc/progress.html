@@ -1,0 +1,483 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>progress</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="res/doc.css">
+  <style type="text/css"></style>
+</head>
+<body>
+  <h1>progress</h1>
+  <hr />
+  <p>加载信息提示框。</p>
+  <h3>索引</h3>
+  <hr />
+  <h3>
+    <a href="#方法">方法</a>
+    ：
+  </h3>
+  <ul>
+    <li>
+      <a href="#showProgress">showProgress</a>
+      ：显示进度框
+    </li>
+    <li>
+      <a href="#hideProgress">hideProgress</a>
+      ：隐藏进度提示框
+    </li>
+    <li>
+      <a href="#showToast">showToast</a>
+      ：显示进度提示框，但是设置的时间一到就会消失
+    </li>
+  </ul>
+  <hr />
+  <h3>
+    <div id="方法">方法</div>
+  </h3>
+  <hr />
+  <h4>
+    <div id="showProgress"  style="color:red">showProgress</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.progress.showProgress(options, [animationtype])   ⇒ void</h4>
+      <p>进度条，以动画方式呈现进度提示框。根据需求的不同，可以通过属性来设置。</p>
+      <ul>
+        <li> <strong>options</strong>
+          ：( <em>JSON</em>
+          )进度条配置项
+          <ul>
+            <li> <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>keys</strong>
+              <ul>
+                <li>
+                  <strong>title</strong>
+                  ：( <em>JSON</em>
+                  ) 显示的标题
+                  <ul>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                    </li>
+                    <li>
+                      <strong>keys</strong>
+                      <ul>
+                        <li>
+                          <strong>name</strong>
+                          ： (
+                          <em>String</em>
+                          ) 显示的标题
+                          <ul>
+                            <li>
+                              <strong>默认值</strong>
+                              ：'请稍后'
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <strong>fontSize</strong>
+                          ： ( Number ) 标题字体大小
+                          <ul>
+                            <li>
+                              <strong>默认值</strong>
+                              ：16
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <strong>color</strong>
+                          ： (
+                          <em>String</em>
+                          ) 标题字体颜色
+                          <ul>
+                            <li>
+                              <strong>默认值</strong>
+                              ：'#ffffff'(白色)
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>detailTitle</strong>
+                  ： (
+                  <em>JSON</em>
+                  ) 显示的详细描述
+                  <ul>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                    </li>
+                    <li>
+                      <strong>keys</strong>
+                      <ul>
+                        <li>
+                          <strong>name</strong>
+                          ： (
+                          <em>String</em>
+                          ) 显示的详细描述
+                          <ul>
+                            <li>
+                              <strong>默认值</strong>
+                              ：'加载中...'
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <strong>fontSize</strong>
+                          ： (
+                          <em>Number</em>
+                          ) 详细描述字体大小
+                          <ul>
+                            <li>
+                              <strong>默认值</strong>
+                              ：14
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <strong>color</strong>
+                          ： (
+                          <em>String</em>
+                          ) 详细描述字体颜色
+                          <ul>
+                            <li>
+                              <strong>默认值</strong>
+                              ：'#ffffff'(白色)
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>images</strong>
+                  ： (
+                  <em>Array</em>
+                  ) 显示的图片 最佳大小为37*37px 若传入多个图片，则显示为动画效果 不设置该属性时，图片路径为协议路径 默认为一个白色动画轮子
+                  <ul>
+                    <li>
+                      <strong>默认值</strong>
+                      ：白色动画轮子
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>bgColor</strong>
+                  ： (
+                  <em>String</em>
+                  ) 背景色
+                  <ul>
+                    <li>
+                      <strong>默认值</strong>
+                      ：'#000000' (黑色)
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>bgOpacity</strong>
+                  ： (
+                  <em>Number</em>
+                  ) 背景透明度
+                  <ul>
+                    <li>
+                      <strong>默认值</strong>
+                      ：0.8
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>animationtype</strong>
+          ：设置弹出框显示时的动画类型
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：
+              <em>Number</em>
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>可选范围</strong>
+              <ul>
+                <li>0：渐隐渐显动画</li>
+                <li>1：缩放动画</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    EX-1：
+    app.progress.showProgress({
+        title: {
+            name: '努力加载中...',
+            fontSize: '16',
+            color: '#3300cc'
+        },
+        detailTitle: {
+            name: '哈哈哈哈',
+            fontSize: '16',
+            color: '#3300cc'
+        },
+        images: ['res://屏幕.png', 'res://屏幕副本.png', 'res://屏幕副本2.png', 'res://屏幕副本3.png'],
+        bgColor: '#9900ff',
+        bgOpacity: '0.6'
+    })
+
+    EX-2：
+    app.progress.showProgress({
+        title: {
+            name: '努力加载中...',
+            fontSize: '16',
+            color: '#3300cc'
+        },
+        detailTitle: {
+            name: '哈哈哈哈',
+            fontSize: '16',
+            color: '#3300cc'
+        },
+        images: ['res://屏幕.png', 'res://屏幕副本.png', 'res://屏幕副本2.png', 'res://屏幕副本3.png'],
+        bgColor: '#9900ff',
+        bgOpacity: '0.6'
+    }, 0)
+</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="hideProgress" style="color:red">hideProgress</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.progress.hideProgress()   ⇒ void</h4>
+      <p>隐藏进度提示框。</p>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>app.progress.hideProgress()</code></pre>
+
+    </li>
+  </ul>
+  <h4>
+    <div id="showToast" style="color:red">showToast</div>
+  </h4>
+  <ul>
+    <li>
+      <h4>app.progress.showToast(time, options)   ⇒ void</h4>
+      <p>隐藏进度提示框。</p>
+      <ul>
+        <li>
+          <strong>time</strong>
+          ：显示的时间，时间过后自动消失，单位是秒
+          <ul>
+            <li>
+              <strong>type</strong>
+              ：Number
+            </li>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>options</strong>
+          ：(
+          <em>JSON</em>
+          )toast配置项
+          <ul>
+            <li>
+              <strong>默认值</strong>
+              ：无
+            </li>
+            <li>
+              <strong>keys</strong>
+              <ul>
+                <li>
+                  <strong>title</strong>
+                  ：(
+                  <em>JSON</em>
+                  ) 显示的标题
+                  <ul>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                    </li>
+                    <li>
+                      <strong>keys</strong>
+                      <ul>
+                        <li>
+                          <strong>name</strong>
+                          ： (
+                          <em>String</em>
+                          ) 显示的标题
+                          <ul>
+                            <li>
+                              <strong>默认值</strong>
+                              ：'请稍后'
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <strong>fontSize</strong>
+                          ： (
+                          <em>Number</em>
+                          ) 标题字体大小
+                          <ul>
+                            <li>
+                              <strong>默认值</strong>
+                              ：16
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <strong>color</strong>
+                          ： (
+                          <em>String</em>
+                          ) 标题字体颜色
+                          <ul>
+                            <li>
+                              <strong>默认值</strong>
+                              ：'#ffffff'(白色)
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>detailTitle</strong>
+                  ： (
+                  <em>JSON</em>
+                  ) 显示的详细描述
+                  <ul>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                    </li>
+                    <li>
+                      <strong>keys</strong>
+                      <ul>
+                        <li>
+                          <strong>name</strong>
+                          ： (
+                          <em>String</em>
+                          ) 显示的详细描述
+                          <ul>
+                            <li>
+                              <strong>默认值</strong>
+                              ：'加载中...'
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <strong>fontSize</strong>
+                          ： (
+                          <em>Number</em>
+                          ) 详细描述字体大小
+                          <ul>
+                            <li>
+                              <strong>默认值</strong>
+                              ：14
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <strong>color</strong>
+                          ： (
+                          <em>String</em>
+                          ) 详细描述字体颜色
+                          <ul>
+                            <li>
+                              <strong>默认值</strong>
+                              ：'#ffffff'(白色)
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>images</strong>
+                  ： (
+                  <em>Array</em>
+                  ) 显示的图片 最佳大小为37*37px 若传入多个图片，则显示为动画效果
+                  <ul>
+                    <li>
+                      <strong>默认值</strong>
+                      ：无
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>bgColor</strong>
+                  ： (
+                  <em>String</em>
+                  ) 背景色
+                  <ul>
+                    <li>
+                      <strong>默认值</strong>
+                      ：'#000000' (黑色)
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>bgOpacity</strong>
+                  ： (
+                  <em>Number</em>
+                  ) 背景透明度
+                  <ul>
+                    <li>
+                      <strong>默认值</strong>
+                      ：0.8
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <h5>示例：</h5>
+      <pre><code>    app.progress.showToast('4',{
+        title: {
+            name: '努力加载中...',
+            fontSize: '16',
+            color: '#3300cc'
+        },
+        detailTitle: {
+            name: '哈哈哈哈',
+            fontSize: '16',
+            color: '#3300cc'
+        },
+        images: ['res://屏幕.png', 'res://屏幕副本.png', 'res://屏幕副本2.png', 'res://屏幕副本3.png'],
+        bgColor: '#9900ff',
+        bgOpacity: '0.6'
+    })
+</code></pre>
+
+    </li>
+  </ul>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
