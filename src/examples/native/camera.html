@@ -9,22 +9,13 @@
     <link rel="stylesheet" href="../dist/css/co.css">
     <link rel="stylesheet" href="css/common.css">
     <style>
-        .button {
-            margin: 5px 15px;
-        }
-        .button-primary{
-            background-color:#CD6600;
-        }
-
         .ui-list-block.ui-media-list .ui-list-item-inner, .ui-list-block li.media-item .ui-list-item-inner{
             display: flex;
         }
 
         .ui-nav-bar ~ .ui-content {
-            position: fixed;
-            overflow-y: scroll;
-            top: 120px;
-            bottom: 65px;
+            top: 160px;
+            bottom: 70px;
         }
         </style>
 
@@ -39,8 +30,8 @@
             </a>
         </div>
     </header>
-    <a id='image' class="button button-block button-rounded button-inverse">拍照</a>
-    <a id='video' class="button button-block button-rounded button-inverse">摄影</a>
+    <a id='image' class="button button-block button-rounded button-highlight button-large">拍照</a>
+    <a id='video' class="button button-block button-rounded button-highlight button-large">摄影</a>
 
     <div class="ui-content ui-list-block ui-media-list" display = 'none'>
         <ul></ul>

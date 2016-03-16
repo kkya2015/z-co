@@ -9,21 +9,7 @@
     <link rel="stylesheet" href="../dist/css/co.css">
     <link rel="stylesheet" href="css/common.css">
     <style>
-        .button {
-            margin: 5px 15px;
-        }
-        .button-primary{
-            background-color:#CD6600;
-        }
-
-        .des {
-            padding: 2em 1em;
-            text-align:left;
-            text-indent: 2em;
-            word-break: break-all;
-        }
-      
-        </style>
+    </style>
 
 </head>
 <body>
@@ -36,16 +22,17 @@
             </a>
         </div>
     </header>
-    <a id='getResolutionWidth' class="button button-block button-rounded button-inverse">设备屏幕宽度分辨率</a>
-    <a id='getResolutionHeight' class="button button-block button-rounded button-inverse">设备屏幕高度分辨率</a>
-    <a id='getScale' class="button button-block button-rounded button-inverse">设备逻辑分辨率与实际分辨率的比例</a>
-    <a id='getDpiX' class="button button-block button-rounded button-inverse">设备屏幕水平方向的密度</a>
-    <a id='getDpiY' class="button button-block button-rounded button-inverse">设备屏幕垂直方向的密度</a>
-    <a id='setBrightness' class="button button-block button-rounded button-inverse">设置屏幕亮度</a>
-    <a id='getBrightness' class="button button-block button-rounded button-inverse">获取屏幕亮度值</a>
-    <a id='lockOrientation' class="button button-block button-rounded button-inverse">锁定屏幕方向,iOS设备不支持</a>
-    <a id='unlockOrientation' class="button button-block button-rounded button-inverse">解除锁定屏幕方向,iOS设备不支持</a>
-
+    <div class = 'ui-content'>
+    <a id='getResolutionWidth' class="button button-block button-rounded button-highlight button-large">屏幕宽度分辨率</a>
+    <a id='getResolutionHeight' class="button button-block button-rounded button-highlight button-large">屏幕高度分辨率</a>
+    <a id='getScale' class="button button-block button-rounded button-highlight button-large">逻辑与实际分辨率的比例</a>
+    <a id='getDpiX' class="button button-block button-rounded button-highlight button-large">屏幕水平方向的密度</a>
+    <a id='getDpiY' class="button button-block button-rounded button-highlight button-large">屏幕垂直方向的密度</a>
+    <a id='setBrightness' class="button button-block button-rounded button-highlight button-large">屏幕亮度</a>
+    <a id='getBrightness' class="button button-block button-rounded button-highlight button-large">屏幕亮度值</a>
+    <a id='lockOrientation' class="button button-block button-rounded button-highlight button-large">锁定屏幕方向(iOS不支持)</a>
+    <a id='unlockOrientation' class="button button-block button-rounded button-highlight button-large">解除锁定屏幕方向(iOS不支持)</a>
+	</div>
     <div id="logP">
         <div id="log">
 	        screen模块管理设备屏幕信息。

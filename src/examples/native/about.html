@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="../dist/css/co.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+    
+    .content{ 
+        background: url(img/aboutBg.png) no-repeat right top;
+        background-size: 100% 100%;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+    }
+    .container{
+        padding-top: 6em;
+        -webkit-box-orient: vertical;
+        display: -webkit-box !important;
+    }
+    
+    .icon{
+        display: -webkit-box !important;
+        -webkit-box-pack: center;
+    }
+    img{
+        width: 100%;
+        vertical-align: top;
+    }  
+    
+    .imgIcon{
+        width: 7em;
+        height: 7em;
+        display: -webkit-box !important;
+    }
+    
+    .des{
+        text-align: center;
+        padding:2em 0 1em 0;
+    }
+    
+    
+</style>
+</head>
+<body >
+    <header class="ui-nav-bar">
+        <div class="ui-nav-bar-inner">
+            <a class="ui-nav-action-back ui-nav-bar-link"> <i class="ui-nav-bar-icon ui-nav-bar-left ui-icon-left-nav"><span class="ui-nav-bar-des"></span></i> 
+            </a>
+            <h1 class="ui-nav-bar-title">关于</h1>
+            <a class="ui-nav-bar-link"></i>
+            </a>
+        </div>
+    </header>
+    <div class="content">
+        <div class="container">
+            <div class="icon">
+                <div class="imgIcon">
+                    <img src="img/icon.png" alt=""></div>
+            </div>
+            <div class="des">369Cloud</div>
+            <div class="des">打造移动互联网第一研发生态圈</div>
+            <div class="des">V1.0.0</div>
+        </div>
+    </div>
+</body>
+    <script src="../dist/js/native.js"></script>
+    <script src="../dist/js/dom.js"></script>
+    <script src="../dist/js/co.js"></script>
+    <script>
+	    var view = app.currentView();
+	    domReady(function(require){
+	    	$(document).find('.ui-nav-action-back').button(function(evt) {
+				app.currentView().back();
+			})
+	    })
+	</script>
+</html>

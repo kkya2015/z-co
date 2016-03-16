@@ -1,5 +1,5 @@
 #logP{
-	height: 5em;
+    height: 5em;
     position: fixed;
     left: 0;
     right: 0;
@@ -8,6 +8,31 @@
     overflow-x: hidden;
     border-top: 2px solid #AAA;
     background: #FFF;
+}
+
+.ui-nav-bar a{
+    color: #CCCCCC;
+}
+
+.ui-nav-bar-title{
+    color: #6C6C6C;
+}
+
+.button {
+    margin: 10px 15px;
+    margin-top: 15px;
+}
+
+.button-primary{
+    background-color:#CD6600;
+}
+
+.button-large {
+    font-size: 16px;
+}
+
+.ui-nav-bar ~ .ui-content {
+    bottom: 95px;
 }
 
 #log {
@@ -21,8 +46,8 @@
     padding: 8px 16px;
 }
 #log2 {
-	height: 4.2em;
-	min-width:95%;
+    height: 4.2em;
+    min-width:95%;
     color: #f00;
     background: #FFF;
     font-size: 12px;
@@ -36,49 +61,49 @@
     padding-right: .5em;
 }
 .container .header{
-	height:3em;
+    height:3em;
 }
 .container .footer{
-	height:3.2em;
+    height:3.2em;
 }
 .f-wei{
-	font-weight: 600;
+    font-weight: 600;
 }
 .c-f4f{
-	background-color: #f4f4f4 !important;
+    background-color: #f4f4f4 !important;
 }
 .t-202{
-	color:#202020;
+    color:#202020;
 }
 .t-585{
-	color:#585757;
+    color:#585757;
 }
 .font-09 {
     font-size: .9em !important;
 }
 .b-ccc{
-	border-color: #cccccc;
+    border-color: #cccccc;
 }
 .bor-l4{
     border-left: 5px #007AFF solid;
 }
 .padd-tb-04{
-	padding-top: .4em;
-	padding-bottom: .4em;
+    padding-top: .4em;
+    padding-bottom: .4em;
 }
 .padd-05-1{
-	padding: .5em 1em;
+    padding: .5em 1em;
 }
 .padd-1{
-	padding: 1em;
+    padding: 1em;
 }
 .mar-tb-04{
-	margin-top: .4em;
-	margin-bottom: .4em;
+    margin-top: .4em;
+    margin-bottom: .4em;
 }
 .hei-3{
-	height:3em;
+    height:3em;
 }
 .line-hei2{
-	line-height: 2em;
+    line-height: 2em;
 }
