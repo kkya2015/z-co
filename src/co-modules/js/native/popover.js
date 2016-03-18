@@ -9,10 +9,12 @@
       var popovername;
       x = x || 0;
       y = y || 0;
-      height = height || 0;
       width = width || 0;
+      height = height || 0;
       if ($L.android()) {
+        x = x * window.devicePixelRatio;
         y = y * window.devicePixelRatio;
+        width = width * window.devicePixelRatio;
         height = height * window.devicePixelRatio;
       }
       /*

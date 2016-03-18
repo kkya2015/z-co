@@ -131,14 +131,22 @@
      * 获取当前窗口的宽度
      */
     this.getWidth = function() {
-      return $L.executeNativeJS(['window', 'getWidth']);
+      var width = $L.executeNativeJS(['window', 'getWidth']);
+      if ($L.android()) {
+        width = width / window.devicePixelRatio;
+      }
+      return width;
     };
 
     /*
      * 获取当前窗口的高度
      */
     this.getHeight = function() {
-      return $L.executeNativeJS(['window', 'getHeight']);
+      var height = $L.executeNativeJS(['window', 'getHeight']);
+      if ($L.android()) {
+        height = height / window.devicePixelRatio;
+      }
+      return height;
     }
 
     /*
@@ -149,25 +157,26 @@
      * @param Number height 区域高度.
      */
     this.addSlideIgnore = function(x, y, width, height) {
-      width = width || this.getWidth();
-      y = y || 0;
-      if (!height) {
-        height = this.getHeight();
-        if ($L.android()) {
-          y = y * window.devicePixelRatio;
-          height = height - y;
-        }
-      } else {
-        height = height * window.devicePixelRatio;
+      if ($L.android()) {
+        x = x || 0;
+        y = y || 0;
+        width = width || this.getWidth();
+        height = height || this.getHeight();
+
+        x = x * window.devicePixelRatio;
         y = y * window.devicePixelRatio;
+        width = width * window.devicePixelRatio;
+        height = height * window.devicePixelRatio;
+        var IgnoreParams = {
+          x: x,
+          y: y,
+          width: width,
+          height: height
+        };
+        $L.executeNativeJS(['window', 'addIgnoreArea'], IgnoreParams)
+
       }
-      var IgnoreParams = {
-        x: x || 0,
-        y: y || 0,
-        width: width,
-        height: height
-      };
-      $L.executeNativeJS(['window', 'addIgnoreArea'], IgnoreParams)
+
     }
 
 
@@ -336,15 +345,20 @@
      * 设置当前页面的位置、长宽
      */
     this.setFrameSize = function(x, y, width, height) {
+
+      x = x || 0;
+      y = y || 0;
       width = width || this.getWidth();
       height = height || this.getHeight();
       if ($L.android()) {
+        x = x * window.devicePixelRatio;
         y = y * window.devicePixelRatio;
+        width = width * window.devicePixelRatio;
         height = height * window.devicePixelRatio;
       }
       var rect = {
-        x: x || 0,
-        y: y || 0,
+        x: x,
+        y: y,
         width: width,
         height: height
       };

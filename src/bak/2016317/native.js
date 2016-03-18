@@ -1,5 +1,5 @@
 /**
- * Released on: 2016-3-16
+ * Released on: 2016-3-17
  * =====================================================
  * Native v1.0.3 (http://docs.369cloud.com/engine/jssdk/JS-SDK)
  * =====================================================
@@ -57,7 +57,7 @@ var app = (function(global) {
     var pageId = GetQueryString('pageId');
     if (!require) require = function() {}
     if ($L.isFunction(factory)) {
-      if (!(($L.android() || $L.ios()) && plus)) {
+      if (!(($.os.ios || $.os.android) && plus)) {
         if (pageId) {
           $L.debug()
           setTimeout(function() {
@@ -73,9 +73,6 @@ var app = (function(global) {
       } else {
         setTimeout(function() {
           if (domReady.isReady) {
-            if (($L.ios()) && $L.isFullScreen()) {
-              $(document.body).addClass('ui-ios7');
-            }
             factory.call(global, require);
           } else {
             setTimeout(arguments.callee, 1);
@@ -96,6 +93,10 @@ var app = (function(global) {
       }
     } else {
       window.onerror = winError
+    }
+
+    if ($L.ios() && $L.isFullScreen()) {
+      $(document.body).addClass('ui-ios7');
     }
     domReady.isReady = true;
     $L.init();

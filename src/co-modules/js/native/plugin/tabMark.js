@@ -24,10 +24,12 @@
 		this.setFrame = function(x, y, width, height) {
 			x = x || 0;
 			y = y || 0;
-			height = height || 0;
 			width = width || 0;
+			height = height || 0;
 			if ($L.android()) {
+				x = x * window.devicePixelRatio;
 				y = y * window.devicePixelRatio;
+				width = width * window.devicePixelRatio;
 				height = height * window.devicePixelRatio;
 			}
 			var rect = {
@@ -89,9 +91,9 @@
 		};
 
 		this.addScrollCallback = function(scrollCallback) {
-			$L.executeObjFunJS([tabM, 'addScrollCallback'], function() {
+			$L.executeObjFunJS([tabM, 'addScrollCallback'], function(index) {
 				if ($L.isFunction(scrollCallback)) {
-					scrollCallback.call();
+					scrollCallback.call(global, index);
 				}
 			})
 			return this;
@@ -112,8 +114,22 @@
 		};
 
 		this.addIgnoreArea = function(tabName, IgnoreParams) {
-			if (isShow) {
-				$L.executeObjFunJS([tabM, 'addIgnoreArea'], tabName, IgnoreParams)
+			if ($L.android() && IgnoreParams) {
+				var x = IgnoreParams.x || 0;
+				var y = IgnoreParams.y || 0;
+				var width = IgnoreParams.width || 0;
+				var height = IgnoreParams.height || 0;
+				x = x * window.devicePixelRatio;
+				y = y * window.devicePixelRatio;
+				width = width * window.devicePixelRatio;
+				height = height * window.devicePixelRatio;
+				var rect = {
+					x: x,
+					y: y,
+					width: width,
+					height: height
+				};
+				$L.executeObjFunJS([tabM, 'addIgnoreArea'], tabName, rect)
 			}
 			return this;
 		};

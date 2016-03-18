@@ -186,11 +186,6 @@
 		return widget;
 	}
 
-	if (($.os.android || $.os.ios)) {
-		if (($.os.ios) && window.app && window.app.isFullScreen()) {
-			$(document.body).addClass('ui-ios7');
-		}
-	}
 
 	setTimeout(function() {
 		$(document).find('.ui-action-back').button(function(evt) {
@@ -225,6 +220,7 @@
 			}
 		};
 	}
+
 	global.define = define;
 	global.co = co;
 })(this, $);

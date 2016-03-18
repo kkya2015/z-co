@@ -30,7 +30,7 @@
 *	[enableHScrollBar](#enableHScrollBar) ：设置页面显示垂直滚动条（Android暂时不支持）
 *	[enableKeyboard](#enableKeyboard) ：设置键盘弹出后，输入框自动定位（Android暂时不支持）
 *	[enableVScrollBar](#enableVScrollBar) ：设置页面显示水平滚动条（Android暂时不支持）
-*	[getHeight](#getHeight) ：获取当前窗口的高度(注：该方法获取的是乘以像素比（devicePixelRatio）的值)
+*	[getHeight](#getHeight) ：获取当前窗口的高度
 *	[getWidth](#getWidth) ：获取当前窗口的宽度
 *	[setAnimationCurve](#setAnimationCurve) ：设置页面关闭时的动画曲线（Android暂时不支持）
 *	[setAnimationDirection](#setAnimationDirection) ：设置页面关闭时的动画方向（Android暂时不支持）
@@ -330,7 +330,7 @@
 
 ####	<div id="getHeight" style="color:red">getHeight</div>
 -	#### getHeight()   ⇒ void 
-			获取当前窗口的高度(注：该方法获取的是乘以像素比（devicePixelRatio）的值)
+			获取当前窗口的高度
 
 -	#####	示例：
 

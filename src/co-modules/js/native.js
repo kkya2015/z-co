@@ -12,8 +12,9 @@ var app = (function(global) {
     name = types[i]
     class2type["[object " + name + "]"] = name.toLowerCase();
   }
-  var DIRNAME_RE = /[^?#]*\//
-  var plus = !!global['rd'];
+  var DIRNAME_RE = /[^?#]*\//,
+    plus = !!global['rd'],
+    readyRE = /complete|loaded|interactive/;
   // var dirname = function(path) {
   //   return path.match(DIRNAME_RE)[0]
   // }
@@ -51,7 +52,7 @@ var app = (function(global) {
     var pageId = GetQueryString('pageId');
     if (!require) require = function() {}
     if ($L.isFunction(factory)) {
-      if (!(($L.android || $L.ios) && plus)) {
+      if (!(($.os.ios || $.os.android) && plus)) {
         if (pageId) {
           $L.debug()
           setTimeout(function() {
@@ -67,7 +68,18 @@ var app = (function(global) {
       } else {
         setTimeout(function() {
           if (domReady.isReady) {
-            factory.call(global, require);
+            if (readyRE.test(document.readyState) && document.body) {
+              document.documentElement.style.height = '100%'
+              document.body.style.height = '100%'
+              var height = document.body.clientHeight;
+              if (height != $L.currentView().getHeight()) {
+                setTimeout(arguments.callee, 1);
+              } else {
+                factory.call(global, require);
+              }
+            } else {
+              setTimeout(arguments.callee, 1);
+            }
           } else {
             setTimeout(arguments.callee, 1);
           }
@@ -87,6 +99,10 @@ var app = (function(global) {
       }
     } else {
       window.onerror = winError
+    }
+
+    if ($L.ios() && $L.isFullScreen()) {
+      $(document.body).addClass('ui-ios7');
     }
     domReady.isReady = true;
     $L.init();

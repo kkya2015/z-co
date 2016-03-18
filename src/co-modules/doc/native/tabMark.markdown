@@ -183,13 +183,17 @@
 	-	**scrollCallback**：内容滚动回调方法
 		-	**type**：Function
 		-	**默认值**：无
+		-	**参数**
+			-	**index**： 内容视图在数组中的位置下标
+				-	**type**：Number
+				-	**默认值**：无
 
 -	#####	示例：
 
 			//注意  在整篇文档中,此对象只创建一次. 请不要重复创建.
 	     	var  tabmark  = app.require("tabMark");
-	        tabmark.addScrollCallback(function(){
-				console.log('内容区域发生了切换'); 
+	        tabmark.addScrollCallback(function(index){
+				console.log(index); 
 			});
 
 #### <div id="showContentAtIndex" style="color:red">showContentAtIndex</div>

@@ -1,5 +1,5 @@
 /**
- * Released on: 2016-3-16
+ * Released on: 2016-3-18
  * =====================================================
  * Native v1.0.3 (http://docs.369cloud.com/engine/jssdk/JS-SDK)
  * =====================================================
@@ -18,8 +18,9 @@ var app = (function(global) {
     name = types[i]
     class2type["[object " + name + "]"] = name.toLowerCase();
   }
-  var DIRNAME_RE = /[^?#]*\//
-  var plus = !!global['rd'];
+  var DIRNAME_RE = /[^?#]*\//,
+    plus = !!global['rd'],
+    readyRE = /complete|loaded|interactive/;
   // var dirname = function(path) {
   //   return path.match(DIRNAME_RE)[0]
   // }
@@ -57,7 +58,7 @@ var app = (function(global) {
     var pageId = GetQueryString('pageId');
     if (!require) require = function() {}
     if ($L.isFunction(factory)) {
-      if (!(($L.android() || $L.ios()) && plus)) {
+      if (!(($.os.ios || $.os.android) && plus)) {
         if (pageId) {
           $L.debug()
           setTimeout(function() {
@@ -73,10 +74,18 @@ var app = (function(global) {
       } else {
         setTimeout(function() {
           if (domReady.isReady) {
-            if (($L.ios()) && $L.isFullScreen()) {
-              $(document.body).addClass('ui-ios7');
+            if (readyRE.test(document.readyState) && document.body) {
+              document.documentElement.style.height = '100%'
+              document.body.style.height = '100%'
+              var height = document.body.clientHeight;
+              if (height != $L.currentView().getHeight()) {
+                setTimeout(arguments.callee, 1);
+              } else {
+                factory.call(global, require);
+              }
+            } else {
+              setTimeout(arguments.callee, 1);
             }
-            factory.call(global, require);
           } else {
             setTimeout(arguments.callee, 1);
           }
@@ -96,6 +105,10 @@ var app = (function(global) {
       }
     } else {
       window.onerror = winError
+    }
+
+    if ($L.ios() && $L.isFullScreen()) {
+      $(document.body).addClass('ui-ios7');
     }
     domReady.isReady = true;
     $L.init();
@@ -1194,14 +1207,22 @@ window.A === undefined && (window.A = app);
      * 获取当前窗口的宽度
      */
     this.getWidth = function() {
-      return $L.executeNativeJS(['window', 'getWidth']);
+      var width = $L.executeNativeJS(['window', 'getWidth']);
+      if ($L.android()) {
+        width = width / window.devicePixelRatio;
+      }
+      return width;
     };
 
     /*
      * 获取当前窗口的高度
      */
     this.getHeight = function() {
-      return $L.executeNativeJS(['window', 'getHeight']);
+      var height = $L.executeNativeJS(['window', 'getHeight']);
+      if ($L.android()) {
+        height = height / window.devicePixelRatio;
+      }
+      return height;
     }
 
     /*
@@ -1212,25 +1233,26 @@ window.A === undefined && (window.A = app);
      * @param Number height 区域高度.
      */
     this.addSlideIgnore = function(x, y, width, height) {
-      width = width || this.getWidth();
-      y = y || 0;
-      if (!height) {
-        height = this.getHeight();
-        if ($L.android()) {
-          y = y * window.devicePixelRatio;
-          height = height - y;
-        }
-      } else {
-        height = height * window.devicePixelRatio;
+      if ($L.android()) {
+        x = x || 0;
+        y = y || 0;
+        width = width || this.getWidth();
+        height = height || this.getHeight();
+
+        x = x * window.devicePixelRatio;
         y = y * window.devicePixelRatio;
+        width = width * window.devicePixelRatio;
+        height = height * window.devicePixelRatio;
+        var IgnoreParams = {
+          x: x,
+          y: y,
+          width: width,
+          height: height
+        };
+        $L.executeNativeJS(['window', 'addIgnoreArea'], IgnoreParams)
+
       }
-      var IgnoreParams = {
-        x: x || 0,
-        y: y || 0,
-        width: width,
-        height: height
-      };
-      $L.executeNativeJS(['window', 'addIgnoreArea'], IgnoreParams)
+
     }
 
 
@@ -1399,15 +1421,20 @@ window.A === undefined && (window.A = app);
      * 设置当前页面的位置、长宽
      */
     this.setFrameSize = function(x, y, width, height) {
+
+      x = x || 0;
+      y = y || 0;
       width = width || this.getWidth();
       height = height || this.getHeight();
       if ($L.android()) {
+        x = x * window.devicePixelRatio;
         y = y * window.devicePixelRatio;
+        width = width * window.devicePixelRatio;
         height = height * window.devicePixelRatio;
       }
       var rect = {
-        x: x || 0,
-        y: y || 0,
+        x: x,
+        y: y,
         width: width,
         height: height
       };
@@ -2763,10 +2790,12 @@ window.A === undefined && (window.A = app);
       var popovername;
       x = x || 0;
       y = y || 0;
-      height = height || 0;
       width = width || 0;
+      height = height || 0;
       if ($L.android()) {
+        x = x * window.devicePixelRatio;
         y = y * window.devicePixelRatio;
+        width = width * window.devicePixelRatio;
         height = height * window.devicePixelRatio;
       }
       /*
@@ -3194,10 +3223,12 @@ window.A === undefined && (window.A = app);
 		this.setFrame = function(x, y, width, height) {
 			x = x || 0;
 			y = y || 0;
-			height = height || 0;
 			width = width || 0;
+			height = height || 0;
 			if ($L.android()) {
+				x = x * window.devicePixelRatio;
 				y = y * window.devicePixelRatio;
+				width = width * window.devicePixelRatio;
 				height = height * window.devicePixelRatio;
 			}
 			var rect = {
@@ -3259,9 +3290,9 @@ window.A === undefined && (window.A = app);
 		};
 
 		this.addScrollCallback = function(scrollCallback) {
-			$L.executeObjFunJS([tabM, 'addScrollCallback'], function() {
+			$L.executeObjFunJS([tabM, 'addScrollCallback'], function(index) {
 				if ($L.isFunction(scrollCallback)) {
-					scrollCallback.call();
+					scrollCallback.call(global, index);
 				}
 			})
 			return this;
@@ -3282,8 +3313,22 @@ window.A === undefined && (window.A = app);
 		};
 
 		this.addIgnoreArea = function(tabName, IgnoreParams) {
-			if (isShow) {
-				$L.executeObjFunJS([tabM, 'addIgnoreArea'], tabName, IgnoreParams)
+			if ($L.android() && IgnoreParams) {
+				var x = IgnoreParams.x || 0;
+				var y = IgnoreParams.y || 0;
+				var width = IgnoreParams.width || 0;
+				var height = IgnoreParams.height || 0;
+				x = x * window.devicePixelRatio;
+				y = y * window.devicePixelRatio;
+				width = width * window.devicePixelRatio;
+				height = height * window.devicePixelRatio;
+				var rect = {
+					x: x,
+					y: y,
+					width: width,
+					height: height
+				};
+				$L.executeObjFunJS([tabM, 'addIgnoreArea'], tabName, rect)
 			}
 			return this;
 		};
@@ -3295,7 +3340,6 @@ window.A === undefined && (window.A = app);
 	}
 
 }(app, this));
-
 ;
 (function($L, global) {
 	$L.debug = function() {
