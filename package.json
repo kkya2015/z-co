@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "gulp-header": "^1.7.1",
-    "gulp-footer": "^1.0.5"
+    "gulp-footer": "^1.0.5",
+    "del": "^2.2.0"
   }
 }

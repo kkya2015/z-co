@@ -9,6 +9,7 @@ var gulp = require('gulp'), //基础库
     uglify = require('gulp-uglify'), //js压缩
     rename = require('gulp-rename'), //重命名
     clean = require('gulp-clean'), //清空文件夹
+    del = require('del'),
     open = require('gulp-open'),
     livereload = require('gulp-livereload'), //livereload
     paths = {
@@ -184,17 +185,7 @@ var gulp = require('gulp'), //基础库
 
 // 清空co
 gulp.task('cleanCo', function(cb) {
-    gulp.src([paths.co.root], {
-            read: false
-        })
-        .on('error', function(err) {
-            console.log(err);
-            this.end();
-        })
-        .pipe(clean())
-        .on('finish', function() {
-            cb();
-        });
+    return del([paths.co.root]);
 });
 
 //co脚本处理
@@ -322,13 +313,7 @@ gulp.task('build-co', gulp.series('cleanCo', 'co-native', 'co-scripts', 'co-zept
 
 // 清空dist样式
 gulp.task('cleanDist', function(cb) {
-    gulp.src([paths.dist.root], {
-            read: false
-        })
-        .pipe(clean())
-        .on('finish', function() {
-            cb();
-        });
+    return del([paths.dist.root]);
 });
 
 // dist样式处理
@@ -403,17 +388,7 @@ gulp.task('dist-native', function(cb) {
 
 // 清空图片、样式、js
 gulp.task('cleanExamples', function(cb) {
-    gulp.src([paths.examples.root], {
-            read: false
-        })
-        .on('error', function(err) {
-            console.log(err);
-            this.end();
-        })
-        .pipe(clean())
-        .on('finish', function() {
-            cb();
-        });
+    return del([paths.examples.root]);
 });
 
 //examples处理
