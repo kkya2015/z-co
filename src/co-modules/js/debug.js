@@ -4,6 +4,7 @@
 		document.body.style.cursor = '-webkit-grab'
 		$L.debug.uuid = 0;
 		$L.debug.xhr = {}
+		$L.debug.eve = {}
 		window.addEventListener('message', function(e) {
 			var origin = e.origin;
 			// if (origin != 'http://localhost:3000') {
@@ -14,6 +15,20 @@
 			} else if (type == 'evaluateScript') {
 				var data = res.data;
 				eval(data);
+			} else if (type == 'event') {
+				var data = res.data;
+				var eventName = res.eventName;
+				var params = res.params;
+				var callback = $L.debug.eve[eventName]
+				if ($L.isFunction(callback)) {
+					if (params) {
+						params = JSON.parse(params)
+						callback.call(global, params)
+					} else {
+						callback.call(global)
+					}
+
+				}
 			} else if (type == 'ajax') {
 				var token = res.token;
 				var success = $L.debug.xhr[token].success;
@@ -64,6 +79,8 @@
 				var res = $L.debug.storage.apply($L.debug, Array.prototype.slice.call(arguments))
 			} else if (arguments[0][0] == 'audio') {
 				var res = $L.debug.audio.apply($L.debug, Array.prototype.slice.call(arguments))
+			} else if (arguments[0][0] == 'eventListener') {
+				var res = $L.debug.event.apply($L.debug, Array.prototype.slice.call(arguments))
 			}
 			if (typeof res !== 'undefined') return res;
 		}
