@@ -74,7 +74,7 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 					-	**取值范围**
 						-	json
 						-	text
-			-	**postType**：( *String* )当请求类型为post时，post请求的方式([post请求的类型](#https://imququ.com/post/four-ways-to-post-data-in-http.html))
+			-	**postType**：( *String* )当请求类型为post时，post请求的方式([post请求的类型](https://imququ.com/post/four-ways-to-post-data-in-http.html))
 				-	**默认值**：'RAW'
 					-	**取值范围**
 						-	RAW
@@ -189,7 +189,7 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 	-	**data**： 发送到服务器的数据
 		-	**type**：JSON
 		-	**默认值**：无
-	-	**postType**： 当请求类型为post时，post请求的方式([post请求的类型](#https://imququ.com/post/four-ways-to-post-data-in-http.html))
+	-	**postType**： 当请求类型为post时，post请求的方式([post请求的类型](https://imququ.com/post/four-ways-to-post-data-in-http.html))
 		-	**默认值**：'RAW'
 			-	**取值范围**
 				-	RAW
@@ -311,7 +311,7 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 	-	**timeout**：网络请求超时时间，单位ms。
 		-	**type**：Number
 		-	**默认值**：30000
-	-	**postType**： 当请求类型为post时，post请求的方式([post请求的类型](#https://imququ.com/post/four-ways-to-post-data-in-http.html))
+	-	**postType**： 当请求类型为post时，post请求的方式([post请求的类型](https://imququ.com/post/four-ways-to-post-data-in-http.html))
 		-	**默认值**：'RAW'
 			-	**取值范围**
 				-	RAW
