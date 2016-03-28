@@ -2353,7 +2353,7 @@ window.A === undefined && (window.A = app);
 		var self = this;
 		settings.offline = 'undefined';
 		settings.expires = 0;
-		settings.bodyType = 'text';
+		settings.bodyType = 'json';
 		this.open = function(url, method, timeout) {
 			if (typeof url === 'undefined') {
 				throw new Error("请传入有效的请求地址！");
