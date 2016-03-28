@@ -232,11 +232,18 @@ var emu = (function(global) {
 
     var executeJS = function(funStr) {
         var start = funStr.indexOf('(');
-        var end = funStr.lastIndexOf(')');
-        var funName = funStr.substring(0, start)
-        if ($E[funName]) {
-            var parameter = funStr.substring(start + 1, end).replace(/','/g, '|').replace(/'/g, '')
-            var args = parameter.split('|')
+        if (start != -1) {
+            var end = funStr.lastIndexOf(')');
+            var funName = funStr.substring(0, start)
+            if ($E[funName]) {
+                var parameter = funStr.substring(start + 1, end).replace(/','/g, '|').replace(/'/g, '')
+                var args = parameter.split('|')
+                $E[funName].apply($E, args)
+            }
+        } else {
+            var params = funStr.split(',');
+            var funName = params[0]
+            var args = params[1].split('|')
             $E[funName].apply($E, args)
         }
     }
