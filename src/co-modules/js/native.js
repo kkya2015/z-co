@@ -47,7 +47,7 @@ var app = (function(global) {
     if (r != null) return (r[2]);
     return null;
   }
-
+  var time = 0;
   var domReady = function(factory, require) {
     var pageId = GetQueryString('pageId');
     if (!require) require = function() {}
@@ -67,15 +67,22 @@ var app = (function(global) {
         }
       } else {
         setTimeout(function() {
+          time++
           if (domReady.isReady) {
             if (readyRE.test(document.readyState) && document.body) {
               document.documentElement.style.height = '100%'
               document.body.style.height = '100%'
               var height = document.body.clientHeight;
-              if (height != $L.currentView().getHeight()) {
-                setTimeout(arguments.callee, 1);
-              } else {
+              var vHieht = $L.currentView().getHeight();
+              var dev = vHieht - height;
+              if (Math.abs(dev) < 10) {
                 factory.call(global, require);
+              } else {
+                if (time < 100) {
+                  setTimeout(arguments.callee, 1);
+                } else {
+                  factory.call(global, require);
+                }
               }
             } else {
               setTimeout(arguments.callee, 1);
