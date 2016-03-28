@@ -172,19 +172,13 @@
 		/*
 		 * 执行get请求
 		 */
-		get: function(url, data, dataType, success) {
-			if (typeof(data) === "function") {
+		get: function(url, dataType, success) {
+			if (typeof(dataType) === "function") {
 				return this.ajax(url, {
-					success: data
-				})
-			} else if (typeof(dataType) === "function") {
-				return this.ajax(url, {
-					data: data,
 					success: dataType
 				})
 			} else {
 				return this.ajax(url, {
-					data: data,
 					dataType: dataType,
 					success: success
 				})
@@ -193,17 +187,10 @@
 		/*
 		 * 执行getJSON请求
 		 */
-		getJSON: function(url, data, success) {
-			if (typeof(data) === "function") {
-				return this.ajax(url, {
-					success: data
-				})
-			} else {
-				return this.ajax(url, {
-					data: data,
-					success: success
-				})
-			}
+		getJSON: function(url, success) {
+			return this.ajax(url, {
+				success: data
+			})
 		},
 		/*
 		 * 发送post请求
@@ -212,13 +199,13 @@
 			if (typeof(postType) === "function") {
 				return this.ajax(url, {
 					data: data,
-					type: 'post',
+					type: 'POST',
 					success: success
 				})
 			} else {
 				return this.ajax(url, {
 					data: data,
-					type: 'post',
+					type: 'POST',
 					postType: postType,
 					success: success
 				})

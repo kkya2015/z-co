@@ -16,6 +16,7 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 *	[ajax](#ajax) ：执行ajax请求
 *	[get](#get) ：执行get请求
 *	[getJSON](#getJSON) ：执行getJSON请求
+*	[post](#post) ：执行post请求
 *	[fileUpload](#fileUpload) ：执行fileUpload请求
 
 ###	[对象](#对象)：
@@ -73,6 +74,11 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 					-	**取值范围**
 						-	json
 						-	text
+			-	**postType**：( *String* )当请求类型为post时，post请求的方式([post请求的类型](#https://imququ.com/post/four-ways-to-post-data-in-http.html))
+				-	**默认值**：'RAW'
+					-	**取值范围**
+						-	RAW
+						-	FORM
 			-	**success**：( *Function* )请求成功之后调用。传入返回后的数据，以及服务器响应头信息。
 				-	**默认值**：无
 					-	**参数**
@@ -122,13 +128,10 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 
 ####	<div id="get" style="color:red">get</div>
 
--	####	app.http.get(url, [data], [dataType], success)   ⇒ [XMLHttpRequest](#XMLHttpRequest)
+-	####	app.http.get(url,[dataType], success)   ⇒ [XMLHttpRequest](#XMLHttpRequest)
 			执行get请求
 	-	**url**： 网络请求地址
 		-	**type**：String
-		-	**默认值**：无
-	-	**data**： 发送到服务器的数据
-		-	**type**：JSON
 		-	**默认值**：无
 	-	**dataType**： 预期服务器返回的数据类型
 		-	**type**：String
@@ -150,29 +153,17 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 			    console.log(data)
 			})
 			
-			EX-2：
-			app.http.get('http://api.u148.net/json/6/1', {
-			    name: 'Dom'
-			}, function(data, response) {
-			    console.log(data)
-			})
-			
 			EX-3：
-			app.http.get('http://api.u148.net/json/6/1', {
-			    name: 'Dom'
-			}, 'json', function(data, response) {
+			app.http.get('http://api.u148.net/json/6/1', 'json', function(data, response) {
 			    console.log(data)
 			})
 
 ####	<div id="getJSON" style="color:red">getJSON</div>
 
--	####	app.http.getJSON(url, [data], success)   ⇒ [XMLHttpRequest](#XMLHttpRequest)
+-	####	app.http.getJSON(url,success)   ⇒ [XMLHttpRequest](#XMLHttpRequest)
 			执行getJSON请求
 	-	**url**： 网络请求地址
 		-	**type**：String
-		-	**默认值**：无
-	-	**data**： 发送到服务器的数据
-		-	**type**：JSON
 		-	**默认值**：无
 	-	**success**： 请求成功之后调用。传入返回后的数据，以及服务器响应头信息
 		-	**type**：Function
@@ -187,11 +178,42 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 			app.http.getJSON('http://api.u148.net/json/6/1', function(data, response) {
 			    console.log(data)
 			})
-			
-			EX-2：
-			app.http.getJSON('http://api.u148.net/json/6/1', {
+
+####	<div id="post" style="color:red">post</div>
+
+-	####	app.http.post(url, data,[postType],success)   ⇒ [XMLHttpRequest](#XMLHttpRequest)
+			执行getJSON请求
+	-	**url**： 网络请求地址
+		-	**type**：String
+		-	**默认值**：无
+	-	**data**： 发送到服务器的数据
+		-	**type**：JSON
+		-	**默认值**：无
+	-	**postType**： 当请求类型为post时，post请求的方式([post请求的类型](#https://imququ.com/post/four-ways-to-post-data-in-http.html))
+		-	**默认值**：'RAW'
+			-	**取值范围**
+				-	RAW
+				-	FORM
+	-	**success**： 请求成功之后调用。传入返回后的数据，以及服务器响应头信息
+		-	**type**：Function
+		-	**默认值**：无
+		-	**参数**
+			-	**data**：( *String/JSON* )服务器返回数据。具体类型依赖于传入的options.dataType字段。
+			-	**response**：( *JSON* )服务器响应头信息。
+
+-	#####	示例：
+
+			EX-1：
+			app.http.post('http://api.u148.net/json/6/1', {
 			    name: 'Dom'
 			}, function(data, response) {
+			    console.log(data)
+			})
+			
+			EX-2：
+			app.http.post('http://api.u148.net/json/6/1', {
+			    name: 'Dom'
+			},'FORM', function(data, response) {
 			    console.log(data)
 			})
 
@@ -272,7 +294,7 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 
 		var xhr = app.http.XMLHttpRequest()
 	
--	#### <div id="open" style="color:red">open(url, [method], [timeout])   ⇒ void </div>   
+-	#### <div id="open" style="color:red">open(url, [method], [timeout],[postType])   ⇒ void </div>   
 			这个方法初始化请求参数以供 send() 方法稍后使用。当这个方法调用的时候，不会打开一个到Web服务器的网络连接。
 	-	**url**：网络请求地址
 		-	**type**：String
@@ -289,6 +311,11 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 	-	**timeout**：网络请求超时时间，单位ms。
 		-	**type**：Number
 		-	**默认值**：30000
+	-	**postType**： 当请求类型为post时，post请求的方式([post请求的类型](#https://imququ.com/post/four-ways-to-post-data-in-http.html))
+		-	**默认值**：'RAW'
+			-	**取值范围**
+				-	RAW
+				-	FORM
 
 -	#####	示例：
 

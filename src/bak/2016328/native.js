@@ -2605,19 +2605,13 @@ window.A === undefined && (window.A = app);
 		/*
 		 * 执行get请求
 		 */
-		get: function(url, data, dataType, success) {
-			if (typeof(data) === "function") {
+		get: function(url, dataType, success) {
+			if (typeof(dataType) === "function") {
 				return this.ajax(url, {
-					success: data
-				})
-			} else if (typeof(dataType) === "function") {
-				return this.ajax(url, {
-					data: data,
 					success: dataType
 				})
 			} else {
 				return this.ajax(url, {
-					data: data,
 					dataType: dataType,
 					success: success
 				})
@@ -2626,17 +2620,10 @@ window.A === undefined && (window.A = app);
 		/*
 		 * 执行getJSON请求
 		 */
-		getJSON: function(url, data, success) {
-			if (typeof(data) === "function") {
-				return this.ajax(url, {
-					success: data
-				})
-			} else {
-				return this.ajax(url, {
-					data: data,
-					success: success
-				})
-			}
+		getJSON: function(url, success) {
+			return this.ajax(url, {
+				success: data
+			})
 		},
 		/*
 		 * 发送post请求
@@ -2645,13 +2632,13 @@ window.A === undefined && (window.A = app);
 			if (typeof(postType) === "function") {
 				return this.ajax(url, {
 					data: data,
-					type: 'post',
+					type: 'POST',
 					success: success
 				})
 			} else {
 				return this.ajax(url, {
 					data: data,
-					type: 'post',
+					type: 'POST',
 					postType: postType,
 					success: success
 				})
@@ -3396,6 +3383,20 @@ window.A === undefined && (window.A = app);
 			} else if (type == 'evaluateScript') {
 				var data = res.data;
 				eval(data);
+			} else if (type == 'event') {
+				var data = res.data;
+				var eventName = res.eventName;
+				var params = res.params;
+				var callback = $L.debug.eve[eventName]
+				if ($L.isFunction(callback)) {
+					if (params) {
+						params = JSON.parse(params)
+						callback.call(global, params)
+					} else {
+						callback.call(global)
+					}
+
+				}
 			} else if (type == 'ajax') {
 				var token = res.token;
 				var success = $L.debug.xhr[token].success;
@@ -3437,7 +3438,6 @@ window.A === undefined && (window.A = app);
 		}
 
 		$L.executeNativeJS = function() {
-			debugger;
 			var res;
 			if (arguments[0][0] == 'window') {
 				var res = $L.debug.window.apply($L.debug, Array.prototype.slice.call(arguments))
@@ -3447,7 +3447,7 @@ window.A === undefined && (window.A = app);
 				var res = $L.debug.storage.apply($L.debug, Array.prototype.slice.call(arguments))
 			} else if (arguments[0][0] == 'audio') {
 				var res = $L.debug.audio.apply($L.debug, Array.prototype.slice.call(arguments))
-			}else if (arguments[0][0] == 'eventListener') {
+			} else if (arguments[0][0] == 'eventListener') {
 				var res = $L.debug.event.apply($L.debug, Array.prototype.slice.call(arguments))
 			}
 			if (typeof res !== 'undefined') return res;
@@ -3852,24 +3852,28 @@ window.A === undefined && (window.A = app);
 	$L.debug.event = function() {
 		var key = arguments[0][1];
 		if (key == "sendEvent") {
-			return 'zh'
+			var eventName = arguments[1]
+			var params = arguments[2]
+			if (params && $L.isPlainObject(params)) {
+				params = JSON.stringify(params)
+				var js = "sendEvent," + eventName + "|" + params;
+			} else {
+				var js = "sendEvent," + eventName;
+			}
+			this.postMessage(js);
 		} else if (key == "addEventListener") {
 			var pageId = this.getQueryString('pageId');
 			var eventName = arguments[1]
 			var callback = arguments[2]
-			this.eve[eventName] = {
-				callback: callback
-			}
-			var js = "addEvent,"+ pageId+"|"+eventName;
+			this.eve[eventName] = callback
+			var js = "addEvent," + pageId + "|" + eventName;
 			this.postMessage(js);
 		} else if (key == "removeEventListener") {
-			if ($.os.android) {
-				return 'Android'
-			} else if ($.os.ios) {
-				return 'iOS'
-			} else {
-				return 'iOS'
-			}
+			var pageId = this.getQueryString('pageId');
+			var eventName = arguments[1]
+			this.eve[eventName] = null
+			var js = "removeEvent," + pageId + "|" + eventName;
+			this.postMessage(js);
 		}
 	}
 }(app, this))
