@@ -1,46 +1,56 @@
 /*===============================================================================
 ************   ui native httpManager   ************
 ===============================================================================*/
-;(function($L, global) {
+;
+(function($L, global) {
 	var XMLHttpRequest = function() {
-		var isOpened = false;
-		var isAbort = false;
-		var settings = {};
-		var self = this;
+		var isOpened = false,
+			isAbort = false,
+			settings = {},
+			self = this,
+			postMethod = 'RAW';
 		settings.offline = 'undefined';
 		settings.expires = 0;
-		settings.bodyType = 'text';
-		this.open = function(url, method, timeout) {
+		this.open = function(url, method, timeout, postType) {
 			if (typeof url === 'undefined') {
 				$L.throwError("请传入有效的请求地址！");
 			}
 			settings.method = method || 'GET';
+			settings.method = settings.method.toUpperCase()
 			settings.url = url;
 			settings.timeout = timeout || 30000;
 			isOpened = true;
+			if (postType && postType.toUpperCase() == 'FORM') {
+				postMethod = postType
+			}
 		};
 		this.send = function(body, dataType) {
 			isAbort = false;
 			if (!isOpened) {
 				$L.throwError("执行send方法失败，请确保请求对象为OPENDE状态！");
 			}
-			if (body && $L.isPlainObject(body)) {
-				settings.body = JSON.stringify(body)
-			}else{
-				settings.body = body
+			if (postMethod.toUpperCase() == 'FORM') {
+				this.postForm(body, settings.dataType)
+			} else {
+				settings.bodyType = 'text';
+				if (body && $L.isPlainObject(body)) {
+					settings.body = JSON.stringify(body)
+				} else {
+					settings.body = body
+				}
+
+				settings.dataType = dataType || 'json';
+				$L.executeNativeJS(['httpManager', 'sendRequest'], settings, function(response, data) {
+					if (self.onSuccess && $L.isFunction(self.onSuccess) && !isAbort) {
+						self.onSuccess.call(global, data, response);
+					}
+
+				}, function(code, response, Message) {
+					if (self.onError && $L.isFunction(self.onError) && !isAbort) {
+						self.onError.call(global, Message, code, response);
+					}
+				});
 			}
-
-			settings.dataType = dataType || 'json';
-			$L.executeNativeJS(['httpManager', 'sendRequest'], settings, function(response, data) {
-				if (self.onSuccess && $L.isFunction(self.onSuccess) && !isAbort) {
-					self.onSuccess.call(global, data, response);
-				}
-
-			}, function(code, response, Message) {
-				if (self.onError && $L.isFunction(self.onError) && !isAbort) {
-					self.onError.call(global, Message, code, response);
-				}
-			});
 
 		};
 		this.postForm = function(data, dataType, files) {
@@ -53,7 +63,9 @@
 				if (typeof data === 'string') data = JSON.parse(data)
 				form.values = data;
 			}
-			if (files) form.files = files;
+			if (files) {
+				form.files = files;
+			}
 			settings.form = form;
 			settings.dataType = dataType || 'json';
 			$L.executeNativeJS(['httpManager', 'sendRequest'], settings, function(response, data) {
@@ -132,7 +144,7 @@
 		ajax: function(url, settings) {
 			var xhr = new XMLHttpRequest();
 			if (settings) {
-				xhr.open(url, settings.type, settings.timeout);
+				xhr.open(url, settings.type, settings.timeout, settings.postType);
 				if (settings.headers)
 					for (name in settings.headers) xhr.setHeader(name, settings.headers[name])
 				xhr.setOffline(settings.offline);
@@ -192,6 +204,26 @@
 					success: success
 				})
 			}
+		},
+		/*
+		 * 发送post请求
+		 */
+		post: function(url, data, postType, success) {
+			if (typeof(postType) === "function") {
+				return this.ajax(url, {
+					data: data,
+					type: 'post',
+					success: success
+				})
+			} else {
+				return this.ajax(url, {
+					data: data,
+					type: 'post',
+					postType: postType,
+					success: success
+				})
+			}
+
 		},
 		/*
 		 * 执行fileUpload请求
