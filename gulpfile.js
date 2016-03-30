@@ -80,7 +80,8 @@ var gulp = require('gulp'), //基础库
             'src/co-modules/js/debug/storage.js',
             'src/co-modules/js/debug/screen.js',
             'src/co-modules/js/debug/audio.js',
-            'src/co-modules/js/debug/tabMark.js'
+            'src/co-modules/js/debug/tabMark.js',
+            'src/co-modules/js/debug/event.js'
         ]
     },
     co = {
@@ -110,12 +111,6 @@ var gulp = require('gulp'), //基础库
             'src/co-modules/js/widgets/tabs.js'
         ]
     },
-    // emu = {
-    //     filename: 'contains',
-    //     js: 'src/co-modules/emu/cont.js',
-    //     html: 'src/co-modules/emu/contains.html',
-    //     css: 'src/co-modules/emu/transitions.css'
-    // },
     emu = {
         filename: 'contains',
         jsFiles: [
@@ -123,7 +118,8 @@ var gulp = require('gulp'), //基础库
             'src/co-modules/emu/window.js',
             'src/co-modules/emu/request.js',
             'src/co-modules/emu/app.js',
-            'src/co-modules/emu/tabMark.js'
+            'src/co-modules/emu/tabMark.js',
+            'src/co-modules/emu/event.js'
         ]
     },
     dom = {
@@ -165,7 +161,7 @@ var gulp = require('gulp'), //基础库
             '/**',
             ' * Released on: <%= date.year %>-<%= date.month %>-<%= date.day %>',
             ' * =====================================================',
-            ' * <%= name %> v1.0.3 (http://docs.369cloud.com/engine/jssdk/JS-SDK)',
+            ' * <%= name %> v1.0.0 (http://docs.369cloud.com/engine/jssdk/JS-SDK)',
             ' * =====================================================',
             ' */',
             ''
@@ -409,7 +405,7 @@ gulp.task('build-emu', function(cb) {
             name: 'Emu'
         }))
         .pipe(gulp.dest(paths.bak + date.year + date.month + date.day))
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(header(banner.header, {
             date: date,
             name: 'Emu'

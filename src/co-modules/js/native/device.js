@@ -56,6 +56,13 @@
 			if (!times) times = 1
 			$L.executeNativeJS(['device', 'beep'], times);
 		},
+
+		/*
+		 * 停止发出蜂鸣声
+		 */
+		stopBeep: function() {
+			$L.executeNativeJS(['device', 'pauseBeep']);
+		},
 		/*
 		 * 设备振动
 		 * @param milliseconds: ( Number ) 必选 设备振动持续的时间，单位为ms，默认为500ms。ios不支持

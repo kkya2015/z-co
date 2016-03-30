@@ -18,6 +18,7 @@ device模块管理设备信息，用于获取手机设备的相关信息，如IM
 *	[getUuid](#getUuid) ：获取设备的唯一标识
 *	[dial](#dial) ：拨打电话
 *	[beep](#beep) ：发出蜂鸣声
+*	[stopBeep](#stopBeep) ：停止发出蜂鸣声
 *	[vibrate](#vibrate) ：设备振动
 *	[setWakeUp](#setWakeUp) ：设置应用保持唤醒（屏幕常亮）状态
 *	[setWakeOff](#setWakeOff) ：关闭应用保持唤醒（屏幕常亮）状态
@@ -85,13 +86,22 @@ device模块管理设备信息，用于获取手机设备的相关信息，如IM
 #### <div id="beep" style="color:red">beep</div>
 -	####	app.device.beep([times])   ⇒ void  
 			调用此方法使得设备发出蜂鸣声。
-	-	**times**：蜂鸣声重复的次数，默认发出一次蜂鸣声，iOS设备不支持
+	-	**times**：蜂鸣声重复的次数(只支持部分安卓机型)，默认发出一次蜂鸣声（注：iOS设备不支持次数的设置，只会发出一声蜂鸣；部分安卓机型设置次数无效果，会无限次发出蜂鸣，需要调用[stopBeep](#stopBeep)来停止)
 		-	**type**：Number 
 		-	**默认值**：1
 
 -	#####	示例：
 
 			app.device.beep(2);
+
+#### <div id="stopBeep" style="color:red">stopBeep</div>
+-	####	app.device.stopBeep()   ⇒ void  
+
+			调用此方停止发出蜂鸣声。
+
+-	#####	示例：
+
+			app.device.stopBeep();
 
 #### <div id="vibrate" style="color:red">vibrate</div>
 -	####	app.device.vibrate([milliseconds])   ⇒ void  

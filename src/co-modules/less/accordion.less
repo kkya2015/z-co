@@ -20,11 +20,20 @@
   margin-top:10px;
   height: 0;
   font-size: 14px;
+}
+
+.ui-accordion-item-content-ios {
   -webkit-transition-duration: 300ms;
   transition-duration: 300ms;
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
+
+.ui-accordion-item-content-android {
+  -webkit-transition-duration: 0ms;
+  transition-duration: 0ms;
+}
+
 .ui-accordion .ui-accordion-item .ui-accordion-item-inner:after {
   position: absolute;
   display: inline-block;

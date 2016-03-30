@@ -44,7 +44,7 @@ app是引擎对外接口的调用对象，所有对引擎的操作均通过app�
 *	[openRightSlideDrawer](#openRightSlideDrawer) ：开启右侧抽屉
 *	[prompt](#prompt) ：弹出带两个或三个按钮和输入框的对话框
 *	[setStatusBarBackgroundColor](#setStatusBarBackgroundColor) ：设置app状态栏背景颜色；Android要求版本4.4以上。默认黑色
-*	[statusBarFontColor](#statusBarFontColor) ：设置当前页面状态栏文字颜色 0 表示黑色。1 表示白色(仅iOS)
+*	[statusBarFontColor](#statusBarFontColor) ：设置当前页面状态栏文字颜色 0 表示黑色。1 表示白色(仅支持iOS)
 *	[unLockRotate](#unLockRotate) ：解锁屏幕翻转
 
 
@@ -422,7 +422,7 @@ app是引擎对外接口的调用对象，所有对引擎的操作均通过app�
 			app.downloadFile('http://192.168.168.111/1.apk');
 
 #### <div id="disableSlideBack" style="color:red">disableSlideBack</div>
--	####	disableSlideBack()   ⇒ void 
+-	####	app.disableSlideBack()   ⇒ void 
 			设置应用不支持滑动返回(Android设备暂时不支持)
 
 -	#####	示例：
@@ -430,7 +430,7 @@ app是引擎对外接口的调用对象，所有对引擎的操作均通过app�
 			app.disableSlideBack();
 
 #### <div id="enableSlideBack" style="color:red">enableSlideBack</div>
--	####	enableSlideBack()   ⇒ void 
+-	####	app.enableSlideBack()   ⇒ void 
 			设置应用支持滑动返回(Android设备暂时不支持)
 
 -	#####	示例：
@@ -890,7 +890,7 @@ app是引擎对外接口的调用对象，所有对引擎的操作均通过app�
 
 ####	<div id="statusBarFontColor" style="color:red">statusBarFontColor</div>
 -	#### app.statusBarFontColor(color)   ⇒ void 
-			设置当前页面状态栏文字颜色 0 表示黑色。1 表示白色(iOS)
+			设置当前页面状态栏文字颜色 0 表示黑色。1 表示白色(仅支持iOS)
 	-	**color**：状态栏文字颜色
 		-	**type**：Number
 		-	**默认值**：0
@@ -900,7 +900,7 @@ app是引擎对外接口的调用对象，所有对引擎的操作均通过app�
 
 -	#####	示例：
 
-			app.statusBarFontColor(1)//设置当前页面状态栏文字为白色(iOS)
+			app.statusBarFontColor(1)//设置当前页面状态栏文字为白色(仅支持iOS)
 
 ####	<div id="unLockRotate" style="color:red">unLockRotate</div>
 -	#### app.unLockRotate()   ⇒ void 
