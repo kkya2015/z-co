@@ -39,7 +39,8 @@
 			this.postMessage(js);
 		} else if (key == 'bringPopoverToFront') {
 			var popname = args[0]
-			var js = "openPopover('" + popname + "')"
+			var windowname = this.getQueryString('pageId');
+			var js = "openPopover('" + popname + "','" + url + "','" + rect + "','" + windowname + "')"
 			this.postMessage(js);
 		} else if (key == 'setSlideLayout') {
 			var params = args[0]

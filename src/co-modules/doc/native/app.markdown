@@ -645,7 +645,7 @@ app是引擎对外接口的调用对象，所有对引擎的操作均通过app�
 ####	<div id="isAppInstalled" style="color:red">isAppInstalled</div>
 -	#### app.isAppInstalled(appSource, callback)   ⇒ void 
 			判断设备上是否已安装指定app
-*	注：iOS需配置scheme，详见[配置方法](./iOS9shipei#第二章)
+*	注：iOS需配置scheme
 	-	**appSource**：应用程序标识。iOS中参数为：被打开app的Scheme 后面加 "://"；Android下为应用的包名
 		-	**type**：String
 		-	**默认值**：无

@@ -161,16 +161,11 @@ function init() {
     })
 
     list = _nav.$list.children('li');
-    var defaultIndex = dataS.defaultIndex
-    if (!defaultIndex) defaultIndex = 1
-    showIndex(defaultIndex)
     var naviHidden = dataS.naviHidden
     if (naviHidden) {
         _nav.$list.css('display', 'none')
         return;
     }
-
-
 
     var vernierColor = dataS.vernierColor
     if (vernierColor) {
@@ -187,6 +182,19 @@ function init() {
             showIndex(to)
         });
 
+
+    var titleColor = dataS.titleColor
+    if (titleColor) {
+        list.find('a').css('color', titleColor)
+    }
+    var titleFont = dataS.titleFont
+    if (titleFont) {
+        list.css('fontSize', titleFont)
+    }
+    var defaultIndex = dataS.defaultIndex
+    if (!defaultIndex) defaultIndex = 1
+    showIndex(defaultIndex)
+
 }
 
 function showIndex(to) {
@@ -199,15 +207,6 @@ function showIndex(to) {
         left: li.offset().left - _nav.$list.offset().left,
         width: li.width() - 20
     });
-
-    var titleColor = dataS.titleColor
-    if (titleColor) {
-        list.find('a').css('color', titleColor)
-    }
-    var titleFont = dataS.titleFont
-    if (titleFont) {
-        list.css('fontSize', titleFont)
-    }
     var titleHighlightFont = dataS.titleHighlightFont
     if (titleHighlightFont) {
         li.css('fontSize', titleHighlightFont)
@@ -222,7 +221,7 @@ function showIndex(to) {
     var windowName = li.data('name');
     var naviHidden = dataS.naviHidden
     var viewHeight = dataS.viewHeight
-    if(viewHeight == 0){
+    if (viewHeight == 0) {
         viewHeight = $(document.body).height()
     }
     if (naviHidden) {
@@ -298,6 +297,6 @@ var angle = function(start, end) {
         diff_y = end.y - start.y;
     //返回角度,不是弧度
     return 360 * Math.atan(diff_y / diff_x) / (2 * Math.PI);
-}   
+}
     
    </script></html>

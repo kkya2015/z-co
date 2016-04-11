@@ -80,6 +80,10 @@ var emu = (function(global) {
     $E.root = GetQueryString('pageId');
     if ($E.root) {
         var comp = $E.root.lastIndexOf('component/');
+        if(comp == -1){
+            alert('请将该页面放入component文件下对应工程目录！')
+            reutrn;
+        }
         var sprit = $E.root.substr(comp).indexOf('/');
         var lastUrl = $E.root.substr(comp + sprit + 1);
         var lastSprit = lastUrl.indexOf('/')

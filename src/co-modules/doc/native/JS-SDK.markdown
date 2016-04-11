@@ -15,7 +15,7 @@ JS-SDK主要由以下三部分组成：
 ### 资源获取
 
 
-*	DOM及CO部分目前已在[github](https://github.com/369cloud/D6)上开源，有兴趣的同学可以下载自行查看源码并可自定义打包，项目地址：[https://github.com/369cloud/D6](https://github.com/369cloud/D6)
+*	DOM及CO部分目前已在[github](http://369cloud.github.io/D6/)上开源，有兴趣的同学可以下载自行查看源码并可自定义打包，项目地址：[http://369cloud.github.io/D6/](http://369cloud.github.io/D6/)
 *	Native目前已提供最新版本下载，可随时下载最新版本用于项目，下载地址：[JS SDK](http://dev.369cloud.com/sdkdownload?sdkId=33)
 
 
@@ -28,10 +28,10 @@ JS-SDK主要由以下三部分组成：
 *	app对象为所有接口及对象的统一入口，所有涉及引擎的功能均通过或间接通过app对象获取或执行。通过该对象可获取当前页面对象、创建窗口对象，以及一些全局功能函数的调用。
 
 
-*	通过app.currentView()获取的当前页面对象对当前页面进行操作，可通过该对象创建子页面对象popover对象进行复杂的页面布局。
+*	通过app.currentView()获取的当前页面对象对当前页面进行操作，可通过该对象创建子页面对象popover进行复杂的页面布局。
 
 
-*	app、window、view、popover三者的关系可以简单的理解为浏览器中：window对象 <--> app对象；浏览器窗口 <--> window对象；document对象 <-->  view对象；iframe对象 <--> popover对象
+*	app、window、view、popover四者的关系可以简单的理解为浏览器中：window对象 <--> app对象；浏览器窗口 <--> window对象；document对象 <-->  view对象；iframe对象 <--> popover对象
 
 
 *	popover通常在单页面无法完成布局的情况下使用，可将页面分为重叠的两部分来达到复杂的布局功能。通常建议通过单页面完成布局。
@@ -39,7 +39,7 @@ JS-SDK主要由以下三部分组成：
 
 		EX:
  
-		PAGE1:
+		PAGE1:普通布局
 
 	    domReady(function(){
 			var win = app.createWindow();
@@ -48,7 +48,7 @@ JS-SDK主要由以下三部分组成：
 	        })
 	    })
 
-		PAGE2:
+		PAGE2:页面嵌套布局
 
 	    domReady(function(){
 			var view = app.currentView();

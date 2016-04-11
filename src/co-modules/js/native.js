@@ -13,8 +13,9 @@ var app = (function(global) {
     class2type["[object " + name + "]"] = name.toLowerCase();
   }
   var DIRNAME_RE = /[^?#]*\//,
-    plus = !!global['rd'],
-    readyRE = /complete|loaded|interactive/;
+    readyRE = /complete|loaded|interactive/,
+    ua = navigator.userAgent,
+    hybrid = ua.indexOf('Mode/Hybrid') > -1;
   // var dirname = function(path) {
   //   return path.match(DIRNAME_RE)[0]
   // }
@@ -47,25 +48,12 @@ var app = (function(global) {
     if (r != null) return (r[2]);
     return null;
   }
-  var time = 0;
   var domReady = function(factory, require) {
-    var pageId = GetQueryString('pageId');
+    var time = 0;
+    if (!hybrid) hybrid = !!global['rd']
     if (!require) require = function() {}
     if ($L.isFunction(factory)) {
-      if (!(($.os.ios || $.os.android) && plus)) {
-        if (pageId) {
-          $L.debug()
-          setTimeout(function() {
-            if ($L.debug.isReady) {
-              factory.call(global, require);
-            } else {
-              setTimeout(arguments.callee, 1);
-            }
-          }, 1);
-        } else {
-          factory.call(global, require);
-        }
-      } else {
+      if (($.os.ios || $.os.android) && hybrid) {
         setTimeout(function() {
           time++
           if (domReady.isReady) {
@@ -91,9 +79,23 @@ var app = (function(global) {
             setTimeout(arguments.callee, 1);
           }
         }, 1);
+      } else {
+        var pageId = GetQueryString('pageId');
+        if (pageId) {
+          $L.debug()
+          setTimeout(function() {
+            if ($L.debug.isReady) {
+              factory.call(global, require);
+            } else {
+              setTimeout(arguments.callee, 1);
+            }
+          }, 1);
+        } else {
+          factory.call(global, require);
+        }
       }
-
     }
+
   };
 
 
@@ -116,9 +118,7 @@ var app = (function(global) {
   };
   global.domReady = domReady;
 
-  var base = 'rd',
-    baseObj = global[base],
-    windowType = 0, //加载本地HTML
+  var windowType = 0, //加载本地HTML
     popoverType = 0, //加载本地HTML
     windowAnimationType = 11, // 动画效果--推入
     windowAnimationDirection = 41, // 动画方向--右侧
@@ -273,6 +273,7 @@ var app = (function(global) {
   };
 
   var resolveFun = function(arr) {
+    var baseObj = global['rd']
     var fun = baseObj;
     var callObj = baseObj;
     if ($L.isArray(arr)) {
@@ -304,6 +305,7 @@ var app = (function(global) {
    * 执行require方法统一入口
    */
   $L.executeRequireJS = function() {
+    var baseObj = global['rd']
     var args = Array.prototype.slice.call(arguments);
     if (baseObj) {
       var fun = baseObj['require'];
