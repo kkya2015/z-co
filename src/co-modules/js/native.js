@@ -53,7 +53,7 @@ var app = (function(global) {
     if (!hybrid) hybrid = !!global['rd']
     if (!require) require = function() {}
     if ($L.isFunction(factory)) {
-      if (($.os.ios || $.os.android) && hybrid) {
+      if (hybrid) {
         setTimeout(function() {
           time++
           if (domReady.isReady) {

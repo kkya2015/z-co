@@ -472,8 +472,7 @@
 					this._execEvent('scroll');
 				}
 				if (Math.abs(360 * Math.atan(diff_y / diff_x) / (2 * Math.PI)) < 60) return;
-				// console.log(co.verticalSwipe);
-				if (!co.verticalSwipe) return;
+				if (!d6.verticalSwipe) return;
 			}
 
 			// We need to move at least 10 pixels for the scrolling to initiate

@@ -256,7 +256,7 @@ var emu = (function(global) {
         executeJS(e.data);
     }, false);
     setTimeout(function() {
-        executeJS("openWindow('" + $E.rootName + "','" + $E.rootUrl + "','" + true + "')");
+        executeJS("openWindow," + $E.rootName + "|" + $E.rootUrl + "|0|true");
     }, 1);
     return $E;
 

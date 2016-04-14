@@ -4,6 +4,7 @@ device对象添加stopBeep方法，支持停止蜂鸣  -- device.js 、device.md
 修复accordionList、accordion在安卓上的BUG  -- accordionList.js 、accordionList.less、accordion.js 、accordion.less
 修复tabMark默认打开不是第一个页签时，下标位置不对的BUG  -- tabMark.html
 针对新引擎采用ua方式判断运行环境  --  native.js
+view对象添加close、closePopover方法  --  view.js
 
 
-/*  截止日期 ： 2016/4/11 
+/*  截止日期 ： 2016/4/11 */

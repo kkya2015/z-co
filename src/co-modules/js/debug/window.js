@@ -7,11 +7,7 @@
 			var windowname = args[0]
 			var type = args[1]
 			var url = args[2]
-			if (type == 0) {
-				url = args[2]
-			}
-			// var js = "openWindow('" + windowname + "','" + url + "','" + type + "')"
-			var js = "openWindow('" + windowname + "','" + url + "')"
+			var js = "openWindow," + windowname + "|" + url + "|" + type;
 			this.postMessage(js);
 		} else if (key == 'closeSelf') {
 			var pageId = this.getQueryString('pageId');

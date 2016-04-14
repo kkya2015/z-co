@@ -189,11 +189,11 @@ http网络异步请求,主要封装了类ajax请求，简化开发者在进行aj
 	-	**data**： 发送到服务器的数据
 		-	**type**：JSON
 		-	**默认值**：无
-	-	**postType**： 当请求类型为post时，post请求的方式([post请求的类型](https://imququ.com/post/four-ways-to-post-data-in-http.html))
+	-	**postType**： 当请求类型为post时，post请求的方式
 		-	**默认值**：'RAW'
 			-	**取值范围**
-				-	RAW
-				-	FORM
+				-	RAW ：纯字符串格式
+				-	FORM ：key-value格式
 	-	**success**： 请求成功之后调用。传入返回后的数据，以及服务器响应头信息
 		-	**type**：Function
 		-	**默认值**：无

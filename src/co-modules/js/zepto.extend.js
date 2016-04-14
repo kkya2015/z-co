@@ -1,8 +1,9 @@
 /*===============================================================================
 ************   zepto extend   ************
 ===============================================================================*/
-;(function($) {
-
+;
+(function($) {
+    var isTouch = !!(('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch)
     var unique = function(arr) {
         var unique = [];
         for (var i = 0; i < arr.length; i++) {
@@ -118,8 +119,9 @@
     }
 
     $.fn.button = function(callback) {
+
         var self = this;
-        self.on('tap', function(evt) {
+        self.on(isTouch ? "tap" : "click", function(evt) {
             var ele = evt.currentTarget;
             if ($.isFunction(callback)) {
                 callback.apply(self, [ele, evt]);

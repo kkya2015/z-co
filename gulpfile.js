@@ -87,10 +87,10 @@ var gulp = require('gulp'), //基础库
     co = {
         filename: 'co',
         jsFiles: [
-            'src/co-modules/js/libs/iscroll.js',
+            'src/co-modules/js/iscroll.js',
             'src/co-modules/js/zepto.extend.js',
             'src/co-modules/js/$extend.js',
-            'src/co-modules/js/co.js',
+            'src/co-modules/js/core.js',
             'src/co-modules/js/widgets/slider/slider.js',
             'src/co-modules/js/widgets/slider/touch.js',
             'src/co-modules/js/widgets/slider/guide.js',
@@ -161,7 +161,7 @@ var gulp = require('gulp'), //基础库
             '/**',
             ' * Released on: <%= date.year %>-<%= date.month %>-<%= date.day %>',
             ' * =====================================================',
-            ' * <%= name %> v1.0.0 (http://docs.369cloud.com/engine/jssdk/JS-SDK)',
+            ' * <%= name %> v1.0.1 (http://docs.369cloud.com/engine/jssdk/JS-SDK)',
             ' * =====================================================',
             ' */',
             ''
@@ -405,7 +405,7 @@ gulp.task('build-emu', function(cb) {
             name: 'Emu'
         }))
         .pipe(gulp.dest(paths.bak + date.year + date.month + date.day))
-        // .pipe(uglify())
+        .pipe(uglify())
         .pipe(header(banner.header, {
             date: date,
             name: 'Emu'

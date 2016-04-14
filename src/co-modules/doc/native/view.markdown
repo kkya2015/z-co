@@ -19,6 +19,8 @@
 *	[addHeaderRefresh](#addHeaderRefresh) ：给当前页面添加下拉刷新
 *	[addSlideIgnore](#addSlideIgnore) ：添加当前页面忽略抽屉手势窗口区域（该方法只用于安卓,主要用于与JS滑动事件冲突时使用）
 *	[back](#back) ：返回上一层或返回指定名字的窗口
+*	[close](#close) ：关闭当前页面
+*	[closePopover](#closePopover) ：关闭指定Popover对象
 *	[createPopover](#createPopover) ：创建Popover对象
 *	[disableBounces](#disableBounces) ：设置页面不可弹动（Android暂时不支持）
 *	[disableDragDismiss](#disableDragDismiss) ：设置页面不支持滑动消失键盘（Android暂时不支持）
@@ -212,6 +214,28 @@
 		
 			EX-2：
 			view.back('windowname'); //返回名字为windowname的窗口
+
+#### <div id="close" style="color:red">close</div>
+-	####	close()   ⇒ void
+			关闭当前页面
+
+-	#####	示例：
+
+			var view = app.currentView();
+			view.close();
+
+#### <div id="closePopover" style="color:red">closePopover</div>
+-	####	closePopover(popovername)   ⇒ void
+			关闭指定Popover对象
+	-	**popovername**：指定popover对象的name值
+		-	**type**：String
+		-	**默认值**：无
+
+-	#####	示例：
+
+			var view = app.currentView();
+			view.closePopover('popName');
+
 
 #### <div id="createPopover" style="color:red">createPopover</div>
 -	####	createPopover([x], [y], [width], [height])   ⇒ [popover](./popover.md)

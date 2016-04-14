@@ -1,5 +1,5 @@
 /**
- * Released on: 2016-4-11
+ * Released on: 2016-4-14
  * =====================================================
  * Native v1.0.1 (http://docs.369cloud.com/engine/jssdk/JS-SDK)
  * =====================================================
@@ -59,7 +59,7 @@ var app = (function(global) {
     if (!hybrid) hybrid = !!global['rd']
     if (!require) require = function() {}
     if ($L.isFunction(factory)) {
-      if (($.os.ios || $.os.android) && hybrid) {
+      if (hybrid) {
         setTimeout(function() {
           time++
           if (domReady.isReady) {
@@ -3624,11 +3624,7 @@ window.A === undefined && (window.A = app);
 			var windowname = args[0]
 			var type = args[1]
 			var url = args[2]
-			if (type == 0) {
-				url = args[2]
-			}
-			// var js = "openWindow('" + windowname + "','" + url + "','" + type + "')"
-			var js = "openWindow('" + windowname + "','" + url + "')"
+			var js = "openWindow," + windowname + "|" + url + "|" + type;
 			this.postMessage(js);
 		} else if (key == 'closeSelf') {
 			var pageId = this.getQueryString('pageId');

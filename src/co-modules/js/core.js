@@ -1,7 +1,7 @@
 
 ;
 (function(global, $, undefined) {
-	var co = {
+	var d6 = {
 			verticalSwipe: true //是否可以纵向滑动
 		},
 		$ui = {},
@@ -83,7 +83,7 @@
 	};
 
 	Base.touchMove = function() {
-		return this.isTouchScreen() ? "touchmove" : "mouseup"
+		return this.isTouchScreen() ? "touchmove" : "mousemove"
 	};
 
 	Base.longTap = function() {
@@ -99,15 +99,6 @@
 		console.log(str);
 		return this;
 	};
-	Base.callZ = (function() {
-		var instance = $();
-		instance.length = 1;
-
-		return function(item) {
-			instance[0] = item;
-			return instance;
-		};
-	})()
 
 	Base.stopPropagation = function(e) {
 		e.stopPropagation();
@@ -217,5 +208,6 @@
 	}
 
 	global.define = define;
-	global.co = co;
+	
+	global.d6 = d6;
 })(this, $);

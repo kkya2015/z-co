@@ -32,9 +32,13 @@
         }
     }
 
-    $E.openWindow = function(windowname, url, noTransition) {
-        var pageId = $E.strEncode(windowname);
-        var win = document.getElementById(pageId);
+    $E.openWindow = function() {
+        var windowname = arguments[0],
+            url = arguments[1],
+            type = arguments[2],
+            noTransition = arguments[3],
+            pageId = $E.strEncode(windowname),
+            win = document.getElementById(pageId);
         if (win) {
             win.style.zIndex = ++$E.Zindex;
             return;
@@ -63,10 +67,25 @@
         iframe.style.height = "100%";
         iframe.id = pageId + 'iframe';
         view.appendChild(iframe);
-        iframe.onload = iframe.onreadystatechange = function() {
-            $E.iframeload.call(iframe, pageId);
+
+        if (type == 1) {
+            iframe.onload = iframe.onreadystatechange = function() {
+                if (!this.readyState || this.readyState == "complete") {
+                    var msg = {
+                        type: 'htmlMsg',
+                        data: url
+                    }
+                    msg = JSON.stringify(msg);
+                    this.contentWindow.postMessage(msg, '*');
+                }
+            }
+            iframe.src = "blank.html?pageId=" + pageId;
+        } else {
+            iframe.onload = iframe.onreadystatechange = function() {
+                $E.iframeload.call(iframe, pageId);
+            }
+            iframe.src = $E.parseUrl(url) + "?pageId=" + pageId;
         }
-        iframe.src = $E.parseUrl(url) + "?pageId=" + pageId;
         if (noTransition != 'true') {
             view.className = 'page-from-right-to-center';
             view.addEventListener("webkitAnimationEnd", function() {

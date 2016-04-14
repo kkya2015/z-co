@@ -1,5 +1,5 @@
 /**
- * Released on: 2016-4-11
+ * Released on: 2016-4-13
  * =====================================================
  * Native v1.0.1 (http://docs.369cloud.com/engine/jssdk/JS-SDK)
  * =====================================================
@@ -59,7 +59,7 @@ var app = (function(global) {
     if (!hybrid) hybrid = !!global['rd']
     if (!require) require = function() {}
     if ($L.isFunction(factory)) {
-      if (($.os.ios || $.os.android) && hybrid) {
+      if (hybrid) {
         setTimeout(function() {
           time++
           if (domReady.isReady) {
