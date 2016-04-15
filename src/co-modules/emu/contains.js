@@ -247,7 +247,7 @@ var emu = (function(global) {
         } else {
             var params = funStr.split(',');
             var funName = params[0]
-            var args = params[1].split('|')
+            var args = params.slice(1).join(",").split('|')
             $E[funName].apply($E, args)
         }
     }
