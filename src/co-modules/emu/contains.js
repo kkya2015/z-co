@@ -92,8 +92,8 @@ var emu = (function(global) {
         $E.rootUrl = lastUrl.substr(lastSprit + 1);
         $E.baseUrl = component + entry;
     } else {
-        // $E.rootUrl = 'index.html';
-        $E.rootUrl = 'native.html';
+        $E.rootUrl = 'index.html';
+        // $E.rootUrl = 'native.html';
         // $E.rootUrl = 'testTab.html';
         $E.baseUrl = '';
     }

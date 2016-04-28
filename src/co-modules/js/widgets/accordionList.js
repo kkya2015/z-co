@@ -49,6 +49,7 @@
                 var accordionItem = $(evt.target).closest(SELECTOR_ACCORDION_LIST_ITEM);
                 _acd.accordionToggle(accordionItem);
             }
+            _acd.preventDefault(evt);
         })
     };
 

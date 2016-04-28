@@ -58,10 +58,17 @@
 		},
 
 		/*
+		 * 暂停发出蜂鸣声
+		 */
+		pauseBeep: function() {
+			$L.executeNativeJS(['device', 'pauseBeep']);
+		},
+
+		/*
 		 * 停止发出蜂鸣声
 		 */
 		stopBeep: function() {
-			$L.executeNativeJS(['device', 'pauseBeep']);
+			$L.executeNativeJS(['device', 'stopBeep']);
 		},
 		/*
 		 * 设备振动

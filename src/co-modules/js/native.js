@@ -82,14 +82,18 @@ var app = (function(global) {
       } else {
         var pageId = GetQueryString('pageId');
         if (pageId) {
-          $L.debug()
-          setTimeout(function() {
-            if ($L.debug.isReady) {
-              factory.call(global, require);
-            } else {
-              setTimeout(arguments.callee, 1);
-            }
-          }, 1);
+          if ($L.debug) {
+            $L.debug()
+            setTimeout(function() {
+              if ($L.debug.isReady) {
+                factory.call(global, require);
+              } else {
+                setTimeout(arguments.callee, 1);
+              }
+            }, 1);
+          } else {
+            factory.call(global, require);
+          }
         } else {
           factory.call(global, require);
         }
