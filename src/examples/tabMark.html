@@ -207,6 +207,14 @@ function showIndex(to) {
         left: li.offset().left - _nav.$list.offset().left,
         width: li.width() - 20
     });
+    var titleColor = dataS.titleColor
+    if (titleColor) {
+        list.find('a').css('color', titleColor)
+    }
+    var titleFont = dataS.titleFont
+    if (titleFont) {
+        list.css('fontSize', titleFont)
+    }
     var titleHighlightFont = dataS.titleHighlightFont
     if (titleHighlightFont) {
         li.css('fontSize', titleHighlightFont)
